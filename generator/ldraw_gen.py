@@ -792,6 +792,83 @@ class LdrBuilder:
         self.brick_1x1(0, -112, 0, REDDISH_BROWN)
         return self
 
+    def build_police_car(self) -> 'LdrBuilder':
+        """
+        Builds a compact police car (City Modern style, ~30 pieces).
+
+        Design:
+          - 4 black wheels at corners (Y=-12, X=±40, Z=±30).
+          - Black chassis plate 4x4 (Y=0).
+          - White body bottom plate 4x2 (Y=-8) — narrower than chassis
+            so wheels show through.
+          - White body side walls (Y=-32).
+          - White cabin (Y=-56) brick 2x2 + slope windshield front.
+          - White roof plate (Y=-80).
+          - Light bar: trans_clear_red + trans_yellow (Y=-88).
+
+        Coordinate convention:
+          - X = forward/back (length axis). Car centered, body 6 studs long.
+          - Z = left/right (width axis). Body 2 studs wide, wheels ±40 LDU.
+          - Y = vertical. Y=0 is ground; negative Y goes up (LDraw convention).
+        """
+        BLUE_TRIM = BLUE
+        BODY = WHITE
+        GLASS = TRANS_RED  # placeholder, real windshield would be LIGHT_BLUE
+        WINDOW = LIGHT_BLUE
+
+        # 1. Wheels (4 tires + 4 wheels, Y=-8, at corners outside body width)
+        for sx, sz in [(-40, -40), (-40, 40), (40, -40), (40, 40)]:
+            self.step()
+            self.place('2431.dat', BLACK, sx, -8, sz)  # tire
+            self.place('2412b.dat', LIGHT_BLUISH_GREY, sx, -8, sz)  # wheel
+
+        # 2. Black chassis plate 4x4 (Y=0) — covers wheel axles
+        self.step()
+        self.place('3031.dat', BLACK, 0, 0, 0)  # plate 4x4 (80x80 LDU)
+
+        # 3. White body bottom plate 4x4 (Y=-8) — body sits on this
+        self.step()
+        self.place('3031.dat', BODY, 0, -8, 0)  # plate 4x4
+
+        # 4. Blue stripe down the sides (decorative trim, Y=-16)
+        self.step()
+        for z in [-20, 20]:
+            self.place('3069b.dat', BLUE_TRIM, 0, -16, z)  # tile 1x2 — runs full length
+
+        # 5. Body sides — bricks 1x2 along each side, white (Y=-32 to -56)
+        self.step()
+        for x in [-40, 0, 40]:
+            for z in [-20, 20]:
+                self.place('3004.dat', BODY, x, -32, z)  # brick 1x2
+
+        # 6. Cabin (rear) — brick 2x2 white (Y=-56)
+        self.step()
+        self.brick_2x2(-20, -56, 0, BODY)
+        self.brick_2x2(20, -56, 0, BODY)
+
+        # 7. Windshield (slope) — front of cabin (Y=-56, X=60)
+        self.step()
+        self.place('3820.dat', WINDOW, 60, -56, 0)  # slope 1x2 facing forward
+
+        # 8. Roof plate 2x4 (Y=-80)
+        self.step()
+        self.place('3020.dat', BODY, 0, -80, 0)  # plate 2x4
+
+        # 9. Light bar — trans_clear red 1x1 + trans_yellow 1x1 (Y=-88)
+        self.step()
+        self.place('4073.dat', TRANS_RED, -20, -88, 0)  # plate 1x1 round
+        self.place('4073.dat', YELLOW, 20, -88, 0)  # plate 1x1 round
+
+        # 10. Police badge — yellow 1x1 round on hood (Y=-16, X=-40)
+        self.step()
+        self.place('4073.dat', YELLOW, -40, -16, 0)  # star/badge marker
+
+        # 11. Front bumper — white plate 1x2 (Y=-16, X=60)
+        self.step()
+        self.place('3023.dat', BODY, 60, -16, 0)  # plate 1x2
+
+        return self
+
     def build_technic(self) -> 'LdrBuilder':
         """Builds a Technic assembly: base + pin stack + Technic beam + axles.
 
@@ -1186,6 +1263,18 @@ def build_demo_brickheadz() -> LdrBuilder:
     return b
 
 
+def build_demo_police_car() -> LdrBuilder:
+    """Demo 8: City Modern police car (corpus 1438, modern + licensed cohorts)."""
+    b = LdrBuilder(title='Demo Police Car', author='LdrawGen [opencode]')
+    b.set_theme('City Police')
+    b.set_keywords(['police-car', 'city', 'modern', 'vehicle', 'omr', 'demo'])
+    b.add_history('2026-09-12 [LdrawGen] Demo police car (build_police_car)')
+    b.add_comment('=== Demo 8: Police car (City Modern style, corpus 1438 modern+licensed cohorts) ===')
+    b.build_police_car()
+    b.close_section('end police car')
+    return b
+
+
 # =============================================================================
 # Entrada CLI
 # =============================================================================
@@ -1254,10 +1343,11 @@ def main() -> None:
         ('demo_space_classic.ldr', build_demo_space_classic()),
         ('demo_technic.ldr', build_demo_technic()),
         ('demo_brickheadz.ldr', build_demo_brickheadz()),
+        ('demo_police_car.ldr', build_demo_police_car()),
     ]
     for name, builder in demos:
         _run_demo(name, builder)
-    print('\n=== All 7 demos generated and validated (0 errors, 0 warnings) ===')
+    print('\n=== All 8 demos generated and validated (0 errors, 0 warnings) ===')
 
 
 if __name__ == '__main__':
