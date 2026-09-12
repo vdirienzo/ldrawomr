@@ -73,8 +73,8 @@ PYTHONPATH=. python3 ml/validate_ldr.py generator/demo_castle_lion_knights.ldr
 
 ```bash
 PYTHONPATH=. python3 ml/prep_dataset.py   # tokenize MPDs into ml/dataset.jsonl
-PYTHONPATH=. python3 ml/train_v3.py       # ~86 min on CPU for 30 epochs, writes ml/model_v3.pt
-cp ml/model_v3.pt ml/model.pt             # promote v3 to default model
+PYTHONPATH=. python3 ml/train_v4.py       # ~127 min on CPU for 20 epochs (25.7M params), writes ml/model_v4.pt
+cp ml/model_v4.pt ml/model.pt             # promote v4 to default model
 PYTHONPATH=. python3 ml/generate.py       # regenerate using new checkpoint
 PYTHONPATH=. python3 ml/benchmark.py      # validate 20-sample validity rate
 ```

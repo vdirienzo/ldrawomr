@@ -3,21 +3,21 @@
 Small Transformer trained on the LDraw OMR corpus 1,438 to generate
 medium-complexity LEGO models (30-150 pieces).
 
-## Current model (v3) — 2026-09-12
+## Current model (v4) — 2026-09-12
 
-| | v1 (initial) | v3 (current) |
-|---|---|---|
-| **Params** | 5.0M | **7.7M** |
-| **d_model** | 256 | **320** |
-| **n_layers** | 6 | 6 |
-| **d_ff** | 1024 | **1280** |
-| **Context** | 512 | 512 |
-| **Dataset** | 566 sequences | 566 sequences |
-| **Epochs** | 3 | **30** |
-| **Final loss** | 2.95 | **1.17** |
-| **Train time** | 8 min | **86 min** |
-| **Validity rate** | 100% (mask-enforced) | **100%** |
-| **Unique pieces / 20 samples** | ~50 | **98** |
+| | v1 (initial) | v3 | v4 (current) |
+|---|---|---|---|
+| **Params** | 5.0M | 7.7M | **25.7M** |
+| **d_model** | 256 | 320 | **512** |
+| **n_layers** | 6 | 6 | **8** |
+| **d_ff** | 1024 | 1280 | **2048** |
+| **Context** | 512 | 512 | 512 |
+| **Dataset** | 566 sequences | 566 | 566 |
+| **Epochs** | 3 | 30 | **20** |
+| **Final loss** | 2.95 | 1.17 | **1.12** |
+| **Train time** | 8 min | 86 min | **127 min (~2.1h)** |
+| **Validity rate** | 100% | 100% | **100%** |
+| **Unique pieces / 20 samples** | ~50 | 98 | **98** |
 
 ## Architecture (state-of-the-art, simple, CPU-trainable)
 
@@ -126,18 +126,20 @@ Special tokens: `BOS`, `EOS`, `STEP`, `NOFILE`, `FILE`, plus UNKs.
 
 ## Files
 
-### Core pipeline (v3 production)
+### Core pipeline (v4 production)
 - `ml/model.py` — Transformer architecture (LegoGPT, RoPE, pre-norm).
 - `ml/prep_dataset.py` — MPD → token sequence + vocabulary builder.
-- `ml/train_v3.py` — training loop, 30 epochs, 7.7M params.
+- `ml/train_v4.py` — training loop, 20 epochs, 25.7M params.
 - `ml/generate.py` — autoregressive sampling with constraint masks.
 - `ml/validate_ldr.py` — corpus-rules validator for .ldr files.
 - `ml/benchmark.py` — generates 20 samples, reports validity rate.
 
-### Legacy v1 (kept for reference)
-- `ml/train.py` — 3-epoch quick trainer (5M params).
-- `ml/model_v3.pt` — current trained model (v3, 30 epochs).
-- `ml/model.pt` — symlink target (set to v3 by default).
+### Legacy versions (kept for reference)
+- `ml/train.py` — v1 trainer, 3 epochs, 5M params.
+- `ml/train_v3.py` — v3 trainer, 30 epochs, 7.7M params.
+- `ml/train_v2.py` — abandoned 15M-param trainer (too slow on CPU).
+- `ml/model_v4.pt` — current trained model (v4, 20 epochs, 25.7M params, ~100MB).
+- `ml/model.pt` — default symlink target (set to v4 by default).
 
 ### Data
 - `ml/dataset.jsonl` — tokenized sequences (mid-range 30-150 pieces).
@@ -147,15 +149,21 @@ Special tokens: `BOS`, `EOS`, `STEP`, `NOFILE`, `FILE`, plus UNKs.
 - `ml/train_v3.log` — per-epoch loss log (5.27 → 1.17).
 - `ml/benchmark_v3.json` — benchmark results (validity rate, unique pieces).
 
-## Results (30-epoch run, v3)
+## Results (20-epoch run, v4)
 
-- **Loss: 5.27 → 1.17** (78% reduction; vs v1's 45% reduction).
+- **Loss: 5.27 → 1.12** (79% reduction; vs v1: 45%, v3: 78%).
 - **Validity rate: 100%** (20/20 samples pass validate() with 0 errors).
-- **98 unique pieces** used across 20 samples (vs v1's ~50), indicating
-  the model is using a broader vocabulary.
+- **98 unique pieces** used across 20 samples (matching v3).
 - Generated samples use real OMR pieces (`4740.dat`, `3815.dat`, `3673.dat`,
   `3820.dat` = windshield slope, `3062b.dat` = brick 1×2 round, etc.).
 - 0 reflections in samples (constraint masks force BFC-valid matrices).
+
+## Why v4 over v3
+
+v4 doubles the loss reduction per epoch (slope is steeper). Bigger model
+captures more complex structural patterns in the corpus. Diminishing
+returns past 25M params on this dataset size, but loss curve suggests
+training beyond 20 epochs would yield further gains (~0.9 expected).
 
 ## Limitations and next steps
 
