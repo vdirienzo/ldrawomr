@@ -4,61 +4,83 @@ Project: analyze LDraw OMR (Official Model Repository) MPDs and synthesize learn
 
 ## Language
 
-**All new documentation, comments, commit messages, and user-facing strings MUST be in English.** Historical docs written in Spanish (LEARNED_CONVENTIONS_*.md, README.md, NEXT_SESSION.md, dashboard.html, findings/*.md) are kept for traceability — do not delete them, but **do not add new Spanish content**. Add English versions alongside them when needed (e.g. `README.en.md`).
+**All new documentation, comments, docstrings, commit messages, and user-facing strings MUST be in English.** This applies to:
 
-The Spanish-tinted docs reflect an early-session convention when the user was speaking Spanish. The user has since clarified that English is the canonical language for this project. Going forward: English only.
+- Markdown files (`.md`)
+- Python source code (docstrings, comments, log/error messages, `#` comments)
+- HTML/CSS/JS strings
+- JSON keys that are user-facing (data keys can stay English)
+- Commit messages
+- Output strings in print/log/UI text
 
-Spanish-only entry points and key Spanish→English mappings for reading historical docs:
-- "reflejos" / "matrices con det<0" → "reflections" / "matrices with det < 0" / "mirrored geometry"
-- "aprendidas" / "reglas aprendidas" → "learned rules"
-- "piezas" → "parts" / "pieces"
-- "encadenamiento" → "chaining" (chaining conventions)
-- "delimitadores STEP" → "STEP markers"
-- "custom parts embebidas" → "embedded custom parts"
-- "validar" → "validate"
-- "omr" → OMR (Official Model Repository)
-- "sub-modelos" / "sub-builds" → "sub-models" / "sub-builds"
+**NO Spanish, NO mixed Spanish-English in any of these contexts.**
 
-The analysis JSONs use English keys (`meta`, `total_pieces`, `neg_det_count`, `sub_build_count`, etc.) so the JSON-based tooling is language-agnostic.
+If historical content is in Spanish (legacy files like `LEARNED_CONVENTIONS_*.md`, `NEXT_SESSION.md`, `dashboard.html`, `findings_*.md`, `generator/ldraw_gen.py`), treat it as technical debt to be cleaned up. The canonical language is English.
+
+## Project at a glance
+
+- **Corpus**: 1,438 OMR sets across 8 cohorts, ~534k pieces analyzed.
+- **Canonical doc**: `LEARNED_CONVENTIONS_532.md` (23 learned rules from the 532-set baseline corpus).
+- **Generator**: `generator/ldraw_gen.py` produces `.ldr`/`.mpd` files.
+- **State persistence**: `STATE.json` lists all setlist files, parser paths, cohort counts.
 
 ## Orientation
 
-- **State is persisted in `STATE.json`** — load it first to know corpus, cohorts, and what's done.
-- **`NEXT_SESSION.md`** is the canonical "what to do next" doc when the user asks for continuation.
-- **`LEARNED_CONVENTIONS_532.md`** is the current canonical rules doc (23 rules from 532 sets).
-- **Project root**: `/home/user/Projects/ldraw`. No git, no `package.json`, no build system — pure Python scripts.
+- **`AGENTS.md`** (this file) — agent instructions + strict English-only policy.
+- **`STATE.json`** — load first to know corpus, cohorts, scripts, and what's done.
+- **`README.md`** — quick-start guide (English).
+- **`LEARNED_CONVENTIONS_532.md`** — canonical learned rules.
+- **`NEXT_SESSION.md`** — plan for the next session to continue the corpus.
+- **`analysis/`** — parsers, stats JSONs, findings MDs.
+- **`generator/`** — code generator + 5 demos.
+- **`corpus/`** — Parts Library mirror + MPDs + setlists.
+- **`output/dashboard.html`** — interactive HTML dashboard.
 
-## Resume protocol (when user says "continue with everything that's missing")
+## Resume protocol (when user says "download and analyze everything that's missing")
 
 1. Read `STATE.json` and `NEXT_SESSION.md`.
 2. Verify corpus: `python3 -c "import json; print(json.load(open('STATE.json'))['corpus']['total_sets'])"`.
-3. Pick a strategy: Plan D completo (full OMR), enfocado (gaps only), or temático (user-chosen).
-4. Dispatch **one** subagent to scrape URLs from `corpus/all_omr_themes.json` (135 themes) and verify each with `curl -sI`. Output: `corpus/setlist_<cohort>.{txt,json}`.
+3. Pick a strategy: Plan D complete (full OMR), focused (gaps only), or thematic (user-chosen).
+4. Dispatch **one** subagent to scrape URLs from `corpus/all_omr_themes.json` (if available) or OMR pages. The OMR directory is at `https://library.ldraw.org/omr/sets`. Verify each with `curl -sI`. Output: `corpus/setlist_<cohort>.{txt,json}`.
 5. Download in parallel: `cat setlist.txt | xargs -I {} -P 24 sh -c 'curl -sL --max-time 60 -o mpds_<cohort>/$(basename {}) {}'`.
-6. Update parser (or copy `analysis/batch_parse3.py` to `batch_parse4.py`) to scan the new directory.
-7. Re-run parser, dispatch 4 parallel analysis subagents (chaining / themes / cohorts / generator-update).
-8. Synthesize new conventions doc, update `STATE.json`, update `README.md`.
+6. Update parser (or copy `analysis/batch_parse4.py` to `batch_parse5.py`) to scan the new directory.
+7. Re-run parser.
+8. Dispatch 4 parallel analysis subagents:
+   - (A) **chaining** → `analysis/findings_chaining_<N>.md`.
+   - (B) **cohorts** → `analysis/findings_cohorts_<N>.md`.
+   - (C) **themes** → `analysis/findings_themes_<N>.md`.
+   - (D) **generator update** → modifies `generator/ldraw_gen.py` with new constants/templates, returns stats of new demos.
+9. Synthesize new conventions doc (`LEARNED_CONVENTIONS_<N>.md` or update existing).
+10. Update `README.md`, `STATE.json`, and commit.
+
+Each subagent writes its own MD and cites numbers from the JSON. Do **NOT** have subagents write code that touches the parser or generator beyond the (D) task.
 
 ## Scripts and entrypoints
 
-| Script | Type | Run as | Output |
-|--------|------|-------|--------|
-| `analysis/parse_omr.py` | parser level-1 | `python3 analysis/parse_omr.py` | `analysis/raw_stats.json` |
-| `analysis/deep_parse.py` | parser level-2 | `python3 analysis/deep_parse.py` | `analysis/deep_stats.json` |
-| `analysis/batch_parse.py` | parser 100 sets | `python3 analysis/batch_parse.py` | legacy |
-| `analysis/batch_parse2.py` | parser 300 sets | `python3 analysis/batch_parse2.py` | legacy |
-| `analysis/batch_parse3.py` | parser 532 sets, 3 cohorts | `python3 analysis/batch_parse3.py` | `analysis/cross_corpus2_stats.json`, `analysis/per_set_stats_532.json` |
-| `generator/ldraw_gen.py` | CLI demo generator | `python3 generator/ldraw_gen.py` | 5 `demo_*.ldr` files |
+| Script | Purpose | Run as |
+|--------|---------|--------|
+| `analysis/parse_omr.py` | parser level-1 (basic stats) | `python3 analysis/parse_omr.py` |
+| `analysis/deep_parse.py` | parser level-2 (bigrams, matrices, deltas, Y-layers) | `python3 analysis/deep_parse.py` |
+| `analysis/batch_parse.py` | parser batch (100 sets) | `python3 analysis/batch_parse.py` |
+| `analysis/batch_parse2.py` | parser batch 2.0 (300 sets, cross-cohort) | `python3 analysis/batch_parse2.py` |
+| `analysis/batch_parse3.py` | parser batch 3.0 (532 sets, 3 cohorts) | `python3 analysis/batch_parse3.py` |
+| `analysis/batch_parse4.py` | parser batch 4.0 (1,438 sets, 8 cohorts) | `python3 analysis/batch_parse4.py` |
+| `generator/ldraw_gen.py` | CLI demo generator | `cd generator && python3 ldraw_gen.py` |
 
-To add a new cohort, **copy `batch_parse3.py` → `batch_parse4.py`** and add the cohort loop. Do not edit `batch_parse3.py` in place — older scripts must remain runnable for legacy corpora.
+To add a new cohort, **copy `batch_parseN.py` → `batch_parse(N+1).py`** and add the cohort loop. Do not edit `batch_parseN.py` in place — older scripts must remain runnable for legacy corpora.
 
 ## Cohort directories and setlists
 
 | Cohort | Dir | Setlist JSON | Sets |
-|--------|-----|--------------|-----|
+|--------|-----|--------------|-----:|
 | 80s/90s | `corpus/mpds/` | `corpus/setlist_80s90s.json` | 100 |
 | Kids | `corpus/mpds_kids/` | `corpus/setlist_kids.json` | 200 |
-| Classic | `corpus/mpds_classic/` | `corpus/setlist_classic.json` | 232 |
+| Classic (Plan C) | `corpus/mpds_classic/` | `corpus/setlist_classic.json` | 232 |
+| Classic gaps | `corpus/mpds_classic_gaps/` | `corpus/setlist_classic_gaps.json` | 158 |
+| Technic | `corpus/mpds_technic/` | `corpus/setlist_technic.json` | 175 |
+| Modern | `corpus/mpds_modern/` | `corpus/setlist_modern.json` | 287 |
+| Specialty | `corpus/mpds_specialty/` | `corpus/setlist_specialty.json` | 165 |
+| Licensed | `corpus/mpds_licensed/` | `corpus/setlist_licensed.json` | 121 |
 
 Add new cohorts as `corpus/mpds_<name>/` + `corpus/setlist_<name>.json`.
 
@@ -81,7 +103,7 @@ Add new cohorts as `corpus/mpds_<name>/` + `corpus/setlist_<name>.json`.
 
 ## Generator conventions (`generator/ldraw_gen.py`)
 
-- The file is **1161 lines, single-file, stdlib-only**. Don't split it into a package.
+- The file is **~1,200 lines, single-file, stdlib-only**. Don't split it into a package.
 - **Constants are global module-level**: `BLACK=0`, `IDENTITY=(1,0,0,...)`, `BRICK_2X2="3004.dat"`. Adding more? Keep alphabetical within section.
 - **Demos are checked-in artifacts**: when modifying `ldraw_gen.py`, re-run to refresh `generator/demo_*.ldr`. Don't delete demos.
 - **`validate()` is the contract**: every demo must return `0 errors, 0 warnings`. Warnings are emitted for non-canonical Y (not multiple of 8) or X/Z (not multiple of 20), and for `det<0` matrices.
@@ -91,23 +113,13 @@ Add new cohorts as `corpus/mpds_<name>/` + `corpus/setlist_<name>.json`.
 ## Theme taxonomy (`corpus/all_omr_themes.json`)
 
 135 OMR themes are pre-categorized:
-- `official_classic` — pre-2000 System (49 themes, 545 sets). Target corpus for 80s/90s + classic cohorts.
-- `official_modern` — post-2000 non-franchise (37 themes, 408 sets). Target for kids cohort.
+- `official_classic` — pre-2000 System (49 themes, ~545 sets). Target for 80s/90s + classic cohorts.
+- `official_modern` — post-2000 non-franchise (37 themes, ~408 sets). Target for kids cohort.
 - `licensed` — franchise IPs (Star Wars, Harry Potter, etc.). User often excludes these.
 - `technic` — Technic + Mindstorms. User excludes by default but `756.dat` reflections show up in no-Technic sets too.
 - `specialty` — Brickheadz, Architecture, Ideas, Seasonal, etc.
 
 User has signaled preference for `official_classic` (City/Town/Castle/Space focus), excluding Technic and licensed franchises.
-
-## Subagent dispatch patterns
-
-When the user asks for corpus analysis, dispatch subagents in parallel:
-- (A) **chaining**: reads `analysis/cross_corpus2_stats.json` (or successor), produces `analysis/findings_chaining_*.md`.
-- (B) **cohorts**: reads same, produces `analysis/findings_cohorts_*.md`.
-- (C) **themes**: reads `analysis/per_set_stats_*.json`, produces `analysis/findings_themes_*.md`.
-- (D) **generator update**: reads `analysis/cross_corpus2_stats.json` + `generator/ldraw_gen.py`, updates the generator with new constants/templates, returns stats of new demos.
-
-Each subagent writes its own MD and is told to cite numbers from the JSON. Do NOT have subagents write code that touches the parser or generator beyond the (D) task.
 
 ## Validation invariant
 
@@ -123,27 +135,20 @@ After any parser change, re-run the corresponding `batch_parse*.py` and confirm 
 
 ## When the user says "download and analyze everything that's missing"
 
-This is the canonical resume trigger. The user will phrase this in Spanish (typical phrases below). **Do not stop until the full pipeline is complete.**
+This is the canonical resume trigger. Trigger phrases (any of these means "do everything missing"):
 
-### Trigger phrases (Spanish, any of these means "do everything missing")
-
-- "descargá todos los modelos que faltan y seguí hasta el final para el análisis"
-- "descargá todo lo que falta y analizalo"
-- "completá el corpus"
-- "seguí con todo lo que falta"
 - "download and analyze everything that's missing"
-- "plan D completo"
+- "complete the corpus"
+- "follow up with everything that's missing"
+- "Plan D complete"
+- (Spanish equivalents, but aim to write in English going forward)
 
-When any of these (or similar) is detected, follow `NEXT_SESSION.md` §3 (Plan D) end-to-end. The user has done this 4 times already (2 sets → 100 → 200 → 232 → ???) with the same intent. **The full pipeline must run:**
+When any of these is detected, follow the **Resume protocol** above end-to-end. The user has done this multiple times (2 sets → 100 → 200 → 232 → 906 more sets → 1,438 total). **The full pipeline must run**: do not pause mid-pipeline to ask "should I continue?" — the user has already said yes. If a stage fails, retry it before stopping.
 
-1. Find URLs for missing sets (subagent).
-2. Download in parallel.
-3. Update parser (`batch_parse4.py`).
-4. Run parser.
-5. Dispatch 4 parallel analysis subagents (chaining, cohorts, themes, generator).
-6. Synthesize new canonical doc (`LEARNED_CONVENTIONS_FINAL.md` or update `_532.md`).
-7. Update `README.md`.
-8. Update `STATE.json` with new totals.
-9. Run `python3 generator/ldraw_gen.py` and confirm all demos validate.
+## Code style
 
-**If a stage fails, retry it before stopping.** Do not pause mid-pipeline to ask "should I continue?" — the user has already said yes.
+- All Python code: docstrings in English, comments in English (`#`).
+- All identifiers: English only. No Spanish variable names.
+- All error messages and log lines: English.
+- String literals that might be printed: English.
+- Type hints preferred (the project uses `from __future__ import annotations`).

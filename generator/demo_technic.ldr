@@ -1,0 +1,34 @@
+0 Demo Technic Frame
+0 Name: demo_technic_frame.ldr
+0 Author: LdrawGen [opencode]
+0 !LDRAW_ORG Model
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+0 !THEME Technic
+0 !KEYWORDS technic,pins,axles,beam,omr,demo
+0 !HISTORY 2026-09-12 [LdrawGen] Demo technic (build_technic)
+
+0 // === Demo 6: Technic frame (corpus 1438, cohort_technic, pins/beam/axles) ===
+0 STEP
+1 8 -20 0 -20 1 0 0 0 1 0 0 0 1 3022.dat
+1 8 -20 0 20 1 0 0 0 1 0 0 0 1 3022.dat
+1 8 20 0 -20 1 0 0 0 1 0 0 0 1 3022.dat
+1 8 20 0 20 1 0 0 0 1 0 0 0 1 3022.dat
+0 STEP
+1 1 0 -8 0 1 0 0 0 1 0 0 0 1 2780.dat
+0 STEP
+1 4 0 -16 0 1 0 0 0 1 0 0 0 1 2780.dat
+0 STEP
+1 14 0 -24 0 1 0 0 0 1 0 0 0 1 2780.dat
+0 STEP
+1 25 -20 -8 -20 1 0 0 0 1 0 0 0 1 2780.dat
+1 25 20 -8 -20 1 0 0 0 1 0 0 0 1 2780.dat
+1 25 -20 -8 20 1 0 0 0 1 0 0 0 1 2780.dat
+1 25 20 -8 20 1 0 0 0 1 0 0 0 1 2780.dat
+0 STEP
+1 2 -20 -32 0 1 0 0 0 1 0 0 0 1 6558.dat
+0 STEP
+1 7 0 -40 0 1 0 0 0 1 0 0 0 1 3701.dat
+0 STEP
+1 0 0 -48 -20 1 0 0 0 1 0 0 0 1 4519.dat
+1 0 0 -48 20 1 0 0 0 1 0 0 0 1 4519.dat
+0 // --- end technic ---

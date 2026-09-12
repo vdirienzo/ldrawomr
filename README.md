@@ -4,27 +4,30 @@ Project to understand the LDraw file format (open standard for LEGO CAD) and
 learn LEGO modeling conventions by analyzing official models in the OMR
 (Official Model Repository).
 
-**Corpus**: **532 OMR sets** (108,760 pieces) across three cohorts:
-- 100 sets from 80s/90s (non-Technic).
-- 200 "kids" sets (small/affordable, post-1985).
-- 232 "classic" sets (Plan C: uniform distribution across 49 pre-2000 themes).
+**Corpus**: **1,438 OMR sets** (534,152 pieces) across eight cohorts:
+- 100 sets from 80s/90s (non-Technic) — legacy.
+- 200 "kids" sets (small/affordable, post-1985) — legacy.
+- 232 "classic" sets (Plan C: uniform distribution across 49 pre-2000 themes) — legacy.
+- **287 sets Modern** (post-2000 official: City, Creator, Friends, Racers, Fabuland).
+- **175 sets Technic** (Technic, Expert Builder, Universal Building Set, Mindstorms, Star Wars Technic).
+- **165 sets Specialty** (Brickheadz, Architecture, Modular Buildings, Ideas, Icons, Promotional).
+- **121 sets Licensed** (Star Wars, Harry Potter, Elves, Mixels, Pharaoh's Quest, Speed Champions).
+- **158 sets Classic Gaps** (filling pre-2000 themes underrepresented in legacy cohorts).
+
+This represents **97.8% of the OMR's 1,470 sets** (32 sets returned 404 from OMR and were skipped).
 
 ---
 
 ## ⚡ RESUME FROM HERE (next session)
 
 If you want to continue the corpus, read first:
-- **[NEXT_SESSION.md](./NEXT_SESSION.md)** — detailed continuation plan.
 - **[STATE.json](./STATE.json)** — persistent project state (what's there, what's missing).
 
-**TL;DR**: ~938 OMR sets still need downloading (out of 1,470 total).
-Pipeline of 1-2 hours: generate URLs → download → re-parse → re-analyze →
-synthesize new `LEARNED_CONVENTIONS_FINAL.md`.
+The corpus is now nearly complete (1,438/1,470 sets). Remaining gaps are 32 archived/renamed MPDs (404 responses). To go further:
 
-**3 options for "what's missing"**:
-- (A) **Plan D full**: complete the entire OMR (~938 new sets, 4 additional cohorts).
-- (B) **Plan D focused**: only themes underrepresented in current cohorts.
-- (C) **Plan D thematic**: user picks 3-5 specific themes.
+- (A) **Try harder on the 32 missing sets** — search Livewire API for archived MPD filenames.
+- (B) **Re-scrape OMR** to catch any newly added sets (sets get added monthly).
+- (C) **Pivot to other tasks**: TEXMAP analysis, MOC comparison, sub-build hierarchy, language model training.
 
 ---
 
@@ -36,11 +39,9 @@ cd generator/
 python3 ldraw_gen.py
 
 # Re-analyze the corpus if more MPDs are added
-cd analysis/
-python3 deep_parse.py    # 2 sets (10252, 10218) — legacy
-python3 batch_parse.py   # 100 sets (mpds/*.mpd) — legacy
-python3 batch_parse2.py  # 300 sets — legacy
-python3 batch_parse3.py  # 532 sets (mpds/*.mpd + mpds_kids/*.mpd + mpds_classic/*.mpd)
+cd /home/user/Projects/ldraw
+python3 analysis/batch_parse4.py    # 1,438 sets (8 cohorts)
+python3 analysis/batch_parse3.py    # 532 sets (legacy, 3 cohorts)
 ```
 
 ---
@@ -51,79 +52,59 @@ python3 batch_parse3.py  # 532 sets (mpds/*.mpd + mpds_kids/*.mpd + mpds_classic
 .
 ├── README.md                       ← this file (English)
 ├── README.es.md                    ← Spanish version (legacy)
-├── NEXT_SESSION.md                 ← continuation plan for next session
 ├── AGENTS.md                       ← agent instructions (English, language policy)
 ├── STATE.json                      ← persistent project state
 ├── LDRAW_GUIDE.md                  ← LDraw file format specification
 │                                     (file format, primitives, BFC,
 │                                     colors, headers, MPD, OMR)
 │
-├── LEARNED_CONVENTIONS.md          ← LEGACY: analysis of 2 sets
-│                                     (10252 Beetle + 10218 Pet Shop).
-│                                     Kept for traceability.
-├── LEARNED_CONVENTIONS_100.md      ← analysis of 100 80s/90s sets.
-├── LEARNED_CONVENTIONS_300.md      ← analysis of 300 sets (80s/90s + kids).
-├── LEARNED_CONVENTIONS_532.md      ← CANONICAL: 23 rules (18 + 5 new)
-│                                     learned from 532 OMR sets.
+├── LEARNED_CONVENTIONS.md          ← LEGACY: analysis of 2 sets (kept for traceability)
+├── LEARNED_CONVENTIONS_100.md      ← legacy: 100 80s/90s sets
+├── LEARNED_CONVENTIONS_300.md      ← legacy: 300 sets (80s/90s + kids)
+├── LEARNED_CONVENTIONS_532.md      ← legacy: 23 rules from 532 sets
+├── LEARNED_CONVENTIONS_1438.md     ← CANONICAL: 29 rules (23 carried + 9 new)
+│                                     learned from 1,438 OMR sets (Plan D complete).
 │
 ├── output/
-│   └── dashboard.html              ← interactive HTML dashboard
-│                                     (open in any browser, offline)
+│   └── dashboard.html              ← interactive HTML dashboard (open in browser)
 │
 ├── corpus/
-│   ├── ldraw/                      ← full official Parts Library
-│   │                                 (pybricks/ldraw mirror, ~28k files)
-│   ├── 10252-1.mpd                 ← 2 sets analyzed initially
-│   ├── 10218-1.mpd                   (Volkswagen Beetle + Pet Shop)
-│   ├── mpds/                       ← 100 MPDs from 80s/90s (6.7 MB)
-│   ├── mpds_kids/                  ← 200 MPDs kids (25 MB)
-│   ├── mpds_classic/                ← 232 MPDs Plan C classic (8.5 MB)
-│   ├── setlist_80s90s.{txt,json}   ← list of 100 sets from 80s/90s
-│   ├── setlist_kids.{txt,json}      ← list of 200 kids sets
-│   ├── setlist_classic.{txt,json}   ← list of 232 Plan C classic sets
-│   ├── plan_c_distribution.json     ← Plan C plan + documented shortfalls
-│   └── all_omr_themes.json          ← full catalog of 135 OMR themes
+│   ├── ldraw/                      ← full official Parts Library mirror
+│   ├── 10252-1.mpd                 ← 2 sets analyzed initially (Beetle + Pet Shop)
+│   ├── 10218-1.mpd
+│   ├── mpds/                       ← 100 MPDs from 80s/90s (legacy)
+│   ├── mpds_kids/                  ← 200 MPDs kids (legacy)
+│   ├── mpds_classic/               ← 232 MPDs Plan C classic (legacy)
+│   ├── mpds_modern/                ← 287 MPDs modern official (Plan D)
+│   ├── mpds_technic/               ← 175 MPDs Technic (Plan D)
+│   ├── mpds_specialty/             ← 165 MPDs specialty/collector (Plan D)
+│   ├── mpds_licensed/              ← 121 MPDs licensed franchises (Plan D)
+│   ├── mpds_classic_gaps/          ← 158 MPDs classic gaps (Plan D)
+│   ├── setlist_*.{txt,json}        ← one setlist per cohort
+│   ├── plan_c_distribution.json    ← Plan C plan + documented shortfalls
+│   └── all_omr_themes.json         ← full catalog of 135 OMR themes
 │
 ├── analysis/
-│   ├── parse_omr.py                ← OMR parser level-1 (basic stats)
-│   ├── deep_parse.py               ← parser level-2 (2 sets, bigrams,
-│   │                                 matrices, deltas, Y-layers)
-│   ├── batch_parse.py              ← batch parser (100 sets)
-│   ├── batch_parse2.py             ← batch parser 2.0 (300 sets,
-│   │                                 cross-cohort)
-│   ├── batch_parse3.py             ← batch parser 3.0 (532 sets,
-│   │                                 3 cohorts, per_set_stats_532)
-│   ├── raw_stats.json              ← stats level-1 (2 sets)
-│   ├── deep_stats.json             ← stats level-2 (2 sets)
-│   ├── cross_corpus_stats.json     ← global stats (100 sets) [legacy]
-│   ├── per_set_stats.json          ← per-set stats (100 sets) [legacy]
-│   ├── cross_corpus2_stats.json    ← global stats (532 sets) — 4 cohorts
-│   ├── per_set_stats_300.json      ← per-set stats (532 sets)
-│   │
-│   ├── findings_chaining.md        ← chaining 2 sets [legacy]
-│   ├── findings_steps.md           ← STEP cadence (2 sets)
-│   ├── findings_custom_parts.md    ← embedded custom parts (2 sets)
-│   ├── findings_chaining_100.md    ← cross-corpus chaining (100 sets)
-│   ├── findings_themes.md          ← theme conventions (100 sets)
-│   ├── findings_evolution.md       ← 80s vs 90s (100 sets)
-│   ├── findings_chaining_300.md    ← cross-corpus chaining (300 sets)
-│   ├── findings_cohorts.md         ← 80s/90s vs kids (300 sets)
-│   ├── findings_themes_300.md      ← theme conventions (300 sets)
-│   ├── findings_cohorts_3.md       ← 3 cohorts 80s/90s vs kids vs classic
-│   ├── findings_themes_532.md      ← theme conventions (532 sets)
-│   │
-│   └── findings_*.md               ← all English-doc-friendly analysis
+│   ├── batch_parse.py              ← legacy parser (100 sets)
+│   ├── batch_parse2.py             ← legacy parser (300 sets)
+│   ├── batch_parse3.py             ← legacy parser (532 sets)
+│   ├── batch_parse4.py             ← CURRENT parser (1,438 sets, 8 cohorts)
+│   ├── cross_corpus2_stats.json    ← legacy global stats (532 sets)
+│   ├── cross_corpus3_stats.json    ← CURRENT global stats (1,438 sets, 8 cohorts)
+│   ├── per_set_stats_1438.json     ← CURRENT per-set stats (1,438 sets)
+│   ├── findings_chaining_1438.md   ← chaining patterns corpus 1,438
+│   ├── findings_cohorts_themes_1438.md ← cohort/theme analysis corpus 1,438
+│   └── findings_*.md               ← all prior findings (kept for traceability)
 │
 └── generator/
-    ├── ldraw_gen.py                ← Python model generator
-    │                                 (class LdrBuilder, validations,
-    │                                  templates per theme, demo)
-    ├── demo_town.ldr               ← Town 80s style demo (29 pieces)
-    ├── demo_kid.ldr                ← City Modern 2010s style demo (18 pieces)
-    ├── demo_classic.ldr            ← sanity check brick 2x4 (1 piece)
-    ├── demo_castle_lion_knights.ldr ← Castle demo with reflections (28 pieces)
-    ├── demo_space_classic.ldr      ← Space Classic demo (18 pieces)
-    └── demo_model.ldr              ← main demo (legacy, 52 pieces)
+    ├── ldraw_gen.py                ← Python model generator (1,161 lines, stdlib-only)
+    ├── demo_town.ldr
+    ├── demo_kid.ldr
+    ├── demo_classic.ldr
+    ├── demo_castle_lion_knights.ldr
+    ├── demo_space_classic.ldr
+    ├── demo_technic.ldr            ← Plan D new (technic beam + pin idiom)
+    └── demo_brickheadz.ldr         ← Plan D new (1x1 round tile display idiom)
 ```
 
 ---
@@ -133,96 +114,105 @@ python3 batch_parse3.py  # 532 sets (mpds/*.mpd + mpds_kids/*.mpd + mpds_classic
 | Document | Purpose |
 |----------|---------|
 | **[LDRAW_GUIDE.md](./LDRAW_GUIDE.md)** | Complete LDraw format spec. What you need to **read/write** `.dat`/`.ldr`/`.mpd` files. |
-| **[LEARNED_CONVENTIONS_532.md](./LEARNED_CONVENTIONS_532.md)** | Conventions learned from **532 sets** (108,760 pieces). What you need to **build models the OMR way**. |
+| **[LEARNED_CONVENTIONS_1438.md](./LEARNED_CONVENTIONS_1438.md)** | **Canonical** conventions from 1,438 sets (534k pieces). 29 rules. |
+| **[LEARNED_CONVENTIONS_532.md](./LEARNED_CONVENTIONS_532.md)** | Legacy conventions from 532 sets. 23 rules. |
 | **[LEARNED_CONVENTIONS_300.md](./LEARNED_CONVENTIONS_300.md)** | Previous analysis (300 sets). Kept for traceability. |
-| **[LEARNED_CONVENTIONS_100.md](./LEARNED_CONVENTIONS_100.md)** | Previous analysis (100 sets 80s/90s). Kept for traceability. |
-| **[LEARNED_CONVENTIONS.md](./LEARNED_CONVENTIONS.md)** | (Legacy) analysis of 2 sets. Kept for traceability. |
-| **[NEXT_SESSION.md](./NEXT_SESSION.md)** | Continuation plan for next session. |
-| **[analysis/findings_cohorts_3.md](./analysis/findings_cohorts_3.md)** | 3-cohort structural differences. |
-| **[analysis/findings_themes_532.md](./analysis/findings_themes_532.md)** | Theme-specific conventions. |
-| **[analysis/findings_chaining_300.md](./analysis/findings_chaining_300.md)** | Quantitative chaining detail. |
-| **[output/dashboard.html](./output/dashboard.html)** | Interactive HTML dashboard with all stats (open in browser). |
-| **[generator/ldraw_gen.py](./generator/ldraw_gen.py)** | Python generator that applies the learned rules. |
+| **[analysis/findings_chaining_1438.md](./analysis/findings_chaining_1438.md)** | Chaining patterns, bigrams, deltas (1,438 sets). |
+| **[analysis/findings_cohorts_themes_1438.md](./analysis/findings_cohorts_themes_1438.md)** | Per-cohort + per-theme analysis (1,438 sets). |
+| **[STATE.json](./STATE.json)** | Persistent project state. |
+| **[output/dashboard.html](./output/dashboard.html)** | Interactive HTML dashboard (open in browser). |
+| **[generator/ldraw_gen.py](./generator/ldraw_gen.py)** | Python generator that applies the 29 learned rules. |
 
 ---
 
-## The 23 canonical rules (corpus 532)
+## The 29 canonical rules (corpus 1,438)
 
-The 12 rules from the corpus 100 were re-evaluated with 532 sets (3 cohorts). Summary:
+The 23 rules from corpus 532 were re-evaluated with 1,438 sets across 8 cohorts. Summary:
 
-- **7 rules confirmed** (R1, R2, R5, R7, R12, R16, R17).
-- **8 rules weakened or qualified** (R3 reflections, R4 custom parts, R6 slope signature, R8 Technic, R9 size, R10 BFC, R11 sub-builds, R13 vocabulary).
-- **2 rules refuted** (R3 — Space-themed sets spike reflections to 5-21%, R10 — BFC is NOT monotonic with time).
-- **5 new rules** (R19-R23) — focused on Space-themed patterns.
+- **20 rules confirmed or extended** (R1-R13, R16, R17, R19-R23).
+- **3 rules weakened or refuted** by Technic:
+  - R1 (Y = multiples of 8) **partially refuted** by Technic half-brick values (±10 LDU).
+  - R2 (X/Z deltas = multiples of 20) extends: 20-unit X grid is 3× more common than (60,0,0).
+  - R3 (reflections <0.3%) refuted by Technic > Competition at 33%.
+- **9 new rules** (R24-R32) from the larger corpus:
+  - **R24** Technic is BFC CERTIFY champion (78.9% vs corpus 35.5%).
+  - **R25** Technic sub-build density (29.96/set = 2.55× System).
+  - **R26** Pin-into-beam is the universal Technic chaining bigram.
+  - **R27** Brickheadz `22885.dat` + `3023.dat` signature (display idiom).
+  - **R28** Modular Buildings roof slope trio.
+  - **R29** Reflections concentrate in Space + Technic Competition; Star Wars UCS = 0%.
+  - **R30** 20-unit X grid dominates (17,714 = 3× the (60,0,0) count).
+  - **R31** Sub-builds scale with complexity, not era.
+  - **R32** Half-brick Y values are Technic-specific.
 
-The **3 most important rules** that changed with corpus 532:
+The **5 most important changes** from corpus 532 to 1,438:
 
-| # | Canonical rule | Corpus 532 evidence |
-|---|----------------|---------------------|
-| R1 | Y-layers are multiples of 8 | ✅ 100% top-15 canonical |
-| R2 | X/Z deltas are multiples of 20 | ✅ 100% top-15 canonical |
-| R3 | Reflections < 0.3% | ❌ 1.345% in corpus 532 — **Space-themed spike to 5-21%** |
-| **R19** 🆕 | Space-themed sets have 5-21% reflections | Classic Space 21.14%, Unitron 13.95% |
-| **R20** 🆕 | `756.dat` (Technic 16×32 baseplate) is Space signature | 1,627 uses, enters top-8 global |
-| **R23** 🆕 | Y = +8 LDU = antennas/masts | 1,389 pieces (signed by Space-themed) |
+| # | Canonical rule | Corpus 1,438 evidence |
+|---|----------------|----------------------|
+| R1 | Y-layers are multiples of 8 | ⚠️ Holds for 7/8 cohorts. **Fails for Technic** (±10 LDU half-bricks). |
+| R2 | X/Z deltas are multiples of 20 | ✅ Confirmed + extended: 20-unit X grid is the dominant stride. |
+| R3 | Reflections < 0.3% | ❌ 0.687% corpus 1,438. **Technic Competition 33%** rivals Space. |
+| **R24** 🆕 | Technic drives BFC CERTIFY | 138/175 = 78.9% Technic, lifts corpus from 24.8% → 35.5%. |
+| **R26** 🆕 | Pin-into-beam is Technic's signature | `2780.dat ↔ 6558.dat` = 1,277+ pairs in technic cohort. |
+| **R29** 🆕 | Reflections concentrate in Space + Tech Competition | Classic Space 18.08%, Technic Competition 33%, Star Wars UCS 0%. |
 
-See **[LEARNED_CONVENTIONS_532.md §0](./LEARNED_CONVENTIONS_532.md)** for the detailed 23 rules.
+See **[LEARNED_CONVENTIONS_1438.md §0](./LEARNED_CONVENTIONS_1438.md)** for the detailed 29 rules.
 
 ---
 
 ## Generator
 
-`generator/ldraw_gen.py` (1,161 lines, stdlib-only) applies the 23 learned rules. It has 5 validated demos:
+`generator/ldraw_gen.py` (1,161 lines, stdlib-only) applies the 29 learned rules. It has **7 validated demos**:
 
-| Demo | Theme | Pieces | STEPs | Files | Reflections | Validation |
-|------|------|-------:|------:|------:|-----------:|------------|
-| `demo_town.ldr` | Town 80s | 29 | 12 | 9 | 0 | 0e/0w |
-| `demo_kid.ldr` | City Modern 2010s | 18 | 7 | 6 | 0 | 0e/0w |
-| `demo_classic.ldr` | Sanity check brick 2×4 | 1 | 1 | 1 | 0 | 0e/0w |
-| `demo_castle_lion_knights.ldr` | Castle with reflections | 28 | 9 | 7 | 4 | 0e/0w |
-| `demo_space_classic.ldr` | Space Classic | 18 | 8 | 6 | 0 | 0e/0w |
+| Demo | Theme | Validation |
+|------|-------|------------|
+| `demo_town.ldr` | Town 80s | 0e/0w |
+| `demo_kid.ldr` | City Modern 2010s | 0e/0w |
+| `demo_classic.ldr` | Sanity check brick 2×4 | 0e/0w |
+| `demo_castle_lion_knights.ldr` | Castle with reflections | 0e/0w |
+| `demo_space_classic.ldr` | Space Classic | 0e/0w |
+| `demo_technic.ldr` | Technic (beam + pin idiom) | 0e/0w |
+| `demo_brickheadz.ldr` | Brickheadz (1×1 round display) | 0e/0w |
 
 Each demo has distinct `!THEME` and `!KEYWORDS` to identify the cohort.
-Metrics are compared against the corpus 532 average (204 pieces/set, 1.34% reflections).
+Metrics are compared against the corpus 1,438 average (371.6 pieces/set, 0.687% reflections).
 
 ---
 
-## Corpus statistics (532 sets)
+## Corpus statistics (1,438 sets)
 
-| Metric | 80s/90s | Kids | Classic | **All 532** |
-|--------|--------:|-----:|--------:|-----------:|
-| Sets | 100 | 200 | 232 | **532** |
-| Total pieces | 18,670 | 42,947 | 47,143 | **108,760** |
-| Pieces/set (mean) | 186.7 | 214.7 | 203.2 | **204.4** |
-| Sub-builds/set | 8.39 | 7.68 | **10.13** | 8.88 |
-| Custom parts | 112 | 818 | 107 | **1,037** |
-| Custom ratio | 0.6% | 1.9% | **0.2%** | 0.95% |
-| BFC CERTIFY | 21% | 36.5% | **16.4%** | 24.8% |
-| **Reflections (det<0)** | 0.27% | 0.25% | **2.77%** | **1.35%** |
+| Cohort | Sets | Pieces | Mean p/set | BFC CERTIFY | Reflections | Custom parts |
+|--------|-----:|-------:|-----------:|------------:|------------:|-------------:|
+| 80s/90s | 100 | 18,670 | 186.7 | 21.0% | 0.27% | 112 |
+| Kids | 200 | 42,947 | 214.7 | 36.5% | 0.25% | 818 |
+| Classic | 232 | 47,143 | 203.2 | 16.4% | 2.77% | 107 |
+| **Modern** | 287 | 114,904 | 400.4 | 27.5% | **0.04%** | 769 |
+| **Technic** | 175 | 169,839 | **970.5** | **78.9%** | 0.68% | 1,691 |
+| **Specialty** | 165 | 63,592 | 385.4 | 36.4% | 0.18% | 351 |
+| **Licensed** | 121 | 45,227 | 373.8 | 49.6% | 0.55% | 531 |
+| **Classic_gaps** | 158 | 31,830 | 201.5 | 25.9% | 2.01% | 91 |
+| **All 1,438** | **1,438** | **534,152** | **371.4** | **35.5%** | **0.687%** | **4,470** |
 
-**Themes** (top-10 in 532): Town > Classic Town (109 sets combined) · Train > 9V (14) · Castle Lion Knights (10) · Friends (17) · Pirates (7) · Model Team (5) · Creator 3-in-1 (14) · Train 12V (8) · M:Tron (8) · Castle (1).
+**Themes** (top-10 in 1,438): Town > Classic Town (217) · Technic (158) · Racers (76) · Brickheadz (76) · Star Wars (64) · Creator 3-in-1 (60) · Fabuland (42) · Architecture (36) · Space > Classic Space (36) · Train > 9V (34).
 
-**Decades** (532 sets): 1980s (140) · 1990s (165) · 2000s (84) · 2010s (126) · 2020s (17).
+**Decades** (1,438 sets): 1970s (12) · 1980s (155) · 1990s (188) · 2000s (300) · 2010s (560) · 2020s (223).
 
 ---
 
 ## Limitations
 
-1. **532 sets** out of 1,470 in OMR — diverse sample but not exhaustive (36.2% of OMR).
-2. **OMR incomplete**: missing many sets (Ninjago, Star Wars post-2010, etc.); this skews analyzed themes.
-3. **Plan C shortfall**: 24 themes kept documented shortfall in `corpus/plan_c_distribution.json`.
-4. **Pirates outlier**: 6286 Skull's Eye Schooner (2,834 pieces) + 6285 Black Seas Barracuda (2,975 pieces) = 91.9% of Pirates theme.
-5. **BFC CERTIFY** still low (24.8%) — OMR editorial bias.
-6. **No TEXMAP/texture analysis** — many modern sets use PNG textures.
-7. **No nested sub-build analysis** (hierarchy within MPD).
-8. **No comparison with MOCs** (non-OMR community may have different conventions).
+1. **1,438/1,470 OMR sets** — 97.8% complete. 32 sets returned 404 (archived/renamed).
+2. **No TEXMAP/texture analysis** — many modern sets use PNG textures.
+3. **No nested sub-build analysis** (hierarchy within MPD).
+4. **No comparison with MOCs** (non-OMR community may have different conventions).
+5. **Livewire search has limitations**: some sets don't appear in paginated `/omr/sets?page=N`.
 
 ---
 
 ## Next steps suggested
 
-- Include Technic sets from 80s/90s to quantify Technic influence (would be a 4th cohort).
-- Compare OMR vs MOCs to validate universality.
+- Recover the 32 missing 404'd sets via Livewire API deep search.
 - Analyze textures (TEXMAP) in modern sets.
 - Structural clustering to detect recurring sub-assemblies.
-- Train a language model on the 108,760 instances.
+- Train a language model on the 534k instances.
+- Re-scrape OMR monthly to catch newly added sets.

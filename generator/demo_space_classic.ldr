@@ -7,7 +7,7 @@
 0 !KEYWORDS 1980s,space,classic-space,omr,demo
 0 !HISTORY 2026-09-12 [LdrawGen] Demo space classic (build_space_base)
 
-0 // === Demo 5: Classic Space base (corpus 532, módulos rojos/amarillos) ===
+0 // === Demo 5: Classic Space base (corpus 532, red/yellow modules) ===
 0 STEP
 1 71 -20 0 -20 1 0 0 0 1 0 0 0 1 3022.dat
 1 71 -20 0 20 1 0 0 0 1 0 0 0 1 3022.dat

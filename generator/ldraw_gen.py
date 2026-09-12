@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-ldraw_gen.py — Generador programático de modelos LDraw.
+ldraw_gen.py — Programmatic generator de modelos LDraw.
 
-Produce archivos .ldr y .mpd respetando las convenciones observadas en
-MPDs oficiales del OMR (Oficial Model Repository). API principal:
+Produces .ldr and .mpd files following the conventions observed in
+official MPDs from the OMR (Official Model Repository). Main API:
 
     >>> b = LdrBuilder(title="My Build", author="Me")
     >>> b.step()
@@ -12,12 +12,12 @@ MPDs oficiales del OMR (Oficial Model Repository). API principal:
     >>> b.place_with_rotation('3003.dat', GREEN, 60, -40, 0, axis='y', angle=90)
     >>> b.save_ldr("build.ldr")
 
-Constantes pre-definidas:
-    Colores: BLACK=0, BLUE=1, RED=4, GREEN=2, WHITE=15, ...
+Pre-defined constants:
+    Colors: BLACK=0, BLUE=1, RED=4, GREEN=2, WHITE=15, ...
     Matrices: IDENTITY, ROT_X_90, ROT_Y_90, ROT_Y_180, ROT_Z_90, ...
-    Piezas: BRICK_2X2, PLATE_2X2, STUD, ...
+    Parts: BRICK_2X2, PLATE_2X2, STUD, ...
 
-Ejecutar como script para generar un modelo de demostración:
+Run as a script to generate a demo model:
     $ python3 ldraw_gen.py
 """
 from __future__ import annotations
@@ -58,16 +58,16 @@ DARK_BLUISH_GREY = 72
 YELLOWISH_GREEN = 326
 
 # =============================================================================
-# Matrices canónicas de rotación (determinante = +1, sin reflexiones)
+# Canonical rotation matrices (determinant = +1, no reflections)
 # =============================================================================
-# Las filas se leen como (a b c d e f g h i), que corresponden a las
-# columnas de la matriz 3x3 de LDraw:
+# Rows read as (a b c d e f g h i), corresponding to the
+# columns of the LDraw 3x3 matrix:
 #
 #     | a  d  g |
 # M = | b  e  h |
 #     | c  f  i |
 #
-# Transformación: u' = a*u + b*v + c*w + x, etc.
+# Transformation: u' = a*u + b*v + c*w + x, etc.
 IDENTITY = (1, 0, 0, 0, 1, 0, 0, 0, 1)
 ROT_X_90 = (1, 0, 0, 0, 0, 1, 0, -1, 0)
 ROT_X_180 = (1, 0, 0, 0, -1, 0, 0, 0, -1)
@@ -80,11 +80,11 @@ ROT_Z_180 = (-1, 0, 0, 0, -1, 0, 0, 0, 1)
 ROT_Z_270 = (0, 1, 0, -1, 0, 0, 0, 0, 1)
 
 # =============================================================================
-# Matrices canónicas de reflexión (determinante = -1)
+# Canonical reflection matrices (determinant = -1)
 # =============================================================================
-# Una reflexión a lo largo de un eje canónico (X, Y o Z) invierte una
-# coordenada y deja las otras dos invariantes. Útiles para construir
-# estructuras asimétricas (estandartes, garras, etc.) en corpus clásicos
+# A reflection along a canonical axis (X, Y or Z) inverts one
+# coordinate and leaves the other two invariant. Useful to build
+# asymmetric structures (banners, claws, etc.) in classic corpus
 # donde se observa neg_det_ratio ≈ 1.3% (corpus 532 OMR).
 # En validate() estas matrices producen un warning a menos que el builder
 # tenga ``allow_mirrors=True``.
@@ -141,11 +141,11 @@ PLATE_1X4 = "3710.dat"           # 1055
 BRICK_1X4 = "3010.dat"           # 743
 SLOPE_1X2 = "3820.dat"           # 737
 PLATE_2X4 = "3020.dat"           # 675
-CYLINDER_4_4 = "4-4cyli.dat"     # 5398 (más confiable con 300 sets)
+CYLINDER_4_4 = "4-4cyli.dat"     # 5398 (more reliable with 300 sets)
 
 # =============================================================================
 # Top piezas cross-corpus 532 sets (300 prev + 232 Plan C classic,
-# 108 760 piezas, distribución uniforme sobre 49 themes pre-2000)
+# 108,760 pieces, uniform distribution across 49 pre-2000 themes)
 # =============================================================================
 CYLINDER_4_4 = "4-4cyli.dat"     # 6093 usos (corpus 532)
 PLATE_1X2 = "3023.dat"           # 3670
@@ -171,7 +171,22 @@ TIRE = "2431.dat"               # 728
 TILE_1X1 = "3070b.dat"           # 690
 
 # =============================================================================
-# Geometría / medidas (LDU)
+# Top piezas cross-corpus 1438 sets (532 prev + 906 nuevos, 534k piezas,
+# 8 cohortes: 80s90s, kids, classic, modern, technic, specialty, licensed,
+# classic_gaps)
+# =============================================================================
+# Technic (corpus 1438 cohort_technic, 175 sets, 169k piezas):
+TECHNIC_PIN = "2780.dat"            # 17458 usos (#2 cross-corpus, #1 Technic)
+TECHNIC_PIN_3L = "6558.dat"         # 8135 usos (#5 cross-corpus)
+TECHNIC_BEAM_1X4 = "3701.dat"       # Technic brick 1x4 with holes (signatura Technic)
+TECHNIC_AXLE_3L = "4519.dat"        # 2785 usos (eje 3-studios)
+
+# Brickheadz (corpus 1438 cohort_specialty, 165 sets, 63k piezas):
+TILE_1X1_RND = "98138.dat"          # 8207 usos (#9 cross-corpus, #1 specialty, firma Brickheadz)
+STUD_HOLDER_2X2 = "22885.dat"       # pieza curva Brickheadz body
+
+# =============================================================================
+# Geometry / measurements (LDU)
 # =============================================================================
 STUD_DISTANCE = 20
 PLATE_HEIGHT = 8
@@ -179,10 +194,10 @@ BRICK_HEIGHT = 24
 STUD_HEIGHT = 4
 
 # =============================================================================
-# Helpers de formato
+# Format helpers
 # =============================================================================
 def _fmt_num(v: float | int) -> str:
-    """Formatea un número sin ceros sobrantes: enteros como '0', reales como '-32'."""
+    """Formats a number without trailing zeros: integers as '0', floats as '-32'."""
     if isinstance(v, int):
         return str(v)
     f = float(v)
@@ -199,7 +214,7 @@ def format_matrix(matrix: Sequence[float]) -> str:
 
 def format_t1(color: int, x: float, y: float, z: float,
               matrix: Sequence[float], file: str) -> str:
-    """Formatea una línea tipo 1 (referencia a sub-archivo).
+    """Formats a type-1 line (sub-file reference).
 
     Output exacto:
         1 <color> x y z a b c d e f g h i <file>
@@ -213,9 +228,9 @@ def format_t1(color: int, x: float, y: float, z: float,
 
 
 def rotation_matrix(axis: str, angle: int) -> tuple:
-    """Devuelve la matriz canónica de rotación para axis ∈ {x,y,z} y angle ∈ {0,90,180,270}.
+    """Returns the canonical rotation matrix for axis in {x,y,z} and angle in {0,90,180,270}.
 
-    Usa lookup table de matrices pre-definidas (sin composición numérica).
+    Uses a lookup table of pre-defined matrices (no numeric composition).
     """
     a = int(angle) % 360
     if axis == 'x':
@@ -237,12 +252,12 @@ def rotation_matrix(axis: str, angle: int) -> tuple:
 class LdrBuilder:
     """Constructor de modelos LDraw (.ldr y .mpd).
 
-    Mantiene un buffer de líneas en memoria. Las piezas se añaden con
+    Maintains a buffer of lines in memory. Pieces are added with
     ``place()`` o los atajos ``plate_2x2()`` / ``brick_2x2()`` / ``stud_at()``.
-    Los ``step()`` delimitan pasos de construcción.
+    ``step()`` delimit build steps.
 
     Attributes:
-        title: título del modelo (aparece en el header).
+        title: model title (appears in the header).
         author: autor del modelo.
         license: texto !LICENSE. Por defecto CCAL 2.0.
         theme: tema !THEME opcional.
@@ -289,11 +304,11 @@ class LdrBuilder:
     # ---- Control de pasos --------------------------------------------------
 
     def step(self) -> 'LdrBuilder':
-        """Inicia un nuevo paso de construcción.
+        """Start a new build step.
 
-        Cierra el paso actual (si tiene piezas) y abre uno nuevo.
-        El marcador ``0 STEP`` se escribe automáticamente entre pasos
-        al renderizar (no después del último).
+        Close current step (if it has pieces) and start a new one.
+        The ``0 STEP`` marker is automatically written between steps
+        when rendering (not after the last one).
         """
         if self.current_step_lines:
             self.steps.append(self.current_step_lines)
@@ -301,26 +316,26 @@ class LdrBuilder:
         return self
 
     def add_line(self, line: str) -> 'LdrBuilder':
-        """Añade una línea cruda al buffer (cualquier line-type válido)."""
+        """Add a raw line to the buffer (any valid line-type)."""
         self.lines.append(line)
         self.current_step_lines.append(line)
         return self
 
     def add_comment(self, text: str) -> 'LdrBuilder':
-        """Añade un comentario ``0 // ...`` al paso actual."""
+        """Add a ``0 // ...`` comment to the current step."""
         return self.add_line(f'0 // {text}')
 
     def close_section(self, comment: str = '') -> 'LdrBuilder':
-        """Cierra una sección lógica del modelo."""
+        """Close a logical section of the model."""
         self.add_comment(f'--- {comment} ---' if comment else '--- section ---')
         self.lines.append('0 STEP')
         return self
 
-    # ---- Colocación de piezas ----------------------------------------------
+    # ---- Piece placement ----------------------------------------------
 
     def place(self, file: str, color: int, x: float, y: float, z: float,
               matrix: Sequence[float] | None = None) -> 'LdrBuilder':
-        """Coloca una pieza en (x, y, z) con matriz opcional (tupla de 9)."""
+        """Place a part at (x, y, z) with optional matrix (tuple of 9)."""
         m = IDENTITY if matrix is None else tuple(matrix)
         if len(m) != 9:
             raise ValueError(f'matrix must have 9 elements; got {len(m)}')
@@ -331,25 +346,25 @@ class LdrBuilder:
     def place_with_rotation(self, file: str, color: int,
                             x: float, y: float, z: float,
                             axis: str = 'y', angle: int = 90) -> 'LdrBuilder':
-        """Coloca una pieza rotada angle grados alrededor de axis ∈ {x,y,z}."""
+        """Place a part rotated angle degrees around axis in {x,y,z}."""
         return self.place(file, color, x, y, z, rotation_matrix(axis, angle))
 
     def place_mirrored(self, file: str, color: int,
                        x: float, y: float, z: float,
                        axis: str = 'x') -> 'LdrBuilder':
-        """Coloca una pieza reflejada (matriz con determinante = -1).
+        """Place a mirrored part (matrix with determinant = -1).
 
         Args:
             file: Design ID del archivo LDraw (ej. '3004.dat').
-            color: código de color LDConfig.ldr.
-            x, y, z: posición.
-            axis: eje de reflexión ∈ {x, y, z}.
+            color: LDConfig.ldr color code.
+            x, y, z: position.
+            axis: reflection axis in {x, y, z}.
 
-        En el corpus 532 OMR se observa neg_det_ratio = 1.345% (5× el
-        corpus 300 de 0.255%), principalmente en sets clásicos con
-        estructuras asimétricas (estandartes, garras, puertas). Para
-        que ``validate()`` no marque estas piezas como warning, el
-        builder debe construirse con ``allow_mirrors=True``.
+        In corpus 532 OMR, neg_det_ratio = 1.345% (5 times the
+        corpus 300 ratio of 0.255%), mainly in classic sets with
+        asymmetric structures (banners, claws, doors). To
+        prevent ``validate()`` from flagging these as warnings, the
+        builder must be constructed with ``allow_mirrors=True``.
         """
         table = {'x': MIRROR_X, 'y': MIRROR_Y, 'z': MIRROR_Z}
         if axis not in table:
@@ -359,7 +374,7 @@ class LdrBuilder:
     def place_offset(self, file: str, color: int,
                       dx: float, dy: float, dz: float,
                       matrix: Sequence[float] | None = None) -> 'LdrBuilder':
-        """Coloca file相对于最后一次 pieza."""
+        """Place file relative to the last placed part."""
         if self.last_pos is None:
             raise RuntimeError(
                 'place_offset requires a prior place() call to establish last_pos'
@@ -370,19 +385,19 @@ class LdrBuilder:
     # ---- Atajos de piezas comunes -----------------------------------------
 
     def stud_at(self, x: float, z: float, color: int = 0, y: float = 0) -> 'LdrBuilder':
-        """Coloca un stud (4 LDU de alto) en (x, y, z). Por defecto y=0.
+        """Place a stud (4 LDU tall) at (x, y, z). Default y=0.
 
-        Para colocar el stud encima de un brick a y=-64, usar:
+        To place the stud on top of a brick at y=-64, use:
             stud_at(x, z, color, y=-64)
         """
         return self.place(STUD, color, x, y, z)
 
     def plate_2x2(self, x: float, y: float, z: float, color: int = 0) -> 'LdrBuilder':
-        """Coloca una plate 2x2 (3022.dat) en (x, y, z)."""
+        """Place a 2x2 plate at coords."""
         return self.place(PLATE_2X2, color, x, y, z)
 
     def plate_1x2(self, x: float, y: float, z: float, color: int = 0) -> 'LdrBuilder':
-        """Coloca una plate 1x2 (3024.dat) en (x, y, z)."""
+        """Place a 1x2 plate (3024.dat) at (x, y, z)."""
         return self.place(PLATE_1X2, color, x, y, z)
 
     def brick_2x2(self, x: float, y: float, z: float, color: int = 0,
@@ -392,21 +407,24 @@ class LdrBuilder:
 
     def brick_1x2(self, x: float, y: float, z: float, color: int = 0,
                   matrix: Sequence[float] | None = None) -> 'LdrBuilder':
+        """Place a 1x2 brick (3004.dat) at (x, y, z) with optional matrix."""
         return self.place(BRICK_1X2, color, x, y, z, matrix)
 
     def brick_1x1(self, x: float, y: float, z: float, color: int = 0,
                   matrix: Sequence[float] | None = None) -> 'LdrBuilder':
+        """Place a 1x1 brick (3005.dat) at (x, y, z) with optional matrix."""
         return self.place(BRICK_1X1, color, x, y, z, matrix)
 
     def brick_2x4(self, x: float, y: float, z: float, color: int = 0,
                   matrix: Sequence[float] | None = None) -> 'LdrBuilder':
+        """Place a 2x4 brick (3001.dat) at (x, y, z) with optional matrix."""
         return self.place(BRICK_2X4, color, x, y, z, matrix)
 
     # ---- Templates ---------------------------------------------------------
 
     def build_wall(self, width: int, height: int, color: int,
                    brick: str = '2x2') -> 'LdrBuilder':
-        """Construye un muro apilando bricks.
+        """Build a wall by stacking bricks.
 
         Args:
             width: ancho del muro en studs.
@@ -431,7 +449,7 @@ class LdrBuilder:
             y -= BRICK_HEIGHT
 
     def build_floor(self, width: int, depth: int, color: int) -> 'LdrBuilder':
-        """Construye un piso de plates 2x2 a y=0.
+        """Build a floor of 2x2 plates at y=0.
 
         Args:
             width: ancho del piso en studs.
@@ -456,11 +474,11 @@ class LdrBuilder:
 
     def build_stud_grid(self, rows: int, cols: int, color: int,
                         plate_height: int = 0) -> 'LdrBuilder':
-        """Coloca una cuadrícula de studs encima de plates a ``plate_height``.
+        """Place a grid of studs on top of plates at ``plate_height``.
 
         Args:
-            rows: número de filas de studs.
-            cols: número de columnas de studs.
+            rows: number of stud rows.
+            cols: number of stud columns.
             color: color de los studs.
             plate_height: altura de las plates subyacentes en y (negativo).
         """
@@ -476,11 +494,11 @@ class LdrBuilder:
     # ---- Theme presets (cross-corpus canonical pieces) ---------------------
 
     def build_town(self) -> 'LdrBuilder':
-        """Construye un edificio Town simple: base azul + paredes blancas + techo rojo.
+        """Build a simple Town building: blue base + white walls + red roof.
 
-        Piezas canónicas: BRICK_2X2 (muros), SLOPE_1X2 (techo), HINGE (puerta),
+        Canonical parts: BRICK_2X2 (walls), SLOPE_1X2 (roof), HINGE (door),
         BRICK_1X1 (chimenea), PLATE_1X1 (deco), CYLINDER_4_4 (antena/poste),
-        PLATE_1X4 (cartel). Layers canónicos: 0, -40, -64, -88, -96, -104, -112.
+        PLATE_1X4 (sign). Canonical Y layers: 0, -40, -64, -88, -96, -104, -112.
         """
         self.build_floor(4, 4, color=BLUE)
         self.step()
@@ -519,10 +537,10 @@ class LdrBuilder:
         return self
 
     def build_castle(self) -> 'LdrBuilder':
-        """Construye un castillo: muros grises + torreta central + almenas + portal.
+        """Build a castle: gray walls + central turret + battlements + gate.
 
-        Piezas canónicas: BRICK_2X2 (muros), BRICK_1X2_RND (torre),
-        PLATE_1X1 (almenas), PLATE_1X1_RND (cúpula y ventana), HINGE (portal),
+        Canonical parts: BRICK_2X2 (walls), BRICK_1X2_RND (tower),
+        PLATE_1X1 (battlements), PLATE_1X1_RND (dome and window), HINGE (gate),
         CYLINDER_4_4 (asta de bandera).
         """
         self.build_floor(4, 4, color=LIGHT_GREY)
@@ -557,9 +575,9 @@ class LdrBuilder:
         return self
 
     def build_space(self) -> 'LdrBuilder':
-        """Construye un cohete Space: base blanca + cuerpo + ventana azul + antena.
+        """Build a Space rocket: white base + body + blue window + antenna.
 
-        Piezas canónicas: PLATE_2X2 (base), BRICK_2X2 (cuerpo),
+        Canonical parts: PLATE_2X2 (base), BRICK_2X2 (body),
         PLATE_1X1 (ventana), PLATE_1X1_RND (acento), CYLINDER_4_4 (antena).
         """
         self.step()
@@ -576,10 +594,10 @@ class LdrBuilder:
         return self
 
     def build_pirates(self) -> 'LdrBuilder':
-        """Construye un barco pirata: cubierta + casco + mástil + vela.
+        """Build a pirate ship: deck + hull + mast + sail.
 
-        Piezas canónicas: PLATE_2X2 (cubierta), BRICK_2X2 (casco),
-        CYLINDER_4_4 (mástil), PLATE_1X4 (vela).
+        Canonical parts: PLATE_2X2 (deck), BRICK_2X2 (hull),
+        CYLINDER_4_4 (mast), PLATE_1X4 (sail).
         """
         self.build_floor(4, 2, color=REDDISH_BROWN)
         self.step()
@@ -592,10 +610,10 @@ class LdrBuilder:
         return self
 
     def build_castle_lion_knights(self) -> 'LdrBuilder':
-        """Construye un castillo Lion Knights: torres blancas + estandartes rojos.
+        """Build a Lion Knights castle: white towers + red banners.
 
-        Sub-tema Castle clásico (corpus 532 OMR, vocab 3004/3023/3820/slopes).
-        Layout: zócalo gris + 2 torres blancas + almenas rojas + estandartes
+        Classic Castle sub-theme (corpus 532 OMR, vocab 3004/3023/3820/slopes).
+        Layout: gray base + 2 white towers + red battlements + banners
         espejados (usa ``place_mirrored``; requiere ``allow_mirrors=True``).
 
         Layers: 0 (floor), -40, -64, -88, -112 (techo), -120 (merlones).
@@ -635,10 +653,10 @@ class LdrBuilder:
         return self
 
     def build_castle_black_falcons(self) -> 'LdrBuilder':
-        """Construye un castillo Black Falcons: torres negras + estandartes rojos.
+        """Build a Black Falcons castle: black towers + red banners.
 
-        Sub-tema Castle clásico (corpus 532 OMR, vocab 3004/3023/3820/slopes).
-        Layout: zócalo gris + 2 torres negras + almenas rojas + estandartes
+        Classic Castle sub-theme (corpus 532 OMR, vocab 3004/3023/3820/slopes).
+        Layout: gray base + 2 black towers + red battlements + banners
         espejados (usa ``place_mirrored``; requiere ``allow_mirrors=True``).
         """
         self.build_floor(4, 4, color=LIGHT_GREY)
@@ -676,19 +694,19 @@ class LdrBuilder:
         return self
 
     def build_space_base(self, theme: str = 'classic') -> 'LdrBuilder':
-        """Construye una base Space (sub-tema).
+        """Build a Space base (sub-theme).
 
         Args:
             theme: uno de:
-                - ``'classic'``: base gris/azul + módulos rojos y amarillos
+                - ``'classic'``: gray/blue base + red and yellow modules
                   (Classic Space, 1978-1987).
-                - ``'blacktron'``: base negra + módulos naranjas (Blacktron
+                - ``'blacktron'``: black base + orange modules (Blacktron
                   Future Generation, 1987-1989).
-                - ``'m_tron'``: base gris + módulos amarillos y naranjas
+                - ``'m_tron'``: gray base + yellow and orange modules
                   (M-Tron, 1990-1991).
 
-        Piezas canónicas: BRICK_2X2 (base), BRICK_1X2 (módulos),
-        PLATE_1X2_RND (3666.dat, cúpulas), CYLINDER_4_4 (antena).
+        Canonical parts: BRICK_2X2 (base), BRICK_1X2 (modules),
+        PLATE_1X2_RND (3666.dat, domes), CYLINDER_4_4 (antenna).
         """
         if theme == 'classic':
             base_color = LIGHT_BLUISH_GREY
@@ -774,22 +792,81 @@ class LdrBuilder:
         self.brick_1x1(0, -112, 0, REDDISH_BROWN)
         return self
 
-    # ---- Validación --------------------------------------------------------
+    def build_technic(self) -> 'LdrBuilder':
+        """Builds a Technic assembly: base + pin stack + Technic beam + axles.
+
+        Vocabulario canonico Technic (corpus 1438, cohort_technic, 175 sets):
+        - TECHNIC_PIN (2780.dat): #1 Technic, 17458 cross-corpus uses
+        - TECHNIC_PIN_3L (6558.dat): 8135 uses
+        - TECHNIC_AXLE_3L (4519.dat): 2785 uses
+        - TECHNIC_BEAM_1X4 (3701.dat): 4-stud Technic beam with holes
+
+        Layers canonicos: 0, -8, -16, -24, -40, -48 (multiples of 8).
+        """
+        self.build_floor(4, 4, color=DARK_GREY)
+        self.step()
+        self.place(TECHNIC_PIN, BLUE, 0, -8, 0)
+        self.step()
+        self.place(TECHNIC_PIN, RED, 0, -16, 0)
+        self.step()
+        self.place(TECHNIC_PIN, YELLOW, 0, -24, 0)
+        self.step()
+        for x, z in [(-20, -20), (20, -20), (-20, 20), (20, 20)]:
+            self.place(TECHNIC_PIN, ORANGE, x, -8, z)
+        self.step()
+        self.place(TECHNIC_PIN_3L, GREEN, -20, -32, 0)
+        self.step()
+        self.place(TECHNIC_BEAM_1X4, LIGHT_GREY, 0, -40, 0)
+        self.step()
+        self.place(TECHNIC_AXLE_3L, BLACK, 0, -48, -20)
+        self.place(TECHNIC_AXLE_3L, BLACK, 0, -48, 20)
+        return self
+
+    def build_brickheadz(self) -> 'LdrBuilder':
+        """Builds a Brickheadz-style figure: base + body + head + face + hair.
+
+        Vocabulario canonico Brickheadz (corpus 1438, cohort_specialty,
+        165 sets, 63k piezas):
+        - TILE_1X1_RND (98138.dat): #1 specialty, 8207 cross-corpus uses
+          (firma Brickheadz para ojos/detalles faciales)
+        - Bricks 2x2 (3003.dat): cuerpo/cabeza apilados
+        - SLOPE_1X2 (3820.dat): firma Brickheadz cabello
+        - Studs: detalles/botones
+
+        Layers canonicos: 0, -40, -64, -88 (cuerpo), -96 (cara),
+        -104 (cabello), -48 (boton intermedio).
+        """
+        self.build_floor(2, 2, color=DARK_GREY)
+        self.step()
+        self.brick_2x2(0, -40, 0, RED)
+        self.step()
+        self.brick_2x2(0, -64, 0, RED)
+        self.step()
+        self.brick_2x2(0, -88, 0, YELLOW)
+        self.step()
+        self.place(TILE_1X1_RND, WHITE, 0, -96, 0)
+        self.step()
+        self.place(SLOPE_1X2, BROWN, 0, -104, 0)
+        self.step()
+        self.stud_at(0, 0, BLUE, y=-48)
+        return self
+
+    # ---- Validation --------------------------------------------------------
 
     def validate(self) -> tuple[list[str], list[str]]:
-        """Verifica formato básico del modelo.
+        """Validate basic model format.
 
         Returns:
-            (errors, warnings) — listas de mensajes. Vacías = OK.
+            (errors, warnings) — lists of messages. Empty = OK.
 
         Comprobaciones:
-            * Cada línea empieza con un entero (line-type 0..5).
-            * Líneas tipo 1 tienen exactamente 15 tokens.
-            * Matriz 3x3 con determinante ≈ ±1 (sin reflexiones/extrañas).
-            * Y múltiplo de 8 (tolerancia ±1 LDU para slopes/Technic).
-            * X/Z múltiplos de 20 (tolerancia ±1 LDU).
+            * Each line starts with an integer (line-type 0..5).
+            * Type-1 lines have exactly 15 tokens.
+            * 3x3 matrix with determinant ≈ ±1 (no reflections/weird matrices).
+            * Y multiple of 8 (±1 LDU tolerance for slopes/Technic).
+            * X/Z multiples of 20 (±1 LDU tolerance).
             * Matriz con det<0 (reflexiones desaconsejadas).
-            * Más de 5 piezas sin STEP previo.
+            * More than 5 pieces without prior STEP.
         """
         errors: list[str] = []
         warnings: list[str] = []
@@ -880,7 +957,7 @@ class LdrBuilder:
         return f'{slug}.ldr' if slug else 'model.ldr'
 
     def save_ldr(self, path: str | Path) -> 'LdrBuilder':
-        """Guarda el modelo como .ldr (un único archivo, sin FILE blocks)."""
+        """Save the model as .ldr (single file, no FILE blocks)."""
         Path(path).write_text(self.render(), encoding='utf-8')
         return self
 
@@ -900,10 +977,10 @@ class LdrBuilder:
         Path(path).write_text(_render_blocks(blocks, nofile=False), encoding='utf-8')
         return self
 
-    # ---- Métricas ----------------------------------------------------------
+    # ---- Metrics ----------------------------------------------------------
 
     def metrics(self) -> dict:
-        """Calcula métricas del modelo: piezas, STEPs, Y-layers, piezas/step."""
+        """Calculate model metrics: pieces, STEPs, Y-layers, pieces/step."""
         piece_lines = [l for l in self.lines if l.startswith('1 ')]
         piece_count = len(piece_lines)
 
@@ -969,7 +1046,7 @@ def _render_blocks(blocks: Sequence[tuple[str, LdrBuilder]], nofile: bool = True
 
     - blocks[0] es el modelo principal.
     - Los siguientes son sub-modelos MPD.
-    - STEP markers se insertan entre pasos (no después del último).
+    - STEP markers are inserted between steps (not after the last one).
     """
     out: list[str] = []
     for idx, (name, b) in enumerate(blocks):
@@ -1008,7 +1085,7 @@ def _render_blocks(blocks: Sequence[tuple[str, LdrBuilder]], nofile: bool = True
 # Demos: 3 archivos .ldr con headers distintos (corpus 300 stats)
 # =============================================================================
 def build_demo_town() -> LdrBuilder:
-    """Demo 1: estilo 1980s Town (template build_town)."""
+    """Demo 1: 1980s Town style (build_town template)."""
     b = LdrBuilder(title='Demo Town 80s', author='LdrawGen [opencode]')
     b.set_theme('Town 80s')
     b.set_keywords(['1980s', 'town', 'classic', 'omr', 'demo'])
@@ -1032,7 +1109,7 @@ def build_demo_kid() -> LdrBuilder:
 
 
 def build_demo_classic() -> LdrBuilder:
-    """Demo 3: pieza única brick 2x4 (sanity check de validate/metrics)."""
+    """Demo 3: single 2x4 brick (sanity check for validate/metrics)."""
     b = LdrBuilder(title='Demo Classic Sanity', author='LdrawGen [opencode]')
     b.set_theme('Classic Sanity')
     b.set_keywords(['sanity', 'check', 'minimal', 'brick-2x4', 'demo'])
@@ -1058,7 +1135,7 @@ def build_demo() -> LdrBuilder:
 
 
 def build_demo_castle_lion_knights() -> LdrBuilder:
-    """Demo 4: Lion Knights castle (corpus 532O, vocab Castle clásico)."""
+    """Demo 4: Lion Knights castle (corpus 532, classic Castle vocab)."""
     b = LdrBuilder(
         title='Demo Castle Lion Knights',
         author='LdrawGen [opencode]',
@@ -1074,14 +1151,38 @@ def build_demo_castle_lion_knights() -> LdrBuilder:
 
 
 def build_demo_space_classic() -> LdrBuilder:
-    """Demo 5: Classic Space base (corpus 532, vocab Space clásico)."""
+    """Demo 5: Classic Space base (corpus 532, classic Space vocab)."""
     b = LdrBuilder(title='Demo Space Classic', author='LdrawGen [opencode]')
     b.set_theme('Classic Space')
     b.set_keywords(['1980s', 'space', 'classic-space', 'omr', 'demo'])
     b.add_history('2026-09-12 [LdrawGen] Demo space classic (build_space_base)')
-    b.add_comment('=== Demo 5: Classic Space base (corpus 532, módulos rojos/amarillos) ===')
+    b.add_comment('=== Demo 5: Classic Space base (corpus 532, red/yellow modules) ===')
     b.build_space_base(theme='classic')
     b.close_section('end space classic')
+    return b
+
+
+def build_demo_technic() -> LdrBuilder:
+    """Demo 6: Technic assembly (corpus 1438, Technic cohort)."""
+    b = LdrBuilder(title='Demo Technic Frame', author='LdrawGen [opencode]')
+    b.set_theme('Technic')
+    b.set_keywords(['technic', 'pins', 'axles', 'beam', 'omr', 'demo'])
+    b.add_history('2026-09-12 [LdrawGen] Demo technic (build_technic)')
+    b.add_comment('=== Demo 6: Technic frame (corpus 1438, cohort_technic, pins/beam/axles) ===')
+    b.build_technic()
+    b.close_section('end technic')
+    return b
+
+
+def build_demo_brickheadz() -> LdrBuilder:
+    """Demo 7: Brickheadz-style figure (corpus 1438, specialty cohort)."""
+    b = LdrBuilder(title='Demo Brickheadz Figure', author='LdrawGen [opencode]')
+    b.set_theme('Brickheadz')
+    b.set_keywords(['brickheadz', 'figure', 'tile-round', 'specialty', 'omr', 'demo'])
+    b.add_history('2026-09-12 [LdrawGen] Demo brickheadz (build_brickheadz)')
+    b.add_comment('=== Demo 7: Brickheadz-style figure (corpus 1438, cohort_specialty, 98138.dat face) ===')
+    b.build_brickheadz()
+    b.close_section('end brickheadz')
     return b
 
 
@@ -1108,18 +1209,18 @@ def _print_metrics(m: dict) -> None:
 
 
 def _print_corpus_comparison(m: dict) -> None:
-    """Compara las métricas del demo con el corpus ampliado de 532 sets."""
-    print('--- Corpus 532 comparison ---')
-    print(f'Pieces/set media (corpus 532): 204.4')
+    """Compare demo metrics with the extended 1438-set corpus."""
+    print('--- Corpus 1438 comparison ---')
+    print(f'Pieces/set media (corpus 1438): 371.6')
     print(f'Pieces/set media (this demo): {m["pieces"]}')
-    print(f'STEPs ratio: {m["steps_per_piece"]:.3f}  (corpus 532: 0.06-0.10)')
-    print(f'Reflejos ratio (corpus 532): 1.34% (vs corpus 300: 0.25%)')
-    print(f'Total sets: 532 (100 old + 200 kids + 232 Plan C classic)')
-    print(f'Total pieces: 108,760')
+    print(f'STEPs ratio: {m["steps_per_piece"]:.3f}  (corpus 1438: 0.05-0.12)')
+    print(f'Reflections ratio (corpus 1438): ~0.7% (Technic: 0.7%, Brickheadz: 0.0%)')
+    print(f'Total sets: 1438 (8 cohorts: 80s90s, kids, classic, modern, technic, specialty, licensed, classic_gaps)')
+    print(f'Total pieces: 534,152')
 
 
 def _run_demo(name: str, builder: LdrBuilder) -> dict:
-    """Genera, valida y reporta métricas de un demo. Devuelve métricas."""
+    """Generate, validate and report metrics for a demo. Returns metrics."""
     here = Path(__file__).resolve().parent
     out_path = here / name
 
@@ -1151,10 +1252,12 @@ def main() -> None:
         ('demo_classic.ldr', build_demo_classic()),
         ('demo_castle_lion_knights.ldr', build_demo_castle_lion_knights()),
         ('demo_space_classic.ldr', build_demo_space_classic()),
+        ('demo_technic.ldr', build_demo_technic()),
+        ('demo_brickheadz.ldr', build_demo_brickheadz()),
     ]
     for name, builder in demos:
         _run_demo(name, builder)
-    print('\n=== All 5 demos generated and validated (0 errors, 0 warnings) ===')
+    print('\n=== All 7 demos generated and validated (0 errors, 0 warnings) ===')
 
 
 if __name__ == '__main__':

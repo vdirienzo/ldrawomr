@@ -1,0 +1,25 @@
+0 Demo Brickheadz Figure
+0 Name: demo_brickheadz_figure.ldr
+0 Author: LdrawGen [opencode]
+0 !LDRAW_ORG Model
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+0 !THEME Brickheadz
+0 !KEYWORDS brickheadz,figure,tile-round,specialty,omr,demo
+0 !HISTORY 2026-09-12 [LdrawGen] Demo brickheadz (build_brickheadz)
+
+0 // === Demo 7: Brickheadz-style figure (corpus 1438, cohort_specialty, 98138.dat face) ===
+0 STEP
+1 8 0 0 0 1 0 0 0 1 0 0 0 1 3022.dat
+0 STEP
+1 4 0 -40 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 STEP
+1 4 0 -64 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 STEP
+1 14 0 -88 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 STEP
+1 15 0 -96 0 1 0 0 0 1 0 0 0 1 98138.dat
+0 STEP
+1 6 0 -104 0 1 0 0 0 1 0 0 0 1 3820.dat
+0 STEP
+1 1 0 -48 0 1 0 0 0 1 0 0 0 1 stud.dat
+0 // --- end brickheadz ---
