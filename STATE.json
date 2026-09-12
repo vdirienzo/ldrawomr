@@ -1,0 +1,72 @@
+{
+  "project_root": "/home/user/Projects/ldraw",
+  "session_date": "2026-09-12",
+  "corpus": {
+    "total_sets": 1438,
+    "total_pieces": 534152,
+    "sub_builds": 20074,
+    "custom_parts": 4470,
+    "bfc_certify_sets": 510,
+    "reflection_pieces": 3668,
+    "unique_set_numbers": 1438,
+    "cohorts": {
+      "80s90s": {
+        "sets": 100,
+        "pieces": 18670
+      },
+      "kids": {
+        "sets": 200,
+        "pieces": 42947
+      },
+      "classic": {
+        "sets": 232,
+        "pieces": 47143
+      },
+      "modern": {
+        "sets": 287,
+        "pieces": 114904
+      },
+      "technic": {
+        "sets": 175,
+        "pieces": 169839
+      },
+      "specialty": {
+        "sets": 165,
+        "pieces": 63592
+      },
+      "licensed": {
+        "sets": 121,
+        "pieces": 45227
+      },
+      "classic_gaps": {
+        "sets": 158,
+        "pieces": 31830
+      }
+    }
+  },
+  "omr_metadata": {
+    "total_themes_in_corpus": 152,
+    "total_omr_themes_indexed": 135,
+    "total_sets_in_omr_canonical": 1470
+  },
+  "parser": {
+    "main": "analysis/batch_parse4.py",
+    "stats_output": "analysis/cross_corpus3_stats.json",
+    "per_set_output": "analysis/per_set_stats_1438.json",
+    "how_to_run": "cd /home/user/Projects/ldraw && python3 analysis/batch_parse4.py"
+  },
+  "generator": {
+    "script": "generator/ldraw_gen.py",
+    "lines": 1161,
+    "demos": [
+      "generator/demo_town.ldr",
+      "generator/demo_kid.ldr",
+      "generator/demo_classic.ldr",
+      "generator/demo_castle_lion_knights.ldr",
+      "generator/demo_space_classic.ldr"
+    ],
+    "how_to_run": "cd /home/user/Projects/ldraw/generator && python3 ldraw_gen.py"
+  },
+  "canonical_doc": "LEARNED_CONVENTIONS_532.md (23 rules from 532 sets; Plan D run added 906 more sets across 4 new cohorts)",
+  "plan_d_complete": true
+}

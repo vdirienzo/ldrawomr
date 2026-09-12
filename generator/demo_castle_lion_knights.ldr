@@ -1,0 +1,47 @@
+0 Demo Castle Lion Knights
+0 Name: demo_castle_lion_knights.ldr
+0 Author: LdrawGen [opencode]
+0 !LDRAW_ORG Model
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+0 !THEME Castle Lion Knights
+0 !KEYWORDS 1980s,castle,lion-knights,classic,omr,demo
+0 !HISTORY 2026-09-12 [LdrawGen] Demo castle lion knights (build_castle_lion_knights)
+
+0 // === Demo 4: Castle Lion Knights (corpus 532, estandartes espejados) ===
+0 STEP
+1 7 -20 0 -20 1 0 0 0 1 0 0 0 1 3022.dat
+1 7 -20 0 20 1 0 0 0 1 0 0 0 1 3022.dat
+1 7 20 0 -20 1 0 0 0 1 0 0 0 1 3022.dat
+1 7 20 0 20 1 0 0 0 1 0 0 0 1 3022.dat
+0 STEP
+1 15 -20 -40 -20 1 0 0 0 1 0 0 0 1 3004.dat
+1 15 20 -40 -20 1 0 0 0 1 0 0 0 1 3004.dat
+1 15 -20 -40 20 1 0 0 0 1 0 0 0 1 3004.dat
+1 15 20 -40 20 1 0 0 0 1 0 0 0 1 3004.dat
+0 STEP
+1 15 -20 -64 -20 1 0 0 0 1 0 0 0 1 3004.dat
+1 15 20 -64 -20 1 0 0 0 1 0 0 0 1 3004.dat
+1 15 -20 -64 20 1 0 0 0 1 0 0 0 1 3004.dat
+1 15 20 -64 20 1 0 0 0 1 0 0 0 1 3004.dat
+0 STEP
+1 15 -20 -88 -20 1 0 0 0 1 0 0 0 1 3820.dat
+1 15 20 -88 -20 1 0 0 0 1 0 0 0 1 3820.dat
+1 15 -20 -88 20 1 0 0 0 1 0 0 0 1 3820.dat
+1 15 20 -88 20 1 0 0 0 1 0 0 0 1 3820.dat
+0 STEP
+1 15 -20 -112 -20 1 0 0 0 1 0 0 0 1 3039.dat
+1 15 20 -112 -20 1 0 0 0 1 0 0 0 1 3039.dat
+1 15 -20 -112 20 1 0 0 0 1 0 0 0 1 3039.dat
+1 15 20 -112 20 1 0 0 0 1 0 0 0 1 3039.dat
+0 STEP
+1 4 -20 -112 -20 1 0 0 0 1 0 0 0 1 3005.dat
+1 4 20 -112 -20 1 0 0 0 1 0 0 0 1 3005.dat
+1 4 -20 -112 20 1 0 0 0 1 0 0 0 1 3005.dat
+1 4 20 -112 20 1 0 0 0 1 0 0 0 1 3005.dat
+0 STEP
+1 4 -20 -136 0 -1 0 0 0 1 0 0 0 1 3710.dat
+1 4 20 -136 0 -1 0 0 0 1 0 0 0 1 3710.dat
+0 STEP
+1 1 0 -136 -20 1 0 0 0 -1 0 0 0 1 6141.dat
+1 1 0 -136 20 1 0 0 0 -1 0 0 0 1 6141.dat
+0 // --- end castle lion knights ---

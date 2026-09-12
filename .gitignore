@@ -1,0 +1,23 @@
+# LDraw Parts Library mirror (huge, regenerable from pybricks/ldraw git clone)
+corpus/ldraw/
+
+# Downloaded MPDs (regenerable from OMR with xargs+curl)
+corpus/mpds*/
+
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+
+# Outputs and screenshots (regenerable)
+output/dashboard_preview*.png
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db

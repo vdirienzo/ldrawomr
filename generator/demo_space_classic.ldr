@@ -1,0 +1,36 @@
+0 Demo Space Classic
+0 Name: demo_space_classic.ldr
+0 Author: LdrawGen [opencode]
+0 !LDRAW_ORG Model
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+0 !THEME Classic Space
+0 !KEYWORDS 1980s,space,classic-space,omr,demo
+0 !HISTORY 2026-09-12 [LdrawGen] Demo space classic (build_space_base)
+
+0 // === Demo 5: Classic Space base (corpus 532, módulos rojos/amarillos) ===
+0 STEP
+1 71 -20 0 -20 1 0 0 0 1 0 0 0 1 3022.dat
+1 71 -20 0 20 1 0 0 0 1 0 0 0 1 3022.dat
+1 71 20 0 -20 1 0 0 0 1 0 0 0 1 3022.dat
+1 71 20 0 20 1 0 0 0 1 0 0 0 1 3022.dat
+0 STEP
+1 71 -20 -40 -20 1 0 0 0 1 0 0 0 1 3003.dat
+1 71 20 -40 -20 1 0 0 0 1 0 0 0 1 3003.dat
+1 71 -20 -40 20 1 0 0 0 1 0 0 0 1 3003.dat
+1 71 20 -40 20 1 0 0 0 1 0 0 0 1 3003.dat
+0 STEP
+1 4 0 -40 0 1 0 0 0 1 0 0 0 1 3004.dat
+1 4 0 -64 0 1 0 0 0 1 0 0 0 1 3004.dat
+0 STEP
+1 14 -20 -64 -20 1 0 0 0 1 0 0 0 1 3004.dat
+1 14 20 -64 -20 1 0 0 0 1 0 0 0 1 3004.dat
+1 14 -20 -64 20 1 0 0 0 1 0 0 0 1 3004.dat
+1 14 20 -64 20 1 0 0 0 1 0 0 0 1 3004.dat
+0 STEP
+1 1 0 -88 0 1 0 0 0 1 0 0 0 1 3666.dat
+0 STEP
+1 0 0 -104 0 1 0 0 0 1 0 0 0 1 4-4cyli.dat
+0 STEP
+1 14 0 -112 -20 1 0 0 0 1 0 0 0 1 3024.dat
+1 14 0 -112 20 1 0 0 0 1 0 0 0 1 3024.dat
+0 // --- end space classic ---

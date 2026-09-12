@@ -1,0 +1,325 @@
+{
+  "target_total": 232,
+  "themes_count": 49,
+  "note": "Adjusted from original 300 to achievable 232 due to OMR availability constraints. See shortfalls.",
+  "shortfalls": {
+    "Western": {
+      "requested": 8,
+      "actual": 4,
+      "short": 4
+    },
+    "Castle > Lion Knights": {
+      "requested": 8,
+      "actual": 5,
+      "short": 3
+    },
+    "Town": {
+      "requested": 8,
+      "actual": 2,
+      "short": 6
+    },
+    "Pirates > Pirates I": {
+      "requested": 8,
+      "actual": 0,
+      "short": 8
+    },
+    "Castle > Black Falcons": {
+      "requested": 6,
+      "actual": 1,
+      "short": 5
+    },
+    "Model Team": {
+      "requested": 6,
+      "actual": 1,
+      "short": 5
+    },
+    "Space > Space Police I": {
+      "requested": 6,
+      "actual": 3,
+      "short": 3
+    },
+    "Castle > Forestmen": {
+      "requested": 5,
+      "actual": 0,
+      "short": 5
+    },
+    "Universal Building Set > Basic": {
+      "requested": 5,
+      "actual": 0,
+      "short": 5
+    },
+    "Adventurers > Dino Island": {
+      "requested": 3,
+      "actual": 1,
+      "short": 2
+    },
+    "Castle > Black Knights": {
+      "requested": 3,
+      "actual": 0,
+      "short": 3
+    },
+    "Sports > Soccer": {
+      "requested": 3,
+      "actual": 0,
+      "short": 3
+    },
+    "Town > Paradisa": {
+      "requested": 3,
+      "actual": 2,
+      "short": 1
+    },
+    "Train": {
+      "requested": 3,
+      "actual": 2,
+      "short": 1
+    },
+    "Adventurers > Desert": {
+      "requested": 2,
+      "actual": 0,
+      "short": 2
+    },
+    "Castle > Dragon Knights": {
+      "requested": 2,
+      "actual": 0,
+      "short": 2
+    },
+    "Town > City Center": {
+      "requested": 2,
+      "actual": 1,
+      "short": 1
+    },
+    "Town > Town Jr.": {
+      "requested": 2,
+      "actual": 0,
+      "short": 2
+    },
+    "Town > World City": {
+      "requested": 2,
+      "actual": 0,
+      "short": 2
+    },
+    "Adventurers > Orient Expedition": {
+      "requested": 1,
+      "actual": 0,
+      "short": 1
+    },
+    "Castle": {
+      "requested": 1,
+      "actual": 0,
+      "short": 1
+    },
+    "Town > Extreme Team": {
+      "requested": 1,
+      "actual": 0,
+      "short": 1
+    },
+    "Town > Town Plan": {
+      "requested": 1,
+      "actual": 0,
+      "short": 1
+    },
+    "Znap": {
+      "requested": 1,
+      "actual": 0,
+      "short": 1
+    }
+  },
+  "distribution": [
+    {
+      "theme": "Town > Classic Town",
+      "take": 73
+    },
+    {
+      "theme": "Space > Classic Space",
+      "take": 8
+    },
+    {
+      "theme": "Train > 9V",
+      "take": 8
+    },
+    {
+      "theme": "Space > Futuron",
+      "take": 8
+    },
+    {
+      "theme": "Train > 4.5V",
+      "take": 8
+    },
+    {
+      "theme": "Space > Space Police III",
+      "take": 8
+    },
+    {
+      "theme": "Train > 12V",
+      "take": 8
+    },
+    {
+      "theme": "Western",
+      "take": 4
+    },
+    {
+      "theme": "Space > Blacktron II",
+      "take": 8
+    },
+    {
+      "theme": "Boat",
+      "take": 8
+    },
+    {
+      "theme": "Town > Res-Q",
+      "take": 8
+    },
+    {
+      "theme": "Castle > Lion Knights",
+      "take": 5
+    },
+    {
+      "theme": "Space > M:Tron",
+      "take": 8
+    },
+    {
+      "theme": "Space > Ice Planet 2002",
+      "take": 8
+    },
+    {
+      "theme": "Space > Space Police II",
+      "take": 8
+    },
+    {
+      "theme": "Town",
+      "take": 2
+    },
+    {
+      "theme": "Pirates > Pirates I",
+      "take": 0
+    },
+    {
+      "theme": "Castle > Black Falcons",
+      "take": 1
+    },
+    {
+      "theme": "Model Team",
+      "take": 1
+    },
+    {
+      "theme": "Space > Blacktron I",
+      "take": 6
+    },
+    {
+      "theme": "Space > Space Police I",
+      "take": 3
+    },
+    {
+      "theme": "Space > Spyrius",
+      "take": 6
+    },
+    {
+      "theme": "Universal Building Set",
+      "take": 6
+    },
+    {
+      "theme": "Castle > Forestmen",
+      "take": 0
+    },
+    {
+      "theme": "Universal Building Set > Basic",
+      "take": 0
+    },
+    {
+      "theme": "Space > Unitron",
+      "take": 4
+    },
+    {
+      "theme": "System > Town Plan",
+      "take": 4
+    },
+    {
+      "theme": "Town > Launch Command",
+      "take": 4
+    },
+    {
+      "theme": "Adventurers > Dino Island",
+      "take": 1
+    },
+    {
+      "theme": "Castle > Black Knights",
+      "take": 0
+    },
+    {
+      "theme": "Sports > Soccer",
+      "take": 0
+    },
+    {
+      "theme": "Town > Divers",
+      "take": 3
+    },
+    {
+      "theme": "Town > Outback",
+      "take": 3
+    },
+    {
+      "theme": "Town > Paradisa",
+      "take": 2
+    },
+    {
+      "theme": "Train",
+      "take": 2
+    },
+    {
+      "theme": "Adventurers > Desert",
+      "take": 0
+    },
+    {
+      "theme": "Castle > Dragon Knights",
+      "take": 0
+    },
+    {
+      "theme": "Homemaker",
+      "take": 2
+    },
+    {
+      "theme": "Town > City Center",
+      "take": 1
+    },
+    {
+      "theme": "Town > Town Jr.",
+      "take": 0
+    },
+    {
+      "theme": "Town > World City",
+      "take": 0
+    },
+    {
+      "theme": "Adventurers > Orient Expedition",
+      "take": 0
+    },
+    {
+      "theme": "Castle",
+      "take": 0
+    },
+    {
+      "theme": "Castle > Knights Kingdom II",
+      "take": 1
+    },
+    {
+      "theme": "Space > Insectoids",
+      "take": 1
+    },
+    {
+      "theme": "Town > Extreme Team",
+      "take": 0
+    },
+    {
+      "theme": "Town > Space Port",
+      "take": 1
+    },
+    {
+      "theme": "Town > Town Plan",
+      "take": 0
+    },
+    {
+      "theme": "Znap",
+      "take": 0
+    }
+  ]
+}

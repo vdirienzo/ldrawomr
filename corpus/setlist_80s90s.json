@@ -1,0 +1,902 @@
+[
+  {
+    "set_number": "1591-1",
+    "name": "Danone Truck",
+    "theme": "Town",
+    "year": 1980,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/1591-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "3602-1",
+    "name": "Bianca Lamb and Stroller",
+    "theme": "Fabuland",
+    "year": 1980,
+    "theme_full": "Fabuland",
+    "url": "https://library.ldraw.org/library/omr/3602-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6821-1",
+    "name": "Shovel Buggy",
+    "theme": "Space",
+    "year": 1980,
+    "theme_full": "Space > Classic Space",
+    "url": "https://library.ldraw.org/library/omr/6821-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "7730-1",
+    "name": "Electric Goods Train",
+    "theme": "Train",
+    "year": 1980,
+    "theme_full": "Train > 12V",
+    "url": "https://library.ldraw.org/library/omr/7730-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "7834-1",
+    "name": "Level Crossing Manual",
+    "theme": "Train",
+    "year": 1980,
+    "theme_full": "Train > 12V",
+    "url": "https://library.ldraw.org/library/omr/7834-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6611-1",
+    "name": "Fire Chief's Car",
+    "theme": "Town",
+    "year": 1981,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6611-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "3784-1",
+    "name": "Hugo Hog the Tinker",
+    "theme": "Fabuland",
+    "year": 1982,
+    "theme_full": "Fabuland",
+    "url": "https://library.ldraw.org/library/omr/3784-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "4005-1",
+    "name": "Tug Boat",
+    "theme": "Boat",
+    "year": 1982,
+    "theme_full": "Boat",
+    "url": "https://library.ldraw.org/library/omr/4005-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6685-1",
+    "name": "Fire Copter 1",
+    "theme": "Town",
+    "year": 1982,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6685-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6890-1",
+    "name": "Cosmic Cruiser",
+    "theme": "Space",
+    "year": 1982,
+    "theme_full": "Space > Classic Space",
+    "url": "https://library.ldraw.org/library/omr/6890-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6010-1",
+    "name": "Supply Wagon",
+    "theme": "Castle",
+    "year": 1984,
+    "theme_full": "Castle > Lion Knights",
+    "url": "https://library.ldraw.org/library/omr/6010-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6061-1",
+    "name": "Siege Tower",
+    "theme": "Castle",
+    "year": 1984,
+    "theme_full": "Castle > Lion Knights",
+    "url": "https://library.ldraw.org/library/omr/6061-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6695-1",
+    "name": "Shell Tanker",
+    "theme": "Town",
+    "year": 1984,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6695-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "3795-1",
+    "name": "Kitchen",
+    "theme": "Fabuland",
+    "year": 1985,
+    "theme_full": "Fabuland",
+    "url": "https://library.ldraw.org/library/omr/3795-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6657-1",
+    "name": "Fire Patrol Copter",
+    "theme": "Town",
+    "year": 1985,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6657-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "7715-1",
+    "name": "Push-Along Passenger Steam Train",
+    "theme": "Train",
+    "year": 1985,
+    "theme_full": "Train > 4.5V",
+    "url": "https://library.ldraw.org/library/omr/7715-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "5510-1",
+    "name": "Off-Road 4x4",
+    "theme": "Model Team",
+    "year": 1986,
+    "theme_full": "Model Team",
+    "url": "https://library.ldraw.org/library/omr/5510-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6041-1",
+    "name": "Armor Shop",
+    "theme": "Castle",
+    "year": 1986,
+    "theme_full": "Castle > Lion Knights",
+    "url": "https://library.ldraw.org/library/omr/6041-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6613-1",
+    "name": "Telephone Booth",
+    "theme": "Town",
+    "year": 1986,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6613-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6062-1",
+    "name": "Battering Ram",
+    "theme": "Castle",
+    "year": 1987,
+    "theme_full": "Castle > Black Falcons",
+    "url": "https://library.ldraw.org/library/omr/6062-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6523-1",
+    "name": "Red Cross",
+    "theme": "Town",
+    "year": 1987,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6523-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6884-1",
+    "name": "Aero Module",
+    "theme": "Space",
+    "year": 1987,
+    "theme_full": "Space > Futuron",
+    "url": "https://library.ldraw.org/library/omr/6884-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6674-1",
+    "name": "Crane Truck",
+    "theme": "Town",
+    "year": 1988,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6674-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6885-1",
+    "name": "Saturn Base Main Team (Crater Crawler)",
+    "theme": "Space",
+    "year": 1988,
+    "theme_full": "Space > Futuron",
+    "url": "https://library.ldraw.org/library/omr/6885-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6235-1",
+    "name": "Buried Treasure",
+    "theme": "Pirates",
+    "year": 1989,
+    "theme_full": "Pirates > Pirates I",
+    "url": "https://library.ldraw.org/library/omr/6235-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "1620-1",
+    "name": "Astro Dart",
+    "theme": "Space",
+    "year": 1990,
+    "theme_full": "Space > Futuron",
+    "url": "https://library.ldraw.org/library/omr/1620-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "1631-1",
+    "name": "Black Racer",
+    "theme": "Town",
+    "year": 1990,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/1631-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "1632-1",
+    "name": "Motor Boat",
+    "theme": "Town",
+    "year": 1990,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/1632-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "1680-1",
+    "name": "Hay Cart with Smugglers",
+    "theme": "Castle",
+    "year": 1990,
+    "theme_full": "Castle > Forestmen",
+    "url": "https://library.ldraw.org/library/omr/1680-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6034-1",
+    "name": "Black Monarch's Ghost",
+    "theme": "Castle",
+    "year": 1990,
+    "theme_full": "Castle > Black Knights",
+    "url": "https://library.ldraw.org/library/omr/6034-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6059-1",
+    "name": "Knight's Stronghold",
+    "theme": "Castle",
+    "year": 1990,
+    "theme_full": "Castle > Black Knights",
+    "url": "https://library.ldraw.org/library/omr/6059-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6071-1",
+    "name": "Forestmen's Crossing",
+    "theme": "Castle",
+    "year": 1990,
+    "theme_full": "Castle > Forestmen",
+    "url": "https://library.ldraw.org/library/omr/6071-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6375-1",
+    "name": "Trans Air Carrier",
+    "theme": "Town",
+    "year": 1990,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6375-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6508-1",
+    "name": "Wave Racer",
+    "theme": "Town",
+    "year": 1990,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6508-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6673-1",
+    "name": "Solo Trainer",
+    "theme": "Town",
+    "year": 1990,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6673-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6833-1",
+    "name": "Beacon Tracer",
+    "theme": "Space",
+    "year": 1990,
+    "theme_full": "Space > M:Tron",
+    "url": "https://library.ldraw.org/library/omr/6833-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6989-1",
+    "name": "Mega Core Magnetizer",
+    "theme": "Space",
+    "year": 1990,
+    "theme_full": "Space > M:Tron",
+    "url": "https://library.ldraw.org/library/omr/6989-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "4536-1",
+    "name": "Blue Hopper Car",
+    "theme": "Train",
+    "year": 1991,
+    "theme_full": "Train > 9V",
+    "url": "https://library.ldraw.org/library/omr/4536-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "4546-1",
+    "name": "Road and Rail Maintenance",
+    "theme": "Train",
+    "year": 1991,
+    "theme_full": "Train > 9V",
+    "url": "https://library.ldraw.org/library/omr/4546-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "4558-1",
+    "name": "Metroliner",
+    "theme": "Train",
+    "year": 1991,
+    "theme_full": "Train > 9V",
+    "url": "https://library.ldraw.org/library/omr/4558-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6440-1",
+    "name": "Jetport Fire Squad",
+    "theme": "Town",
+    "year": 1991,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6440-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6541-1",
+    "name": "Intercoastal Seaport",
+    "theme": "Town",
+    "year": 1991,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6541-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6832-1",
+    "name": "Super Nova II",
+    "theme": "Space",
+    "year": 1991,
+    "theme_full": "Space > Blacktron II",
+    "url": "https://library.ldraw.org/library/omr/6832-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6933-1",
+    "name": "Spectral Starguider",
+    "theme": "Space",
+    "year": 1991,
+    "theme_full": "Space > Blacktron II",
+    "url": "https://library.ldraw.org/library/omr/6933-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "1772-1",
+    "name": "Airport Container Truck",
+    "theme": "Town",
+    "year": 1992,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/1772-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6511-1",
+    "name": "Rescue Runabout",
+    "theme": "Town",
+    "year": 1992,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6511-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6648-1",
+    "name": "Mag Racer",
+    "theme": "Town",
+    "year": 1992,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6648-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6897-1",
+    "name": "Rebel Hunter",
+    "theme": "Space",
+    "year": 1992,
+    "theme_full": "Space > Space Police II",
+    "url": "https://library.ldraw.org/library/omr/6897-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "1969-1",
+    "name": "Mini Robot",
+    "theme": "Space",
+    "year": 1993,
+    "theme_full": "Space > Space Police II",
+    "url": "https://library.ldraw.org/library/omr/1969-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "4549-1",
+    "name": "Container Double Stack",
+    "theme": "Train",
+    "year": 1993,
+    "theme_full": "Train > 9V",
+    "url": "https://library.ldraw.org/library/omr/4549-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "5521-1",
+    "name": "Sea Jet",
+    "theme": "Model Team",
+    "year": 1993,
+    "theme_full": "Model Team",
+    "url": "https://library.ldraw.org/library/omr/5521-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6043-1",
+    "name": "Dragon Defender",
+    "theme": "Castle",
+    "year": 1993,
+    "theme_full": "Castle > Dragon Knights",
+    "url": "https://library.ldraw.org/library/omr/6043-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6286-1",
+    "name": "Skull's Eye Schooner",
+    "theme": "Pirates",
+    "year": 1993,
+    "theme_full": "Pirates > Pirates I",
+    "url": "https://library.ldraw.org/library/omr/6286-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6536-1",
+    "name": "Aero Hawk",
+    "theme": "Town",
+    "year": 1993,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6536-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6861-2",
+    "name": "Super Model Building Instruction",
+    "theme": "Space",
+    "year": 1993,
+    "theme_full": "Space > Blacktron II",
+    "url": "https://library.ldraw.org/library/omr/6861-2.mpd",
+    "qualifier": "2"
+  },
+  {
+    "set_number": "1704-1",
+    "name": "Ice Planet Satellite Plough",
+    "theme": "Space",
+    "year": 1994,
+    "theme_full": "Space > Ice Planet 2002",
+    "url": "https://library.ldraw.org/library/omr/1704-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "1713-1",
+    "name": "Shipwrecked Pirate",
+    "theme": "Pirates",
+    "year": 1994,
+    "theme_full": "Pirates > Pirates I",
+    "url": "https://library.ldraw.org/library/omr/1713-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "1775-1",
+    "name": "Jet",
+    "theme": "Town",
+    "year": 1994,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/1775-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6348-1",
+    "name": "Surveillance Squad",
+    "theme": "Town",
+    "year": 1994,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6348-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6514-1",
+    "name": "Trail Ranger",
+    "theme": "Town",
+    "year": 1994,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6514-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6666-1",
+    "name": "Ambulance",
+    "theme": "Town",
+    "year": 1994,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6666-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6939-1",
+    "name": "Saucer Centurion",
+    "theme": "Space",
+    "year": 1994,
+    "theme_full": "Space > Spyrius",
+    "url": "https://library.ldraw.org/library/omr/6939-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "1787-1",
+    "name": "Crater Cruiser",
+    "theme": "Space",
+    "year": 1995,
+    "theme_full": "Space > Unitron",
+    "url": "https://library.ldraw.org/library/omr/1787-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "4555-1",
+    "name": "Cargo Station",
+    "theme": "Train",
+    "year": 1995,
+    "theme_full": "Train > 9V",
+    "url": "https://library.ldraw.org/library/omr/4555-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6279-1",
+    "name": "Skull Island",
+    "theme": "Pirates",
+    "year": 1995,
+    "theme_full": "Pirates > Pirates I",
+    "url": "https://library.ldraw.org/library/omr/6279-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6525-1",
+    "name": "Blaze Commander",
+    "theme": "Town",
+    "year": 1995,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6525-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6614-1",
+    "name": "Launch Evac 1",
+    "theme": "Town",
+    "year": 1995,
+    "theme_full": "Town > Launch Command",
+    "url": "https://library.ldraw.org/library/omr/6614-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "1773-1",
+    "name": "Airline Maintenance Vehicle with Trailer",
+    "theme": "Promotional",
+    "year": 1996,
+    "theme_full": "Promotional > Airlines",
+    "url": "https://library.ldraw.org/library/omr/1773-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "1869-1",
+    "name": "South African Flag",
+    "theme": "Universal Building Set",
+    "year": 1996,
+    "theme_full": "Universal Building Set > Basic",
+    "url": "https://library.ldraw.org/library/omr/1869-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "2130-1",
+    "name": "Danone Promotional Set: Duck",
+    "theme": "Universal Building Set",
+    "year": 1996,
+    "theme_full": "Universal Building Set > Basic",
+    "url": "https://library.ldraw.org/library/omr/2130-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "2132-1",
+    "name": "Danone Promotional Set: Cow",
+    "theme": "Universal Building Set",
+    "year": 1996,
+    "theme_full": "Universal Building Set > Basic",
+    "url": "https://library.ldraw.org/library/omr/2132-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "2133-1",
+    "name": "Danone Promotional Set: Impala",
+    "theme": "Universal Building Set",
+    "year": 1996,
+    "theme_full": "Universal Building Set > Basic",
+    "url": "https://library.ldraw.org/library/omr/2133-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "4002-1",
+    "name": "Riptide Racer",
+    "theme": "Boat",
+    "year": 1996,
+    "theme_full": "Boat",
+    "url": "https://library.ldraw.org/library/omr/4002-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "4565-1",
+    "name": "Freight and Crane Railway",
+    "theme": "Train",
+    "year": 1996,
+    "theme_full": "Train > 9V",
+    "url": "https://library.ldraw.org/library/omr/4565-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "5571-1",
+    "name": "Giant Truck",
+    "theme": "Model Team",
+    "year": 1996,
+    "theme_full": "Model Team",
+    "url": "https://library.ldraw.org/library/omr/5571-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6232-1",
+    "name": "Skeleton Crew",
+    "theme": "Pirates",
+    "year": 1996,
+    "theme_full": "Pirates > Pirates I",
+    "url": "https://library.ldraw.org/library/omr/6232-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6331-1",
+    "name": "Patriot Jet",
+    "theme": "Town",
+    "year": 1996,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6331-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6615-1",
+    "name": "Eagle Stunt Flyer",
+    "theme": "Town",
+    "year": 1996,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/6615-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6712-1",
+    "name": "Sheriff's Showdown",
+    "theme": "Western",
+    "year": 1996,
+    "theme_full": "Western",
+    "url": "https://library.ldraw.org/library/omr/6712-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6755-1",
+    "name": "Sheriff's Lock-Up",
+    "theme": "Western",
+    "year": 1996,
+    "theme_full": "Western",
+    "url": "https://library.ldraw.org/library/omr/6755-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6765-1",
+    "name": "Gold City Junction",
+    "theme": "Western",
+    "year": 1996,
+    "theme_full": "Western",
+    "url": "https://library.ldraw.org/library/omr/6765-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "2846-1",
+    "name": "Indian Kayak",
+    "theme": "Western",
+    "year": 1997,
+    "theme_full": "Western",
+    "url": "https://library.ldraw.org/library/omr/2846-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "2882-1",
+    "name": "Speedboat",
+    "theme": "Town",
+    "year": 1997,
+    "theme_full": "Town > Classic Town",
+    "url": "https://library.ldraw.org/library/omr/2882-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6550-1",
+    "name": "Outback Racer",
+    "theme": "Town",
+    "year": 1997,
+    "theme_full": "Town > Outback",
+    "url": "https://library.ldraw.org/library/omr/6550-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6709-1",
+    "name": "Tribal Chief",
+    "theme": "Western",
+    "year": 1997,
+    "theme_full": "Western",
+    "url": "https://library.ldraw.org/library/omr/6709-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "2541-1",
+    "name": "Adventurers Car",
+    "theme": "Adventurers",
+    "year": 1998,
+    "theme_full": "Adventurers > Desert",
+    "url": "https://library.ldraw.org/library/omr/2541-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "2542-1",
+    "name": "Adventurers Aeroplane",
+    "theme": "Adventurers",
+    "year": 1998,
+    "theme_full": "Adventurers > Desert",
+    "url": "https://library.ldraw.org/library/omr/2542-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "2962-1",
+    "name": "Res-Q Lifeguard",
+    "theme": "Town",
+    "year": 1998,
+    "theme_full": "Town > Res-Q",
+    "url": "https://library.ldraw.org/library/omr/2962-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "3314-1",
+    "name": "Stadium Security",
+    "theme": "Sports",
+    "year": 1998,
+    "theme_full": "Sports > Soccer",
+    "url": "https://library.ldraw.org/library/omr/3314-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "3501-1",
+    "name": "Jet-Car",
+    "theme": "Znap",
+    "year": 1998,
+    "theme_full": "Znap",
+    "url": "https://library.ldraw.org/library/omr/3501-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "5542-1",
+    "name": "Black Thunder",
+    "theme": "Model Team",
+    "year": 1998,
+    "theme_full": "Model Team",
+    "url": "https://library.ldraw.org/library/omr/5542-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6428-1",
+    "name": "Wave Saver",
+    "theme": "Town",
+    "year": 1998,
+    "theme_full": "Town > Res-Q",
+    "url": "https://library.ldraw.org/library/omr/6428-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "6473-1",
+    "name": "Res-Q Cruiser",
+    "theme": "Town",
+    "year": 1998,
+    "theme_full": "Town > Res-Q",
+    "url": "https://library.ldraw.org/library/omr/6473-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "5533-1",
+    "name": "Red Fury",
+    "theme": "Model Team",
+    "year": 1999,
+    "theme_full": "Model Team",
+    "url": "https://library.ldraw.org/library/omr/5533-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "7101-1",
+    "name": "Lightsaber Duel",
+    "theme": "Star Wars",
+    "year": 1999,
+    "theme_full": "Star Wars",
+    "url": "https://library.ldraw.org/library/omr/7101-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "7110-1",
+    "name": "Landspeeder",
+    "theme": "Star Wars",
+    "year": 1999,
+    "theme_full": "Star Wars",
+    "url": "https://library.ldraw.org/library/omr/7110-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "7121-1",
+    "name": "Naboo Swamp",
+    "theme": "Star Wars",
+    "year": 1999,
+    "theme_full": "Star Wars",
+    "url": "https://library.ldraw.org/library/omr/7121-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "7130-1",
+    "name": "Snowspeeder",
+    "theme": "Star Wars",
+    "year": 1999,
+    "theme_full": "Star Wars",
+    "url": "https://library.ldraw.org/library/omr/7130-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "7140-1",
+    "name": "X-wing Fighter",
+    "theme": "Star Wars",
+    "year": 1999,
+    "theme_full": "Star Wars",
+    "url": "https://library.ldraw.org/library/omr/7140-1.mpd",
+    "qualifier": "1"
+  },
+  {
+    "set_number": "7150-1",
+    "name": "TIE Fighter & Y-wing",
+    "theme": "Star Wars",
+    "year": 1999,
+    "theme_full": "Star Wars",
+    "url": "https://library.ldraw.org/library/omr/7150-1.mpd",
+    "qualifier": "1"
+  }
+]

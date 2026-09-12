@@ -1,0 +1,1683 @@
+{
+  "themes": [
+    {
+      "theme_full": "Town > Classic Town",
+      "category": "official_classic",
+      "set_count": 217,
+      "sample_sets": [
+        "106-1",
+        "107-2",
+        "1472-1",
+        "1477-1",
+        "1484-1"
+      ]
+    },
+    {
+      "theme_full": "Technic",
+      "category": "technic",
+      "set_count": 158,
+      "sample_sets": [
+        "1972-1",
+        "41999-1",
+        "42000-1",
+        "42004-1",
+        "42006-1"
+      ]
+    },
+    {
+      "theme_full": "Brickheadz",
+      "category": "specialty",
+      "set_count": 76,
+      "sample_sets": [
+        "40270-1",
+        "40271-1",
+        "40272-1",
+        "40273-1",
+        "40274-1"
+      ]
+    },
+    {
+      "theme_full": "Racers",
+      "category": "official_modern",
+      "set_count": 76,
+      "sample_sets": [
+        "30030-1",
+        "30033-1",
+        "30034-1",
+        "30035-1",
+        "30036-1"
+      ]
+    },
+    {
+      "theme_full": "Star Wars",
+      "category": "licensed",
+      "set_count": 64,
+      "sample_sets": [
+        "20006-1",
+        "20009-1",
+        "20019-1",
+        "20021-1",
+        "30050-1"
+      ]
+    },
+    {
+      "theme_full": "Creator > Creator 3-in-1",
+      "category": "official_modern",
+      "set_count": 60,
+      "sample_sets": [
+        "30542-1",
+        "30571-1",
+        "31009-1",
+        "31025-1",
+        "31027-1"
+      ]
+    },
+    {
+      "theme_full": "Fabuland",
+      "category": "official_modern",
+      "set_count": 42,
+      "sample_sets": [
+        "121-1",
+        "341-2",
+        "347-3",
+        "350-3",
+        "3602-1"
+      ]
+    },
+    {
+      "theme_full": "Architecture",
+      "category": "specialty",
+      "set_count": 36,
+      "sample_sets": [
+        "21000-1",
+        "21000-2",
+        "21001-1",
+        "21002-1",
+        "21003-1"
+      ]
+    },
+    {
+      "theme_full": "Space > Classic Space",
+      "category": "official_classic",
+      "set_count": 36,
+      "sample_sets": [
+        "1499-1",
+        "1557-1",
+        "6780-1",
+        "6801-1",
+        "6805-1"
+      ]
+    },
+    {
+      "theme_full": "Train > 9V",
+      "category": "official_classic",
+      "set_count": 34,
+      "sample_sets": [
+        "10013-1",
+        "10014-1",
+        "10015-1",
+        "10016-1",
+        "10017-1"
+      ]
+    },
+    {
+      "theme_full": "Creator",
+      "category": "official_modern",
+      "set_count": 33,
+      "sample_sets": [
+        "20011-1",
+        "20014-1",
+        "20015-1",
+        "30022-1",
+        "30023-1"
+      ]
+    },
+    {
+      "theme_full": "Friends",
+      "category": "official_modern",
+      "set_count": 29,
+      "sample_sets": [
+        "30100-1",
+        "30101-1",
+        "30102-1",
+        "30103-1",
+        "30105-1"
+      ]
+    },
+    {
+      "theme_full": "Creator > Designer Sets",
+      "category": "official_modern",
+      "set_count": 24,
+      "sample_sets": [
+        "3223-1",
+        "4096-1",
+        "4404-1",
+        "4883-1",
+        "4886-1"
+      ]
+    },
+    {
+      "theme_full": "Creator > Creator Expert",
+      "category": "official_modern",
+      "set_count": 20,
+      "sample_sets": [
+        "10124-1",
+        "10194-1",
+        "10213-1",
+        "10214-1",
+        "10220-1"
+      ]
+    },
+    {
+      "theme_full": "Space > Futuron",
+      "category": "official_classic",
+      "set_count": 17,
+      "sample_sets": [
+        "1620-1",
+        "1621-1",
+        "1974-4",
+        "6770-1",
+        "6810-1"
+      ]
+    },
+    {
+      "theme_full": "Star Wars > Ultimate Collector Series",
+      "category": "licensed",
+      "set_count": 17,
+      "sample_sets": [
+        "10018-1",
+        "10019-1",
+        "10030-1",
+        "10129-1",
+        "10134-1"
+      ]
+    },
+    {
+      "theme_full": "Train > 4.5V",
+      "category": "official_classic",
+      "set_count": 17,
+      "sample_sets": [
+        "112-2",
+        "126-1",
+        "148-1",
+        "158-1",
+        "164-1"
+      ]
+    },
+    {
+      "theme_full": "City > Traffic",
+      "category": "official_modern",
+      "set_count": 16,
+      "sample_sets": [
+        "30313-1",
+        "3179-1",
+        "3180-1",
+        "3221-1",
+        "4206-2"
+      ]
+    },
+    {
+      "theme_full": "Space > Space Police III",
+      "category": "official_classic",
+      "set_count": 15,
+      "sample_sets": [
+        "5969-1",
+        "5970-1",
+        "5971-1",
+        "5972-1",
+        "5973-1"
+      ]
+    },
+    {
+      "theme_full": "City > Police",
+      "category": "official_modern",
+      "set_count": 14,
+      "sample_sets": [
+        "30311-1",
+        "4205-1",
+        "4436-1",
+        "4439-1",
+        "4912-1"
+      ]
+    },
+    {
+      "theme_full": "Modular Buildings",
+      "category": "official_modern",
+      "set_count": 14,
+      "sample_sets": [
+        "10182-1",
+        "10185-1",
+        "10190-1",
+        "10197-1",
+        "10218-1"
+      ]
+    },
+    {
+      "theme_full": "Train > 12V",
+      "category": "official_classic",
+      "set_count": 14,
+      "sample_sets": [
+        "7725-1",
+        "7730-1",
+        "7735-1",
+        "7740-1",
+        "7745-1"
+      ]
+    },
+    {
+      "theme_full": "City > Construction",
+      "category": "official_modern",
+      "set_count": 13,
+      "sample_sets": [
+        "30312-1",
+        "4200-1",
+        "4434-1",
+        "5610-1",
+        "60018-1"
+      ]
+    },
+    {
+      "theme_full": "Western",
+      "category": "official_classic",
+      "set_count": 13,
+      "sample_sets": [
+        "2845-1",
+        "2846-1",
+        "6706-1",
+        "6709-1",
+        "6712-1"
+      ]
+    },
+    {
+      "theme_full": "LEGO Ideas and CUUSOO",
+      "category": "specialty",
+      "set_count": 12,
+      "sample_sets": [
+        "21302-1",
+        "21303-1",
+        "21307-1",
+        "21309-1",
+        "21311-1"
+      ]
+    },
+    {
+      "theme_full": "Space > Blacktron II",
+      "category": "official_classic",
+      "set_count": 12,
+      "sample_sets": [
+        "1462-1",
+        "1479-1",
+        "1887-1",
+        "6812-1",
+        "6832-1"
+      ]
+    },
+    {
+      "theme_full": "Architecture > Skylines",
+      "category": "specialty",
+      "set_count": 11,
+      "sample_sets": [
+        "21026-1",
+        "21027-1",
+        "21028-1",
+        "21032-1",
+        "21033-1"
+      ]
+    },
+    {
+      "theme_full": "Boat",
+      "category": "official_classic",
+      "set_count": 11,
+      "sample_sets": [
+        "310-3",
+        "311-1",
+        "312-3",
+        "314-1",
+        "315-2"
+      ]
+    },
+    {
+      "theme_full": "Technic > Expert Builder",
+      "category": "technic",
+      "set_count": 11,
+      "sample_sets": [
+        "850-1",
+        "851-1",
+        "852-1",
+        "854-1",
+        "8844-1"
+      ]
+    },
+    {
+      "theme_full": "Town > Res-Q",
+      "category": "official_classic",
+      "set_count": 11,
+      "sample_sets": [
+        "1069-1",
+        "1097-1",
+        "2962-1",
+        "6415-1",
+        "6428-1"
+      ]
+    },
+    {
+      "theme_full": "Castle > Lion Knights",
+      "category": "official_classic",
+      "set_count": 9,
+      "sample_sets": [
+        "6010-1",
+        "6021-1",
+        "6022-1",
+        "6040-1",
+        "6041-1"
+      ]
+    },
+    {
+      "theme_full": "Space > M:Tron",
+      "category": "official_classic",
+      "set_count": 9,
+      "sample_sets": [
+        "1478-1",
+        "6811-1",
+        "6833-1",
+        "6862-1",
+        "6877-1"
+      ]
+    },
+    {
+      "theme_full": "Icons",
+      "category": "official_modern",
+      "set_count": 8,
+      "sample_sets": [
+        "10276-1",
+        "10277-1",
+        "10283-1",
+        "10294-1",
+        "10295-1"
+      ]
+    },
+    {
+      "theme_full": "Promotional > Bricktober",
+      "category": "specialty",
+      "set_count": 8,
+      "sample_sets": [
+        "40141-1",
+        "40142-1",
+        "40143-1",
+        "40144-1",
+        "40180-1"
+      ]
+    },
+    {
+      "theme_full": "Racers > Ferrari",
+      "category": "licensed",
+      "set_count": 8,
+      "sample_sets": [
+        "30190-1",
+        "30191-1",
+        "30192-1",
+        "30193-1",
+        "30194-1"
+      ]
+    },
+    {
+      "theme_full": "Space > Ice Planet 2002",
+      "category": "official_classic",
+      "set_count": 8,
+      "sample_sets": [
+        "1704-1",
+        "1731-1",
+        "6814-1",
+        "6834-1",
+        "6879-1"
+      ]
+    },
+    {
+      "theme_full": "Space > Space Police II",
+      "category": "official_classic",
+      "set_count": 8,
+      "sample_sets": [
+        "1916-1",
+        "1969-1",
+        "3015-1",
+        "6813-1",
+        "6852-1"
+      ]
+    },
+    {
+      "theme_full": "Technic > Universal Building Set",
+      "category": "technic",
+      "set_count": 8,
+      "sample_sets": [
+        "8020-1",
+        "8022-1",
+        "8024-1",
+        "8032-1",
+        "8054-1"
+      ]
+    },
+    {
+      "theme_full": "Town",
+      "category": "official_classic",
+      "set_count": 8,
+      "sample_sets": [
+        "10036-1",
+        "10037-1",
+        "10156-1",
+        "1029-1",
+        "2531-1"
+      ]
+    },
+    {
+      "theme_full": "Harry Potter",
+      "category": "licensed",
+      "set_count": 7,
+      "sample_sets": [
+        "75948-1",
+        "75953-1",
+        "75954-1",
+        "75966-1",
+        "75968-1"
+      ]
+    },
+    {
+      "theme_full": "Mixels",
+      "category": "licensed",
+      "set_count": 7,
+      "sample_sets": [
+        "41500-1",
+        "41501-1",
+        "41502-1",
+        "41503-1",
+        "41504-1"
+      ]
+    },
+    {
+      "theme_full": "Pirates > Pirates I",
+      "category": "official_classic",
+      "set_count": 7,
+      "sample_sets": [
+        "1713-1",
+        "6232-1",
+        "6235-1",
+        "6245-1",
+        "6279-1"
+      ]
+    },
+    {
+      "theme_full": "Promotional",
+      "category": "specialty",
+      "set_count": 7,
+      "sample_sets": [
+        "40190-1",
+        "40191-1",
+        "40192-1",
+        "40193-1",
+        "40194-1"
+      ]
+    },
+    {
+      "theme_full": "Brick Sketches",
+      "category": "specialty",
+      "set_count": 6,
+      "sample_sets": [
+        "40386-1",
+        "40391-1",
+        "40428-1",
+        "40431-1",
+        "40456-1"
+      ]
+    },
+    {
+      "theme_full": "Castle > Black Falcons",
+      "category": "official_classic",
+      "set_count": 6,
+      "sample_sets": [
+        "6011-1",
+        "6030-1",
+        "6035-1",
+        "6062-1",
+        "6073-1"
+      ]
+    },
+    {
+      "theme_full": "Elves",
+      "category": "licensed",
+      "set_count": 6,
+      "sample_sets": [
+        "30259-1",
+        "41071-1",
+        "41072-1",
+        "41073-1",
+        "41075-1"
+      ]
+    },
+    {
+      "theme_full": "Model Team",
+      "category": "official_classic",
+      "set_count": 6,
+      "sample_sets": [
+        "5510-1",
+        "5521-1",
+        "5533-1",
+        "5540-1",
+        "5542-1"
+      ]
+    },
+    {
+      "theme_full": "Pharaoh's Quest",
+      "category": "licensed",
+      "set_count": 6,
+      "sample_sets": [
+        "30090-1",
+        "30091-1",
+        "7306-1",
+        "7325-1",
+        "7326-1"
+      ]
+    },
+    {
+      "theme_full": "Space > Blacktron I",
+      "category": "official_classic",
+      "set_count": 6,
+      "sample_sets": [
+        "1875-1",
+        "6876-1",
+        "6894-1",
+        "6941-1",
+        "6954-1"
+      ]
+    },
+    {
+      "theme_full": "Space > Space Police I",
+      "category": "official_classic",
+      "set_count": 6,
+      "sample_sets": [
+        "6781-1",
+        "6831-1",
+        "6886-1",
+        "6895-1",
+        "6955-1"
+      ]
+    },
+    {
+      "theme_full": "Space > Spyrius",
+      "category": "official_classic",
+      "set_count": 6,
+      "sample_sets": [
+        "1714-1",
+        "6835-1",
+        "6889-1",
+        "6939-1",
+        "6949-1"
+      ]
+    },
+    {
+      "theme_full": "Speed Champions",
+      "category": "licensed",
+      "set_count": 6,
+      "sample_sets": [
+        "75870-1",
+        "75878-1",
+        "75892-1",
+        "75893-1",
+        "75895-1"
+      ]
+    },
+    {
+      "theme_full": "Universal Building Set",
+      "category": "official_classic",
+      "set_count": 6,
+      "sample_sets": [
+        "544-1",
+        "555-2",
+        "566-1",
+        "722-1",
+        "733-1"
+      ]
+    },
+    {
+      "theme_full": "Castle > Forestmen",
+      "category": "official_classic",
+      "set_count": 5,
+      "sample_sets": [
+        "1680-1",
+        "1974-3",
+        "6054-1",
+        "6066-1",
+        "6071-1"
+      ]
+    },
+    {
+      "theme_full": "City > Fire",
+      "category": "official_modern",
+      "set_count": 5,
+      "sample_sets": [
+        "4208-1",
+        "4914-1",
+        "60001-1",
+        "60216-1",
+        "7942-1"
+      ]
+    },
+    {
+      "theme_full": "Creator > Early Creator",
+      "category": "official_modern",
+      "set_count": 5,
+      "sample_sets": [
+        "4016-1",
+        "4017-1",
+        "4018-1",
+        "4019-1",
+        "4037-1"
+      ]
+    },
+    {
+      "theme_full": "Legoland > Construction",
+      "category": "official_modern",
+      "set_count": 5,
+      "sample_sets": [
+        "410-1",
+        "435-1",
+        "604-2",
+        "612-1",
+        "689-1"
+      ]
+    },
+    {
+      "theme_full": "The Hobbit and Lord of the Rings > The Lord of the Rings",
+      "category": "licensed",
+      "set_count": 5,
+      "sample_sets": [
+        "30210-1",
+        "9469-1",
+        "9470-1",
+        "9471-1",
+        "9476-1"
+      ]
+    },
+    {
+      "theme_full": "Universal Building Set > Basic",
+      "category": "official_classic",
+      "set_count": 5,
+      "sample_sets": [
+        "1869-1",
+        "2130-1",
+        "2132-1",
+        "2133-1",
+        "2134-1"
+      ]
+    },
+    {
+      "theme_full": "City > Airport",
+      "category": "official_modern",
+      "set_count": 4,
+      "sample_sets": [
+        "10159-1",
+        "3181-1",
+        "60101-1",
+        "7893-1"
+      ]
+    },
+    {
+      "theme_full": "City > Farm",
+      "category": "official_modern",
+      "set_count": 4,
+      "sample_sets": [
+        "7634-1",
+        "7635-1",
+        "7636-1",
+        "7637-1"
+      ]
+    },
+    {
+      "theme_full": "Hobby Sets",
+      "category": "specialty",
+      "set_count": 4,
+      "sample_sets": [
+        "390-2",
+        "392-1",
+        "395-1",
+        "396-1"
+      ]
+    },
+    {
+      "theme_full": "Other",
+      "category": "specialty",
+      "set_count": 4,
+      "sample_sets": [
+        "17101-1",
+        "40782-1",
+        "40783-1",
+        "71006-1"
+      ]
+    },
+    {
+      "theme_full": "Space > Unitron",
+      "category": "official_classic",
+      "set_count": 4,
+      "sample_sets": [
+        "1787-1",
+        "1789-1",
+        "1793-1",
+        "6991-1"
+      ]
+    },
+    {
+      "theme_full": "Speed Racer",
+      "category": "licensed",
+      "set_count": 4,
+      "sample_sets": [
+        "8158-1",
+        "8159-1",
+        "8160-1",
+        "8161-1"
+      ]
+    },
+    {
+      "theme_full": "System > Town Plan",
+      "category": "official_classic",
+      "set_count": 4,
+      "sample_sets": [
+        "1210-2",
+        "1211-2",
+        "1212-2",
+        "1213-2"
+      ]
+    },
+    {
+      "theme_full": "Town > Launch Command",
+      "category": "official_classic",
+      "set_count": 4,
+      "sample_sets": [
+        "6339-1",
+        "6516-1",
+        "6544-1",
+        "6614-1"
+      ]
+    },
+    {
+      "theme_full": "Adventurers > Dino Island",
+      "category": "official_classic",
+      "set_count": 3,
+      "sample_sets": [
+        "5920-1",
+        "5934-1",
+        "5935-1"
+      ]
+    },
+    {
+      "theme_full": "Botanicals",
+      "category": "specialty",
+      "set_count": 3,
+      "sample_sets": [
+        "10280-1",
+        "10281-1",
+        "10349-1"
+      ]
+    },
+    {
+      "theme_full": "Castle > Black Knights",
+      "category": "official_classic",
+      "set_count": 3,
+      "sample_sets": [
+        "6034-1",
+        "6059-1",
+        "6085-1"
+      ]
+    },
+    {
+      "theme_full": "City > Coast Guard",
+      "category": "official_modern",
+      "set_count": 3,
+      "sample_sets": [
+        "4937-1",
+        "7736-1",
+        "7737-1"
+      ]
+    },
+    {
+      "theme_full": "City > Harbor",
+      "category": "official_modern",
+      "set_count": 3,
+      "sample_sets": [
+        "3178-1",
+        "4641-1",
+        "4643-1"
+      ]
+    },
+    {
+      "theme_full": "City > Hospital",
+      "category": "official_modern",
+      "set_count": 3,
+      "sample_sets": [
+        "4431-1",
+        "7902-1",
+        "7903-1"
+      ]
+    },
+    {
+      "theme_full": "Creator > X-Pod",
+      "category": "official_modern",
+      "set_count": 3,
+      "sample_sets": [
+        "4347-1",
+        "4348-1",
+        "4349-1"
+      ]
+    },
+    {
+      "theme_full": "LEGO Art",
+      "category": "specialty",
+      "set_count": 3,
+      "sample_sets": [
+        "31197-1",
+        "31199-1",
+        "31203-1"
+      ]
+    },
+    {
+      "theme_full": "Legoland > Building",
+      "category": "official_modern",
+      "set_count": 3,
+      "sample_sets": [
+        "345-1",
+        "346-2",
+        "349-1"
+      ]
+    },
+    {
+      "theme_full": "Seasonal > Halloween",
+      "category": "specialty",
+      "set_count": 3,
+      "sample_sets": [
+        "40012-1",
+        "40013-1",
+        "40014-1"
+      ]
+    },
+    {
+      "theme_full": "Sports > Soccer",
+      "category": "official_classic",
+      "set_count": 3,
+      "sample_sets": [
+        "3314-1",
+        "3404-1",
+        "3405-1"
+      ]
+    },
+    {
+      "theme_full": "Super Heroes DC > Batman",
+      "category": "licensed",
+      "set_count": 3,
+      "sample_sets": [
+        "30161-1",
+        "30300-1",
+        "40433-1"
+      ]
+    },
+    {
+      "theme_full": "Super Heroes DC > Batman > UCS",
+      "category": "licensed",
+      "set_count": 3,
+      "sample_sets": [
+        "76139-1",
+        "76161-1",
+        "7784-1"
+      ]
+    },
+    {
+      "theme_full": "Technic > Competition",
+      "category": "technic",
+      "set_count": 3,
+      "sample_sets": [
+        "8202-1",
+        "8245-1",
+        "8257-1"
+      ]
+    },
+    {
+      "theme_full": "Technic > Star Wars",
+      "category": "technic",
+      "set_count": 3,
+      "sample_sets": [
+        "8001-1",
+        "8002-1",
+        "8012-1"
+      ]
+    },
+    {
+      "theme_full": "Town > Divers",
+      "category": "official_classic",
+      "set_count": 3,
+      "sample_sets": [
+        "6442-1",
+        "6556-1",
+        "6599-1"
+      ]
+    },
+    {
+      "theme_full": "Town > Outback",
+      "category": "official_classic",
+      "set_count": 3,
+      "sample_sets": [
+        "6490-1",
+        "6550-1",
+        "6553-1"
+      ]
+    },
+    {
+      "theme_full": "Town > Paradisa",
+      "category": "official_classic",
+      "set_count": 3,
+      "sample_sets": [
+        "6402-1",
+        "6414-1",
+        "6416-1"
+      ]
+    },
+    {
+      "theme_full": "Train",
+      "category": "official_classic",
+      "set_count": 3,
+      "sample_sets": [
+        "10001-1",
+        "10002-1",
+        "7819-1"
+      ]
+    },
+    {
+      "theme_full": "Adventurers > Desert",
+      "category": "official_classic",
+      "set_count": 2,
+      "sample_sets": [
+        "2541-1",
+        "2542-1"
+      ]
+    },
+    {
+      "theme_full": "Castle > Dragon Knights",
+      "category": "official_classic",
+      "set_count": 2,
+      "sample_sets": [
+        "6043-1",
+        "6056-1"
+      ]
+    },
+    {
+      "theme_full": "City",
+      "category": "official_modern",
+      "set_count": 2,
+      "sample_sets": [
+        "60054-1",
+        "60059-1"
+      ]
+    },
+    {
+      "theme_full": "City > Cargo",
+      "category": "official_modern",
+      "set_count": 2,
+      "sample_sets": [
+        "7733-1",
+        "7992-1"
+      ]
+    },
+    {
+      "theme_full": "City > Trains",
+      "category": "official_modern",
+      "set_count": 2,
+      "sample_sets": [
+        "7936-1",
+        "7997-1"
+      ]
+    },
+    {
+      "theme_full": "Homemaker",
+      "category": "official_classic",
+      "set_count": 2,
+      "sample_sets": [
+        "261-1",
+        "262-2"
+      ]
+    },
+    {
+      "theme_full": "Legoland > Airport",
+      "category": "official_modern",
+      "set_count": 2,
+      "sample_sets": [
+        "430-1",
+        "613-1"
+      ]
+    },
+    {
+      "theme_full": "Legoland > Space",
+      "category": "official_modern",
+      "set_count": 2,
+      "sample_sets": [
+        "358-1",
+        "367-1"
+      ]
+    },
+    {
+      "theme_full": "Legoland > Vehicle",
+      "category": "official_modern",
+      "set_count": 2,
+      "sample_sets": [
+        "601-2",
+        "610-1"
+      ]
+    },
+    {
+      "theme_full": "Mindstorms",
+      "category": "technic",
+      "set_count": 2,
+      "sample_sets": [
+        "40413-1",
+        "51515-1"
+      ]
+    },
+    {
+      "theme_full": "Minecraft",
+      "category": "licensed",
+      "set_count": 2,
+      "sample_sets": [
+        "21107-1",
+        "21113-1"
+      ]
+    },
+    {
+      "theme_full": "Seasonal > Advent > Friends",
+      "category": "specialty",
+      "set_count": 2,
+      "sample_sets": [
+        "3316-1",
+        "41040-1"
+      ]
+    },
+    {
+      "theme_full": "Seasonal > Christmas",
+      "category": "specialty",
+      "set_count": 2,
+      "sample_sets": [
+        "30028-1",
+        "40138-1"
+      ]
+    },
+    {
+      "theme_full": "The LEGO Movie",
+      "category": "licensed",
+      "set_count": 2,
+      "sample_sets": [
+        "70814-1",
+        "70816-1"
+      ]
+    },
+    {
+      "theme_full": "Town > City Center",
+      "category": "official_classic",
+      "set_count": 2,
+      "sample_sets": [
+        "6470-1",
+        "6472-1"
+      ]
+    },
+    {
+      "theme_full": "Town > Town Jr.",
+      "category": "official_classic",
+      "set_count": 2,
+      "sample_sets": [
+        "2584-1",
+        "6325-1"
+      ]
+    },
+    {
+      "theme_full": "Town > World City",
+      "category": "official_classic",
+      "set_count": 2,
+      "sample_sets": [
+        "10128-1",
+        "10158-1"
+      ]
+    },
+    {
+      "theme_full": "Adventurers > Orient Expedition",
+      "category": "official_classic",
+      "set_count": 1,
+      "sample_sets": [
+        "7410-1"
+      ]
+    },
+    {
+      "theme_full": "Castle",
+      "category": "official_classic",
+      "set_count": 1,
+      "sample_sets": [
+        "6102-1"
+      ]
+    },
+    {
+      "theme_full": "Castle > Knights Kingdom II",
+      "category": "official_classic",
+      "set_count": 1,
+      "sample_sets": [
+        "10176-1"
+      ]
+    },
+    {
+      "theme_full": "City > Off-Road",
+      "category": "official_modern",
+      "set_count": 1,
+      "sample_sets": [
+        "4433-1"
+      ]
+    },
+    {
+      "theme_full": "DOTS",
+      "category": "official_modern",
+      "set_count": 1,
+      "sample_sets": [
+        "41903-1"
+      ]
+    },
+    {
+      "theme_full": "Dimensions",
+      "category": "licensed",
+      "set_count": 1,
+      "sample_sets": [
+        "71200-1"
+      ]
+    },
+    {
+      "theme_full": "Duplo",
+      "category": "official_modern",
+      "set_count": 1,
+      "sample_sets": [
+        "10885-1"
+      ]
+    },
+    {
+      "theme_full": "Duplo > Town",
+      "category": "official_modern",
+      "set_count": 1,
+      "sample_sets": [
+        "10918-1"
+      ]
+    },
+    {
+      "theme_full": "Educational and Dacta > Mindstorms > WeDo",
+      "category": "technic",
+      "set_count": 1,
+      "sample_sets": [
+        "45300-1"
+      ]
+    },
+    {
+      "theme_full": "Factory",
+      "category": "official_modern",
+      "set_count": 1,
+      "sample_sets": [
+        "10183-1"
+      ]
+    },
+    {
+      "theme_full": "Indiana Jones",
+      "category": "licensed",
+      "set_count": 1,
+      "sample_sets": [
+        "20004-1"
+      ]
+    },
+    {
+      "theme_full": "LEGO Brand Store",
+      "category": "specialty",
+      "set_count": 1,
+      "sample_sets": [
+        "40199-1"
+      ]
+    },
+    {
+      "theme_full": "LEGO Brand Store > Monthly Mini Model Build",
+      "category": "specialty",
+      "set_count": 1,
+      "sample_sets": [
+        "40396-1"
+      ]
+    },
+    {
+      "theme_full": "LEGO Exclusive",
+      "category": "specialty",
+      "set_count": 1,
+      "sample_sets": [
+        "4002020-1"
+      ]
+    },
+    {
+      "theme_full": "Legends of Chima",
+      "category": "licensed",
+      "set_count": 1,
+      "sample_sets": [
+        "70127-1"
+      ]
+    },
+    {
+      "theme_full": "Legoland > Harbor",
+      "category": "official_modern",
+      "set_count": 1,
+      "sample_sets": [
+        "364-1"
+      ]
+    },
+    {
+      "theme_full": "Legoland > Hospital",
+      "category": "official_modern",
+      "set_count": 1,
+      "sample_sets": [
+        "600-1"
+      ]
+    },
+    {
+      "theme_full": "Legoland > Western",
+      "category": "official_modern",
+      "set_count": 1,
+      "sample_sets": [
+        "365-1"
+      ]
+    },
+    {
+      "theme_full": "Mindstorms > EV3",
+      "category": "technic",
+      "set_count": 1,
+      "sample_sets": [
+        "31313-1"
+      ]
+    },
+    {
+      "theme_full": "Mindstorms > NXT",
+      "category": "technic",
+      "set_count": 1,
+      "sample_sets": [
+        "8527-1"
+      ]
+    },
+    {
+      "theme_full": "Modular Buildings > Mini",
+      "category": "official_modern",
+      "set_count": 1,
+      "sample_sets": [
+        "10230-1"
+      ]
+    },
+    {
+      "theme_full": "Monster Fighters",
+      "category": "licensed",
+      "set_count": 1,
+      "sample_sets": [
+        "30201-1"
+      ]
+    },
+    {
+      "theme_full": "Promotional > Airlines",
+      "category": "specialty",
+      "set_count": 1,
+      "sample_sets": [
+        "1773-1"
+      ]
+    },
+    {
+      "theme_full": "Seasonal > Chinese (Lunar) New Year",
+      "category": "specialty",
+      "set_count": 1,
+      "sample_sets": [
+        "40148-1"
+      ]
+    },
+    {
+      "theme_full": "Seasonal > Christmas > Creator",
+      "category": "specialty",
+      "set_count": 1,
+      "sample_sets": [
+        "10267-1"
+      ]
+    },
+    {
+      "theme_full": "Seasonal > Thanksgiving",
+      "category": "specialty",
+      "set_count": 1,
+      "sample_sets": [
+        "40011-1"
+      ]
+    },
+    {
+      "theme_full": "Space > Insectoids",
+      "category": "official_classic",
+      "set_count": 1,
+      "sample_sets": [
+        "6919-1"
+      ]
+    },
+    {
+      "theme_full": "Super Heroes Marvel > Avengers",
+      "category": "licensed",
+      "set_count": 1,
+      "sample_sets": [
+        "76042-1"
+      ]
+    },
+    {
+      "theme_full": "Town > Extreme Team",
+      "category": "official_classic",
+      "set_count": 1,
+      "sample_sets": [
+        "1096-1"
+      ]
+    },
+    {
+      "theme_full": "Town > Space Port",
+      "category": "official_classic",
+      "set_count": 1,
+      "sample_sets": [
+        "1180-1"
+      ]
+    },
+    {
+      "theme_full": "Town > Town Plan",
+      "category": "official_classic",
+      "set_count": 1,
+      "sample_sets": [
+        "10184-1"
+      ]
+    },
+    {
+      "theme_full": "Znap",
+      "category": "official_classic",
+      "set_count": 1,
+      "sample_sets": [
+        "3501-1"
+      ]
+    }
+  ],
+  "summary": {
+    "total_themes": 135,
+    "total_sets_with_theme": 1470,
+    "themes_by_category": {
+      "official_classic": {
+        "theme_count": 49,
+        "set_count": 545,
+        "top_10": [
+          {
+            "theme_full": "Town > Classic Town",
+            "set_count": 217
+          },
+          {
+            "theme_full": "Space > Classic Space",
+            "set_count": 36
+          },
+          {
+            "theme_full": "Train > 9V",
+            "set_count": 34
+          },
+          {
+            "theme_full": "Space > Futuron",
+            "set_count": 17
+          },
+          {
+            "theme_full": "Train > 4.5V",
+            "set_count": 17
+          },
+          {
+            "theme_full": "Space > Space Police III",
+            "set_count": 15
+          },
+          {
+            "theme_full": "Train > 12V",
+            "set_count": 14
+          },
+          {
+            "theme_full": "Western",
+            "set_count": 13
+          },
+          {
+            "theme_full": "Space > Blacktron II",
+            "set_count": 12
+          },
+          {
+            "theme_full": "Boat",
+            "set_count": 11
+          }
+        ]
+      },
+      "official_modern": {
+        "theme_count": 37,
+        "set_count": 408,
+        "top_10": [
+          {
+            "theme_full": "Racers",
+            "set_count": 76
+          },
+          {
+            "theme_full": "Creator > Creator 3-in-1",
+            "set_count": 60
+          },
+          {
+            "theme_full": "Fabuland",
+            "set_count": 42
+          },
+          {
+            "theme_full": "Creator",
+            "set_count": 33
+          },
+          {
+            "theme_full": "Friends",
+            "set_count": 29
+          },
+          {
+            "theme_full": "Creator > Designer Sets",
+            "set_count": 24
+          },
+          {
+            "theme_full": "Creator > Creator Expert",
+            "set_count": 20
+          },
+          {
+            "theme_full": "City > Traffic",
+            "set_count": 16
+          },
+          {
+            "theme_full": "City > Police",
+            "set_count": 14
+          },
+          {
+            "theme_full": "Modular Buildings",
+            "set_count": 14
+          }
+        ]
+      },
+      "licensed": {
+        "theme_count": 19,
+        "set_count": 145,
+        "top_10": [
+          {
+            "theme_full": "Star Wars",
+            "set_count": 64
+          },
+          {
+            "theme_full": "Star Wars > Ultimate Collector Series",
+            "set_count": 17
+          },
+          {
+            "theme_full": "Racers > Ferrari",
+            "set_count": 8
+          },
+          {
+            "theme_full": "Harry Potter",
+            "set_count": 7
+          },
+          {
+            "theme_full": "Mixels",
+            "set_count": 7
+          },
+          {
+            "theme_full": "Elves",
+            "set_count": 6
+          },
+          {
+            "theme_full": "Pharaoh's Quest",
+            "set_count": 6
+          },
+          {
+            "theme_full": "Speed Champions",
+            "set_count": 6
+          },
+          {
+            "theme_full": "The Hobbit and Lord of the Rings > The Lord of the Rings",
+            "set_count": 5
+          },
+          {
+            "theme_full": "Speed Racer",
+            "set_count": 4
+          }
+        ]
+      },
+      "technic": {
+        "theme_count": 9,
+        "set_count": 188,
+        "top_10": [
+          {
+            "theme_full": "Technic",
+            "set_count": 158
+          },
+          {
+            "theme_full": "Technic > Expert Builder",
+            "set_count": 11
+          },
+          {
+            "theme_full": "Technic > Universal Building Set",
+            "set_count": 8
+          },
+          {
+            "theme_full": "Technic > Competition",
+            "set_count": 3
+          },
+          {
+            "theme_full": "Technic > Star Wars",
+            "set_count": 3
+          },
+          {
+            "theme_full": "Mindstorms",
+            "set_count": 2
+          },
+          {
+            "theme_full": "Educational and Dacta > Mindstorms > WeDo",
+            "set_count": 1
+          },
+          {
+            "theme_full": "Mindstorms > EV3",
+            "set_count": 1
+          },
+          {
+            "theme_full": "Mindstorms > NXT",
+            "set_count": 1
+          }
+        ]
+      },
+      "specialty": {
+        "theme_count": 21,
+        "set_count": 184,
+        "top_10": [
+          {
+            "theme_full": "Brickheadz",
+            "set_count": 76
+          },
+          {
+            "theme_full": "Architecture",
+            "set_count": 36
+          },
+          {
+            "theme_full": "LEGO Ideas and CUUSOO",
+            "set_count": 12
+          },
+          {
+            "theme_full": "Architecture > Skylines",
+            "set_count": 11
+          },
+          {
+            "theme_full": "Promotional > Bricktober",
+            "set_count": 8
+          },
+          {
+            "theme_full": "Promotional",
+            "set_count": 7
+          },
+          {
+            "theme_full": "Brick Sketches",
+            "set_count": 6
+          },
+          {
+            "theme_full": "Hobby Sets",
+            "set_count": 4
+          },
+          {
+            "theme_full": "Other",
+            "set_count": 4
+          },
+          {
+            "theme_full": "Botanicals",
+            "set_count": 3
+          }
+        ]
+      }
+    },
+    "top_10_overall": [
+      {
+        "theme_full": "Town > Classic Town",
+        "set_count": 217,
+        "category": "official_classic"
+      },
+      {
+        "theme_full": "Technic",
+        "set_count": 158,
+        "category": "technic"
+      },
+      {
+        "theme_full": "Brickheadz",
+        "set_count": 76,
+        "category": "specialty"
+      },
+      {
+        "theme_full": "Racers",
+        "set_count": 76,
+        "category": "official_modern"
+      },
+      {
+        "theme_full": "Star Wars",
+        "set_count": 64,
+        "category": "licensed"
+      },
+      {
+        "theme_full": "Creator > Creator 3-in-1",
+        "set_count": 60,
+        "category": "official_modern"
+      },
+      {
+        "theme_full": "Fabuland",
+        "set_count": 42,
+        "category": "official_modern"
+      },
+      {
+        "theme_full": "Architecture",
+        "set_count": 36,
+        "category": "specialty"
+      },
+      {
+        "theme_full": "Space > Classic Space",
+        "set_count": 36,
+        "category": "official_classic"
+      },
+      {
+        "theme_full": "Train > 9V",
+        "set_count": 34,
+        "category": "official_classic"
+      }
+    ]
+  }
+}

@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LDraw OMR — Análisis Cross-Corpus (532 sets, 108 760 piezas)</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --bg-elevated: #161b22;
+    --bg-card: #1c2128;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --text-muted: #6e7681;
+    --accent: #58a6ff;
+    --accent-2: #d29922;
+    --green: #3fb950;
+    --orange: #d29922;
+    --red: #f85149;
+    --purple: #bc8cff;
+    --pink: #f778ba;
+    --cyan: #39c5cf;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    line-height: 1.6;
+    padding: 40px 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  header { margin-bottom: 40px; }
+  h1 { font-size: 2.5em; margin-bottom: 8px; font-weight: 700; letter-spacing: -0.02em; }
+  h1 .accent { color: var(--accent); }
+  .subtitle { color: var(--text-dim); font-size: 1.1em; margin-bottom: 4px; }
+  .meta-line { color: var(--text-muted); font-size: 0.85em; }
+  h2 {
+    font-size: 1.7em;
+    margin: 56px 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 700;
+  }
+  h2 .section-num { color: var(--accent); font-family: ui-monospace, monospace; }
+  h3 { font-size: 1.25em; margin: 32px 0 12px; color: var(--text); font-weight: 600; }
+  h4 { font-size: 1em; margin: 20px 0 8px; color: var(--text-dim); font-weight: 600; }
+  p { margin-bottom: 12px; }
+  code, .mono { font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+  code {
+    background: var(--bg-card);
+    color: var(--accent);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .kpi {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+  }
+  .kpi.accent-2::before { background: var(--accent-2); }
+  .kpi.green::before { background: var(--green); }
+  .kpi.purple::before { background: var(--purple); }
+  .kpi.pink::before { background: var(--pink); }
+  .kpi.cyan::before { background: var(--cyan); }
+  .kpi.orange::before { background: var(--orange); }
+  .kpi-label { font-size: 0.78em; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .kpi-value { font-size: 2em; font-weight: 700; line-height: 1.1; }
+  .kpi-sub { font-size: 0.85em; color: var(--text-dim); margin-top: 6px; }
+  .kpi-sub .delta-up { color: var(--green); }
+  .kpi-sub .delta-down { color: var(--red); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    background: var(--bg-card);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9em; }
+  th { background: var(--bg-elevated); color: var(--text-dim); font-weight: 600; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.5px; }
+  tr:last-child td { border-bottom: none; }
+  td.num { text-align: right; font-family: ui-monospace, monospace; }
+  td.file { font-family: ui-monospace, monospace; color: var(--accent); }
+  .bar {
+    display: inline-block;
+    height: 8px;
+    background: linear-gradient(90deg, var(--accent), var(--purple));
+    border-radius: 4px;
+    vertical-align: middle;
+  }
+  .bar.accent-2 { background: linear-gradient(90deg, var(--accent-2), var(--orange)); }
+  .bar.green { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+  .bar.pink { background: linear-gradient(90deg, var(--pink), var(--purple)); }
+  .bar.orange { background: linear-gradient(90deg, var(--orange), var(--red)); }
+  .chart {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin: 16px 0;
+  }
+  .chart-title { font-size: 0.95em; color: var(--text-dim); margin-bottom: 16px; font-weight: 600; }
+  .insight {
+    background: linear-gradient(135deg, rgba(88,166,255,0.08), rgba(188,140,255,0.06));
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+  }
+  .insight-title { font-weight: 600; margin-bottom: 6px; color: var(--accent); }
+  .insight p { margin-bottom: 8px; }
+  .insight ul { margin-left: 20px; }
+  .refuted {
+    background: linear-gradient(135deg, rgba(248,81,73,0.08), rgba(247,120,186,0.05));
+    border-left-color: var(--red);
+  }
+  .refuted .insight-title { color: var(--red); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+  .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 0.75em;
+    font-weight: 600;
+    margin-right: 6px;
+  }
+  .badge.ok { background: rgba(63,185,80,0.15); color: var(--green); }
+  .badge.warn { background: rgba(210,153,34,0.15); color: var(--orange); }
+  .badge.bad { background: rgba(248,81,73,0.15); color: var(--red); }
+  .badge.new { background: rgba(188,140,255,0.15); color: var(--purple); }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; font-size: 0.85em; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 3px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+  details {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 10px 0;
+  }
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text);
+    list-style: none;
+  }
+  summary::before { content: '▶ '; color: var(--text-muted); font-size: 0.8em; }
+  details[open] summary::before { content: '▼ '; }
+  details > div { margin-top: 12px; padding-left: 8px; }
+  footer { margin: 80px 0 40px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85em; }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>LDraw OMR <span class="accent">cross-corpus</span></h1>
+  <p class="subtitle">Análisis estadístico de modelos LEGO oficiales del OMR (Official Model Repository)</p>
+  <p class="meta-line">
+    <strong>532 sets</strong> analizados · <strong>108 760 piezas</strong> en total · <strong>4 724 sub-builds</strong> · <strong>23 reglas</strong> aprendidas · generado 2026-09-12
+  </p>
+</header>
+
+<!-- ========================================================== -->
+<h2><span class="section-num">01.</span> Panorama del corpus</h2>
+
+<div class="grid">
+  <div class="kpi"><div class="kpi-label">Sets totales</div><div class="kpi-value">532</div><div class="kpi-sub">de 1 470 disponibles en OMR</div></div>
+  <div class="kpi accent-2"><div class="kpi-label">Piezas totales</div><div class="kpi-value">108 760</div><div class="kpi-sub">204.4 piezas/set en media</div></div>
+  <div class="kpi green"><div class="kpi-label">Sub-builds</div><div class="kpi-value">4 724</div><div class="kpi-sub">8.88 sub-builds/set</div></div>
+  <div class="kpi purple"><div class="kpi-label">Custom parts</div><div class="kpi-value">1 037</div><div class="kpi-sub">0.95 % del corpus</div></div>
+  <div class="kpi pink"><div class="kpi-label">Themes OMR cubiertos</div><div class="kpi-value">≥ 49</div><div class="kpi-sub">+ modernos (Racers, Friends, ...)</div></div>
+  <div class="kpi cyan"><div class="kpi-label">BFC CERTIFY</div><div class="kpi-value">132 / 532</div><div class="kpi-sub">24.8 % de los sets</div></div>
+  <div class="kpi orange"><div class="kpi-label">Reflejos (det &lt; 0)</div><div class="kpi-value">1 463</div><div class="kpi-sub">1.345 % de las piezas</div></div>
+  <div class="kpi"><div class="kpi-label">Reglas aprendidas</div><div class="kpi-value">23</div><div class="kpi-sub">7 confirmadas + 5 nuevas + 11 cualificadas</div></div>
+</div>
+
+<!-- ========================================================== -->
+<h2><span class="section-num">02.</span> Cohortes</h2>
+
+<p>Tres cohortes balanced, cada una con su propia "escuela" de construcción.</p>
+
+<div class="chart">
+  <div class="chart-title">Distribución por cohorte</div>
+  <svg viewBox="0 0 800 280" width="100%" xmlns="http://www.w3.org/2000/svg">
+    <g font-family="ui-monospace, monospace" font-size="11">
+      <!-- Eje -->
+      <line x1="120" y1="20" x2="120" y2="240" stroke="#8b949e" stroke-width="1"/>
+      <!-- 80s/90s -->
+      <text x="115" y="35" text-anchor="end" fill="#e6edf3">80s/90s</text>
+      <text x="115" y="50" text-anchor="end" fill="#8b949e" font-size="9">100 sets</text>
+      <rect x="125" y="22" width="186" height="36" fill="#58a6ff" opacity="0.8"/>
+      <text x="218" y="44" fill="#0d1117" text-anchor="middle" font-weight="700">18 670</text>
+      <text x="320" y="44" fill="#8b949e" font-size="10">piezas</text>
+
+      <text x="115" y="105" text-anchor="end" fill="#e6edf3">Kids</text>
+      <text x="115" y="120" text-anchor="end" fill="#8b949e" font-size="9">200 sets</text>
+      <rect x="125" y="92" width="429" height="36" fill="#d29922" opacity="0.8"/>
+      <text x="340" y="114" fill="#0d1117" text-anchor="middle" font-weight="700">42 947</text>
+      <text x="565" y="114" fill="#8b949e" font-size="10">piezas</text>
+
+      <text x="115" y="175" text-anchor="end" fill="#e6edf3">Classic</text>
+      <text x="115" y="190" text-anchor="end" fill="#8b949e" font-size="9">232 sets</text>
+      <rect x="125" y="162" width="471" height="36" fill="#3fb950" opacity="0.8"/>
+      <text x="361" y="184" fill="#0d1117" text-anchor="middle" font-weight="700">47 143</text>
+      <text x="606" y="184" fill="#8b949e" font-size="10">piezas</text>
+
+      <text x="115" y="245" text-anchor="end" fill="#8b949e" font-size="9">scale</text>
+      <line x1="125" y1="240" x2="715" y2="240" stroke="#30363d"/>
+      <text x="125" y="258" text-anchor="middle" fill="#6e7681" font-size="9">0</text>
+      <text x="297" y="258" text-anchor="middle" fill="#6e7681" font-size="9">20 000</text>
+      <text x="468" y="258" text-anchor="middle" fill="#6e7681" font-size="9">40 000</text>
+      <text x="640" y="258" text-anchor="middle" fill="#6e7681" font-size="9">60 000</text>
+    </g>
+  </svg>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Métrica</th><th>80s/90s</th><th>Kids</th><th>Classic</th><th>Total</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Sets</td><td class="num">100</td><td class="num">200</td><td class="num">232</td><td class="num"><strong>532</strong></td></tr>
+    <tr><td>Piezas totales</td><td class="num">18 670</td><td class="num">42 947</td><td class="num">47 143</td><td class="num"><strong>108 760</strong></td></tr>
+    <tr><td>Piezas/set (media)</td><td class="num">186.7</td><td class="num">214.7</td><td class="num">203.2</td><td class="num"><strong>204.4</strong></td></tr>
+    <tr><td>Sub-builds/set</td><td class="num">8.39</td><td class="num">7.68</td><td class="num">10.13</td><td class="num"><strong>8.88</strong></td></tr>
+    <tr><td>Custom parts</td><td class="num">112</td><td class="num">818</td><td class="num">107</td><td class="num"><strong>1 037</strong></td></tr>
+    <tr><td>Custom ratio</td><td class="num">0.6 %</td><td class="num">1.9 %</td><td class="num">0.2 %</td><td class="num"><strong>0.95 %</strong></td></tr>
+    <tr><td>BFC CERTIFY</td><td class="num">21 %</td><td class="num">36.5 %</td><td class="num">16.4 %</td><td class="num"><strong>24.8 %</strong></td></tr>
+    <tr><td><strong>Reflejos (det &lt; 0)</strong></td><td class="num">0.27 %</td><td class="num">0.25 %</td><td class="num"><span style="color:#f85149"><strong>2.77 %</strong></span></td><td class="num"><strong>1.35 %</strong></td></tr>
+  </tbody>
+</table>
+
+<div class="insight refuted">
+  <div class="insight-title">⚠ Hallazgo crítico: reflejos NO son uniformes</div>
+  <p>El ratio de reflejos del 1.35 % <strong>no es un sesgo del corpus</strong> — está hiperconcentrado en Space-themed sets:</p>
+  <ul>
+    <li><strong>73 sets Space</strong> (Classic Space, Unitron, Blacktron, M:Tron, etc.) = <strong>87.8 %</strong> de todos los reflejos del corpus.</li>
+    <li>Classic Space individual: <strong>21.14 %</strong> de reflejos. Unitron: <strong>13.95 %</strong>. Blacktron I: <strong>12.36 %</strong>.</li>
+    <li>Classic Town (109 sets, theme mayoritario): ratio <strong>0.40 %</strong> — idéntico a kids modernos.</li>
+  </ul>
+  <p>Conclusión: el sesgo es del <strong>theme Space</strong>, no del corpus clásico. Esto refuta la regla "R3: reflejos &lt; 0.3 %" del corpus 300.</p>
+</div>
+
+<!-- ========================================================== -->
+<h2><span class="section-num">03.</span> Top piezas (vocabulario base del LEGO System)</h2>
+
+<p>El top 10 de piezas cubre el <strong>24.3 %</strong> del corpus. Estas 10 piezas son el "vocabulario base" del LEGO System desde los 80s.</p>
+
+<div class="chart">
+  <div class="chart-title">Top 15 piezas — conteo en 532 sets</div>
+  <svg viewBox="0 0 900 540" width="100%" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      .lbl { fill: #e6edf3; font-size: 12px; font-family: ui-monospace, monospace; }
+      .ct { fill: #8b949e; font-size: 10px; font-family: ui-monospace, monospace; }
+      .axis { stroke: #30363d; }
+    </style>
+    <g transform="translate(160, 30)">
+      <line x1="0" y1="0" x2="720" y2="0" class="axis"/>
+      <text x="180" y="-10" text-anchor="middle" class="ct">10 k</text>
+      <text x="360" y="-10" text-anchor="middle" class="ct">20 k</text>
+      <text x="540" y="-10" text-anchor="middle" class="ct">40 k</text>
+      <text x="720" y="-10" text-anchor="middle" class="ct">60 k+</text>
+
+      <g transform="translate(0, 0)">
+        <text x="-10" y="14" text-anchor="end" class="lbl" fill="#58a6ff">4-4cyli.dat</text>
+        <rect width="555" height="20" fill="#58a6ff" opacity="0.85"/>
+        <text x="565" y="14" class="lbl">6 093</text>
+      </g>
+      <g transform="translate(0, 32)">
+        <text x="-10" y="14" text-anchor="end" class="lbl">3023.dat</text>
+        <rect width="334" height="20" fill="#d29922" opacity="0.85"/>
+        <text x="344" y="14" class="lbl">3 670</text>
+      </g>
+      <g transform="translate(0, 64)">
+        <text x="-10" y="14" text-anchor="end" class="lbl">3004.dat</text>
+        <rect width="300" height="20" fill="#3fb950" opacity="0.85"/>
+        <text x="310" y="14" class="lbl">3 293</text>
+      </g>
+      <g transform="translate(0, 96)">
+        <text x="-10" y="14" text-anchor="end" class="lbl">6141.dat</text>
+        <rect width="229" height="20" fill="#bc8cff" opacity="0.85"/>
+        <text x="239" y="14" class="lbl">2 519</text>
+      </g>
+      <g transform="translate(0, 128)">
+        <text x="-10" y="14" text-anchor="end" class="lbl">3005.dat</text>
+        <rect width="215" height="20" fill="#f778ba" opacity="0.85"/>
+        <text x="225" y="14" class="lbl">2 360</text>
+      </g>
+      <g transform="translate(0, 160)">
+        <text x="-10" y="14" text-anchor="end" class="lbl">3024.dat</text>
+        <rect width="190" height="20" fill="#39c5cf" opacity="0.85"/>
+        <text x="200" y="14" class="lbl">2 091</text>
+      </g>
+      <g transform="translate(0, 192)">
+        <text x="-10" y="14" text-anchor="end" class="lbl">3710.dat</text>
+        <rect width="185" height="20" fill="#d29922" opacity="0.65"/>
+        <text x="195" y="14" class="lbl">2 036</text>
+      </g>
+      <g transform="translate(0, 224)">
+        <text x="-10" y="14" text-anchor="end" class="lbl" fill="#f85149">756.dat 🆕</text>
+        <rect width="148" height="20" fill="#f85149" opacity="0.85"/>
+        <text x="158" y="14" class="lbl">1 627</text>
+      </g>
+      <g transform="translate(0, 256)">
+        <text x="-10" y="14" text-anchor="end" class="lbl">3010.dat</text>
+        <rect width="137" height="20" fill="#3fb950" opacity="0.65"/>
+        <text x="147" y="14" class="lbl">1 500</text>
+      </g>
+      <g transform="translate(0, 288)">
+        <text x="-10" y="14" text-anchor="end" class="lbl">3820.dat</text>
+        <rect width="112" height="20" fill="#bc8cff" opacity="0.65"/>
+        <text x="122" y="14" class="lbl">1 229</text>
+      </g>
+      <g transform="translate(0, 320)">
+        <text x="-10" y="14" text-anchor="end" class="lbl">3020.dat</text>
+        <rect width="109" height="20" fill="#39c5cf" opacity="0.65"/>
+        <text x="119" y="14" class="lbl">1 203</text>
+      </g>
+      <g transform="translate(0, 352)">
+        <text x="-10" y="14" text-anchor="end" class="lbl">3069b.dat</text>
+        <rect width="100" height="20" fill="#f778ba" opacity="0.65"/>
+        <text x="110" y="14" class="lbl">1 101</text>
+      </g>
+      <g transform="translate(0, 384)">
+        <text x="-10" y="14" text-anchor="end" class="lbl">3666.dat</text>
+        <rect width="91" height="20" fill="#58a6ff" opacity="0.65"/>
+        <text x="101" y="14" class="lbl">1 005</text>
+      </g>
+      <g transform="translate(0, 416)">
+        <text x="-10" y="14" text-anchor="end" class="lbl">3022.dat</text>
+        <rect width="91" height="20" fill="#d29922" opacity="0.55"/>
+        <text x="101" y="14" class="lbl">995</text>
+      </g>
+      <g transform="translate(0, 448)">
+        <text x="-10" y="14" text-anchor="end" class="lbl">3623.dat</text>
+        <rect width="89" height="20" fill="#3fb950" opacity="0.55"/>
+        <text x="99" y="14" class="lbl">981</text>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<div class="insight">
+  <div class="insight-title">🆕 Pieza revelación: <code>756.dat</code> (baseplate Technic 16×32)</div>
+  <p>En el corpus 300 no aparecía en el top-30. Con los 232 sets clásicos (especialmente Space), entró directo al <strong>#8 global con 1 627 usos</strong>. Es la <strong>firma de Space themes</strong>: aparece masivo en naves pre-1995 que se espejaban para construir simetrías.</p>
+</div>
+
+<!-- ========================================================== -->
+<h2><span class="section-num">04.</span> Y-layers (ritmo vertical)</h2>
+
+<p>Y-layers canónicos múltiplos de 8 LDU (1 plate = 8 LDU, 1 brick = 24 LDU).</p>
+
+<div class="chart">
+  <div class="chart-title">Top 15 Y-layers — distribución cross-corpus</div>
+  <svg viewBox="0 0 800 460" width="100%" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      .lbl2 { fill: #e6edf3; font-size: 12px; font-family: ui-monospace, monospace; }
+      .ct2 { fill: #8b949e; font-size: 10px; font-family: ui-monospace, monospace; }
+      .axis2 { stroke: #30363d; }
+    </style>
+    <g transform="translate(80, 30)">
+      <g transform="translate(0, 0)">
+        <text x="-10" y="14" text-anchor="end" class="lbl2">y = 0</text>
+        <text x="-10" y="26" text-anchor="end" class="ct2">plano base</text>
+        <rect width="586" height="22" fill="#3fb950" opacity="0.85"/>
+        <text x="596" y="14" class="lbl2">6 436</text>
+      </g>
+      <g transform="translate(0, 36)">
+        <text x="-10" y="14" text-anchor="end" class="lbl2">y = -8</text>
+        <text x="-10" y="26" text-anchor="end" class="ct2">1ª plate</text>
+        <rect width="550" height="22" fill="#58a6ff" opacity="0.85"/>
+        <text x="560" y="14" class="lbl2">6 041</text>
+      </g>
+      <g transform="translate(0, 72)">
+        <text x="-10" y="14" text-anchor="end" class="lbl2">y = -24</text>
+        <text x="-10" y="26" text-anchor="end" class="ct2">1er brick</text>
+        <rect width="544" height="22" fill="#d29922" opacity="0.85"/>
+        <text x="554" y="14" class="lbl2">5 976</text>
+      </g>
+      <g transform="translate(0, 108)">
+        <text x="-10" y="14" text-anchor="end" class="lbl2">y = -32</text>
+        <text x="-10" y="26" text-anchor="end" class="ct2">3ª plate</text>
+        <rect width="342" height="22" fill="#58a6ff" opacity="0.6"/>
+        <text x="352" y="14" class="lbl2">3 754</text>
+      </g>
+      <g transform="translate(0, 144)">
+        <text x="-10" y="14" text-anchor="end" class="lbl2">y = -16</text>
+        <text x="-10" y="26" text-anchor="end" class="ct2">2ª plate</text>
+        <rect width="313" height="22" fill="#58a6ff" opacity="0.6"/>
+        <text x="323" y="14" class="lbl2">3 439</text>
+      </g>
+      <g transform="translate(0, 180)">
+        <text x="-10" y="14" text-anchor="end" class="lbl2">y = -48</text>
+        <text x="-10" y="26" text-anchor="end" class="ct2">2º brick</text>
+        <rect width="288" height="22" fill="#d29922" opacity="0.6"/>
+        <text x="298" y="14" class="lbl2">3 164</text>
+      </g>
+      <g transform="translate(0, 216)">
+        <text x="-10" y="14" text-anchor="end" class="lbl2">y = -40</text>
+        <text x="-10" y="26" text-anchor="end" class="ct2">brick+3 plates</text>
+        <rect width="249" height="22" fill="#3fb950" opacity="0.6"/>
+        <text x="259" y="14" class="lbl2">2 742</text>
+      </g>
+      <g transform="translate(0, 252)">
+        <text x="-10" y="14" text-anchor="end" class="lbl2">y = -56</text>
+        <text x="-10" y="26" text-anchor="end" class="ct2">4ª plate</text>
+        <rect width="247" height="22" fill="#58a6ff" opacity="0.5"/>
+        <text x="257" y="14" class="lbl2">2 723</text>
+      </g>
+      <g transform="translate(0, 288)">
+        <text x="-10" y="14" text-anchor="end" class="lbl2" fill="#f85149">y = +8 🆕</text>
+        <text x="-10" y="26" text-anchor="end" class="ct2">antena/mástil</text>
+        <rect width="126" height="22" fill="#f85149" opacity="0.85"/>
+        <text x="136" y="14" class="lbl2">1 389</text>
+      </g>
+      <g transform="translate(0, 324)">
+        <text x="-10" y="14" text-anchor="end" class="lbl2">y = -144</text>
+        <text x="-10" y="26" text-anchor="end" class="ct2">10º brick</text>
+        <rect width="100" height="22" fill="#bc8cff" opacity="0.7"/>
+        <text x="110" y="14" class="lbl2">1 102</text>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<div class="insight">
+  <div class="insight-title">Patrón detectado: "3 plates + N bricks"</div>
+  <p>El top-3 de Y-layers es <strong>(0, -8, -24)</strong>: una base + 1 plate + 1 brick. Esto confirma el patrón universal:</p>
+  <ul>
+    <li>Walls de LEGO <strong>empiezan con 3 plates</strong> (y = -8, -16, -24) antes del primer brick.</li>
+    <li>Cada brickapilado añade 24 LDU; cada plate apilado añade 8 LDU.</li>
+    <li><strong>Y = +8</strong> (1 389 piezas) es la firma de antenas/mástiles en Space-themed — entra al top-15 con corpus 532.</li>
+    <li><strong>Y = -46.1</strong> (slope 33°) existía en corpus 300, ahora queda enterrado bajo los canónicos.</li>
+  </ul>
+</div>
+
+<!-- ========================================================== -->
+<h2><span class="section-num">05.</span> Deltas (cómo encajan las piezas)</h2>
+
+<p>El <strong>85 % de los deltas consecutivos</strong> entre piezas son múltiplos de 20 en X/Z (encaje de stud) y múltiplos de 8 en Y (altura plate/brick).</p>
+
+<div class="chart">
+  <div class="chart-title">Top 10 deltas — offset entre piezas consecutivas</div>
+  <svg viewBox="0 0 900 360" width="100%" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      .lbl3 { fill: #e6edf3; font-size: 12px; font-family: ui-monospace, monospace; }
+      .ct3 { fill: #8b949e; font-size: 9px; font-family: ui-monospace, monospace; }
+      .axis3 { stroke: #30363d; }
+    </style>
+    <g transform="translate(200, 30)">
+      <text x="0" y="-15" class="ct3">0</text>
+      <text x="80" y="-15" text-anchor="middle" class="ct3">500</text>
+      <text x="160" y="-15" text-anchor="middle" class="ct3">1 000</text>
+      <text x="240" y="-15" text-anchor="middle" class="ct3">1 500</text>
+      <text x="320" y="-15" text-anchor="middle" class="ct3">2 000</text>
+      <text x="400" y="-15" text-anchor="middle" class="ct3">2 500</text>
+      <line x1="0" y1="0" x2="500" y2="0" class="axis3"/>
+
+      <g transform="translate(0, 0)">
+        <text x="-10" y="14" text-anchor="end" class="lbl3">(0, 0, 0)</text>
+        <text x="-10" y="26" text-anchor="end" class="ct3" fill="#6e7681">identidad</text>
+        <rect width="241" height="20" fill="#6e7681" opacity="0.7"/>
+        <text x="251" y="14" class="lbl3">2 660</text>
+      </g>
+      <g transform="translate(0, 32)">
+        <text x="-10" y="14" text-anchor="end" class="lbl3">(0, -8, 0)</text>
+        <text x="-10" y="26" text-anchor="end" class="ct3" fill="#58a6ff">plate sobre plate</text>
+        <rect width="152" height="20" fill="#58a6ff" opacity="0.85"/>
+        <text x="162" y="14" class="lbl3">1 669</text>
+      </g>
+      <g transform="translate(0, 64)">
+        <text x="-10" y="14" text-anchor="end" class="lbl3">(60, 0, 0)</text>
+        <text x="-10" y="26" text-anchor="end" class="ct3" fill="#3fb950">3-stud X+</text>
+        <rect width="145" height="20" fill="#3fb950" opacity="0.85"/>
+        <text x="155" y="14" class="lbl3">1 597</text>
+      </g>
+      <g transform="translate(0, 96)">
+        <text x="-10" y="14" text-anchor="end" class="lbl3">(20, 0, 0)</text>
+        <text x="-10" y="26" text-anchor="end" class="ct3" fill="#d29922">1-stud X+</text>
+        <rect width="127" height="20" fill="#d29922" opacity="0.85"/>
+        <text x="137" y="14" class="lbl3">1 401</text>
+      </g>
+      <g transform="translate(0, 128)">
+        <text x="-10" y="14" text-anchor="end" class="lbl3">(-60, 0, 0)</text>
+        <text x="-10" y="26" text-anchor="end" class="ct3" fill="#3fb950">3-stud X-</text>
+        <rect width="100" height="20" fill="#3fb950" opacity="0.85"/>
+        <text x="110" y="14" class="lbl3">1 104</text>
+      </g>
+      <g transform="translate(0, 160)">
+        <text x="-10" y="14" text-anchor="end" class="lbl3">(0, -24, 0)</text>
+        <text x="-10" y="26" text-anchor="end" class="ct3" fill="#bc8cff">brick sobre X</text>
+        <rect width="97" height="20" fill="#bc8cff" opacity="0.85"/>
+        <text x="107" y="14" class="lbl3">1 068</text>
+      </g>
+      <g transform="translate(0, 192)">
+        <text x="-10" y="14" text-anchor="end" class="lbl3">(0, 0, -60)</text>
+        <text x="-10" y="26" text-anchor="end" class="ct3" fill="#3fb950">3-stud Z-</text>
+        <rect width="96" height="20" fill="#3fb950" opacity="0.85"/>
+        <text x="106" y="14" class="lbl3">1 057</text>
+      </g>
+      <g transform="translate(0, 224)">
+        <text x="-10" y="14" text-anchor="end" class="lbl3">(100, 0, 0)</text>
+        <text x="-10" y="26" text-anchor="end" class="ct3" fill="#f778ba">5-stud X+ (trenes)</text>
+        <rect width="93" height="20" fill="#f778ba" opacity="0.85"/>
+        <text x="103" y="14" class="lbl3">1 027</text>
+      </g>
+      <g transform="translate(0, 256)">
+        <text x="-10" y="14" text-anchor="end" class="lbl3">(40, 0, 0)</text>
+        <text x="-10" y="26" text-anchor="end" class="ct3" fill="#3fb950">2-stud X+</text>
+        <rect width="92" height="20" fill="#3fb950" opacity="0.85"/>
+        <text x="102" y="14" class="lbl3">1 011</text>
+      </g>
+      <g transform="translate(0, 288)">
+        <text x="-10" y="14" text-anchor="end" class="lbl3">(0, 0, -20)</text>
+        <text x="-10" y="26" text-anchor="end" class="ct3" fill="#3fb950">1-stud Z-</text>
+        <rect width="88" height="20" fill="#3fb950" opacity="0.85"/>
+        <text x="98" y="14" class="lbl3">968</text>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<div class="insight">
+  <div class="insight-title">📐 Regla práctica de encadenamiento</div>
+  <p>Para construir una fila de plates o bricks <strong>sin solape</strong>:</p>
+  <ul>
+    <li><strong>Horizontal</strong>: <code>Δx</code> o <code>Δz</code> = ±20, ±40, ±60, ±80, ±100 LDU. Cada múltiplo de 20 = 1 stud.</li>
+    <li><strong>Vertical (Y)</strong>: <code>Δy = -8</code> para plate sobre plate; <code>Δy = -24</code> para brick encima de cualquier cosa.</li>
+    <li>El primer delta <strong>(0, 0, 0)</strong> aparece 2 660 veces — son piezas que se quedan en la misma posición entre sub-builds concatenados (no es encadenamiento físico).</li>
+  </ul>
+</div>
+
+<!-- ========================================================== -->
+<h2><span class="section-num">06.</span> Bigramas (qué pieza sigue a qué)</h2>
+
+<p>El <strong>90 %+ de los bigramas son self-bigrams</strong>: los sets se arman mayormente con filas paralelas de la misma pieza.</p>
+
+<table>
+  <thead><tr><th>#</th><th>Par</th><th>Cuenta</th><th>Tipo</th><th>Barra</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td class="file">4-4cyli → 4-4cyli</td><td class="num">6 069</td><td>self (pin-holes en fila)</td><td><span class="bar" style="width: 100%"></span></td></tr>
+    <tr><td>2</td><td class="file">756 → 756</td><td class="num">1 588</td><td>self (Space signature)</td><td><span class="bar" style="width: 26%"></span></td></tr>
+    <tr><td>3</td><td class="file">3004 → 3004</td><td class="num">1 563</td><td>self (bricks 1×2 en muro)</td><td><span class="bar" style="width: 26%"></span></td></tr>
+    <tr><td>4</td><td class="file">3023 → 3023</td><td class="num">1 384</td><td>self (plates 1×2 en fila)</td><td><span class="bar" style="width: 23%"></span></td></tr>
+    <tr><td>5</td><td class="file">6141 → 6141</td><td class="num">1 296</td><td>self (round plates decorativos)</td><td><span class="bar" style="width: 21%"></span></td></tr>
+    <tr><td>6</td><td class="file">3005 → 3005</td><td class="num">1 152</td><td>self (bricks 1×1 columnata)</td><td><span class="bar" style="width: 19%"></span></td></tr>
+    <tr><td>7</td><td class="file">3818 → 3820</td><td class="num">238</td><td><strong>heterogéneo</strong> · slope 33° + slope 45°</td><td><span class="bar accent-2" style="width: 4%"></span></td></tr>
+    <tr><td>8</td><td class="file">3819 → 3818</td><td class="num">233</td><td><strong>heterogéneo</strong> · slope 33° inv + slope 33°</td><td><span class="bar accent-2" style="width: 4%"></span></td></tr>
+    <tr><td>9</td><td class="file">6014 → 6015</td><td class="num">176</td><td><strong>heterogéneo</strong> · wheel + tyre</td><td><span class="bar accent-2" style="width: 3%"></span></td></tr>
+    <tr><td>10</td><td class="file">3005 → 3004</td><td class="num">166</td><td><strong>heterogéneo</strong> · brick 1×1 sobre 1×2</td><td><span class="bar accent-2" style="width: 3%"></span></td></tr>
+  </tbody>
+</table>
+
+<div class="insight">
+  <div class="insight-title">Bigramas slope-slope: firma de Space clásicos</div>
+  <p>Los 4 bigramas heterogéneos más significativos después de los self-bigrams son <strong>todas combinaciones slope-slope</strong>: <code>3818 ↔ 3820 ↔ 3819 ↔ 3817 ↔ 3816</code>. Esto es exclusivo de los cascos de nave Space (Classic Space, Futuron, Blacktron, etc.).</p>
+</div>
+
+<!-- ========================================================== -->
+<h2><span class="section-num">07.</span> Themes LEGO — por corpus</h2>
+
+<p>El OMR tiene <strong>135 themes</strong> categorizados. El corpus de 532 sets incluye una buena representación de los pre-2000 clásicos y los modernos más comunes.</p>
+
+<h3>Top themes por piezas en corpus 532</h3>
+
+<div class="chart">
+  <div class="chart-title">Piezas totales por theme (top-15 por piezas)</div>
+  <svg viewBox="0 0 900 540" width="100%" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      .lbl4 { fill: #e6edf3; font-size: 11px; font-family: ui-monospace, monospace; }
+      .ct4 { fill: #8b949e; font-size: 9px; font-family: ui-monospace, monospace; }
+      .axis4 { stroke: #30363d; }
+    </style>
+    <g transform="translate(260, 30)">
+      <text x="180" y="-15" text-anchor="middle" class="ct4">5 000</text>
+      <text x="360" y="-15" text-anchor="middle" class="ct4">10 000</text>
+      <text x="540" y="-15" text-anchor="middle" class="ct4">20 000</text>
+      <line x1="0" y1="0" x2="600" y2="0" class="axis4"/>
+
+      <g transform="translate(0,0)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Town > Classic Town</text>
+        <rect width="170" height="20" fill="#58a6ff" opacity="0.9"/>
+        <text x="180" y="14" class="lbl4">18 819</text>
+      </g>
+      <g transform="translate(0,30)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Friends</text>
+        <rect width="46" height="20" fill="#f778ba" opacity="0.9"/>
+        <text x="56" y="14" class="lbl4">5 046</text>
+      </g>
+      <g transform="translate(0,60)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Pirates (inc. Pirates I)</text>
+        <rect width="58" height="20" fill="#d29922" opacity="0.9"/>
+        <text x="68" y="14" class="lbl4">6 319</text>
+      </g>
+      <g transform="translate(0,90)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Model Team</text>
+        <rect width="30" height="20" fill="#3fb950" opacity="0.9"/>
+        <text x="40" y="14" class="lbl4">3 215</text>
+      </g>
+      <g transform="translate(0,120)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Creator 3-in-1</text>
+        <rect width="29" height="20" fill="#bc8cff" opacity="0.9"/>
+        <text x="39" y="14" class="lbl4">3 143</text>
+      </g>
+      <g transform="translate(0,150)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Train (todas)</text>
+        <rect width="24" height="20" fill="#39c5cf" opacity="0.9"/>
+        <text x="34" y="14" class="lbl4">2 592</text>
+      </g>
+      <g transform="translate(0,180)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Space (todas)</text>
+        <rect width="20" height="20" fill="#f85149" opacity="0.9"/>
+        <text x="30" y="14" class="lbl4">2 088</text>
+      </g>
+      <g transform="translate(0,210)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Castle (todas)</text>
+        <rect width="15" height="20" fill="#58a6ff" opacity="0.7"/>
+        <text x="25" y="14" class="lbl4">1 621</text>
+      </g>
+      <g transform="translate(0,240)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Fabuland</text>
+        <rect width="8" height="20" fill="#39c5cf" opacity="0.6"/>
+        <text x="18" y="14" class="lbl4">896</text>
+      </g>
+      <g transform="translate(0,270)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Universal Building Set</text>
+        <rect width="3" height="20" fill="#bc8cff" opacity="0.6"/>
+        <text x="13" y="14" class="lbl4">360</text>
+      </g>
+      <g transform="translate(0,300)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Western</text>
+        <rect width="18" height="20" fill="#3fb950" opacity="0.7"/>
+        <text x="28" y="14" class="lbl4">1 967</text>
+      </g>
+      <g transform="translate(0,330)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Harry Potter</text>
+        <rect width="22" height="20" fill="#d29922" opacity="0.6"/>
+        <text x="32" y="14" class="lbl4">2 407</text>
+      </g>
+      <g transform="translate(0,360)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Town (genérico)</text>
+        <rect width="40" height="20" fill="#58a6ff" opacity="0.5"/>
+        <text x="50" y="14" class="lbl4">4 394</text>
+      </g>
+      <g transform="translate(0,390)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Promotional Bricktober</text>
+        <rect width="8" height="20" fill="#f778ba" opacity="0.5"/>
+        <text x="18" y="14" class="lbl4">861</text>
+      </g>
+      <g transform="translate(0,420)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Boat</text>
+        <rect width="9" height="20" fill="#39c5cf" opacity="0.5"/>
+        <text x="19" y="14" class="lbl4">1 009</text>
+      </g>
+      <g transform="translate(0,450)">
+        <text x="-10" y="14" text-anchor="end" class="lbl4">Adventurers</text>
+        <rect width="2" height="20" fill="#bc8cff" opacity="0.5"/>
+        <text x="12" y="14" class="lbl4">207</text>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<div class="grid-2">
+  <div class="chart">
+    <div class="chart-title">🟣 Pirates — vocabulario único</div>
+    <p style="font-size: 0.95em; color: #8b949e; margin: 8px 0;">7 sets, 6 319 piezas, <strong>91.9 %</strong> concentradas en 2 mega-ships:</p>
+    <ul style="font-size: 0.9em; margin-left: 18px;">
+      <li><strong>6286 Skull's Eye Schooner</strong>: 2 834 piezas</li>
+      <li><strong>6285 Black Seas Barracuda</strong>: 2 975 piezas</li>
+    </ul>
+    <p style="font-size: 0.9em; color: #8b949e; margin-top: 8px;">El resto de Pirates promedia ~50 piezas cada uno. <code>4-4cyli</code> domina como mástil (3 895 unidades).</p>
+  </div>
+  <div class="chart">
+    <div class="chart-title">🟢 Fabuland — identidad propia máxima</div>
+    <p style="font-size: 0.95em; color: #8b949e; margin: 8px 0;">23 sets, 896 piezas. <strong>9.3 % custom parts</strong> (el más alto del corpus):</p>
+    <ul style="font-size: 0.9em; margin-left: 18px;">
+      <li>~25 piezas exclusivas <code>u91xx</code></li>
+      <li>Vocabulary único: figuras de animales, casas con techo curvo</li>
+      <li>Raro de custom parts pero vocab consistente interno</li>
+    </ul>
+    <p style="font-size: 0.9em; color: #8b949e; margin-top: 8px;">Fabuland nunca se solapa con System "moderno" — gramática propia.</p>
+  </div>
+</div>
+
+<div class="insight">
+  <div class="insight-title">📊 Castle fragmentado, Space unificado</div>
+  <p><strong>Castle</strong> tiene 7 sub-themes distintos (Lion Knights, Black Falcons, Forestmen, Black Knights, etc.) que <strong>no se agregan</strong> en el OMR. Cada uno tiene su propia pequeña colección (~3-10 sets). <strong>Space</strong>, en cambio, tiene 12 sub-themes pero muchos comparten vocabulario (sobre todo <code>756.dat</code> y slopes).</p>
+</div>
+
+<!-- ========================================================== -->
+<h2><span class="section-num">08.</span> BFC y reflejos — un caso de estudio</h2>
+
+<h3>BFC CERTIFY por theme</h3>
+<p>El BFC (Back Face Culling) marca los archivos como "certified for back-face culling". Es un indicador de formalidad/conformidad.</p>
+
+<div class="chart">
+  <div class="chart-title">% de sets con <code>BFC CERTIFY</code> por cohorte</div>
+  <svg viewBox="0 0 800 220" width="100%" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      .lbl5 { fill: #e6edf3; font-size: 12px; font-family: ui-monospace, monospace; }
+      .ct5 { fill: #8b949e; font-size: 9px; font-family: ui-monospace, monospace; }
+      .axis5 { stroke: #30363d; }
+    </style>
+    <g transform="translate(140, 30)">
+      <text x="0" y="-15" class="ct5">0</text>
+      <text x="156" y="-15" text-anchor="middle" class="ct5">10 %</text>
+      <text x="312" y="-15" text-anchor="middle" class="ct5">20 %</text>
+      <text x="468" y="-15" text-anchor="middle" class="ct5">30 %</text>
+      <text x="624" y="-15" text-anchor="middle" class="ct5">40 %</text>
+      <line x1="0" y1="0" x2="624" y2="0" class="axis5"/>
+
+      <g transform="translate(0,0)">
+        <text x="-10" y="14" text-anchor="end" class="lbl5">Classic</text>
+        <text x="-10" y="26" text-anchor="end" class="ct5" fill="#6e7681">pre-1990</text>
+        <rect width="164" height="20" fill="#f85149" opacity="0.85"/>
+        <text x="174" y="14" class="lbl5">16.4 %</text>
+      </g>
+      <g transform="translate(0,32)">
+        <text x="-10" y="14" text-anchor="end" class="lbl5">80s/90s</text>
+        <text x="-10" y="26" text-anchor="end" class="ct5" fill="#6e7681">1980-1999</text>
+        <rect width="210" height="20" fill="#d29922" opacity="0.85"/>
+        <text x="220" y="14" class="lbl5">21.0 %</text>
+      </g>
+      <g transform="translate(0,64)">
+        <text x="-10" y="14" text-anchor="end" class="lbl5">Kids</text>
+        <text x="-10" y="26" text-anchor="end" class="ct5" fill="#6e7681">1990-2020</text>
+        <rect width="365" height="20" fill="#3fb950" opacity="0.85"/>
+        <text x="375" y="14" class="lbl5">36.5 %</text>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<div class="insight refuted">
+  <div class="insight-title">⚠ Hipótesis refutada: BFC NO crece monotónicamente</div>
+  <p>La intuición sería: "los sets más nuevos son más formales". <strong>Esto es falso</strong> para el corpus:</p>
+  <ul>
+    <li>Clásicos pre-1990: <strong>16.4 %</strong> (el más BAJO)</li>
+    <li>80s/90s: <strong>21.0 %</strong></li>
+    <li>Kids modernos: <strong>36.5 %</strong> (el más ALTO)</li>
+  </ul>
+  <p>Las piezas <em>clásicas</em> están tan optimizadas por los autores OMR que no necesitan incluir la cabecera BFC formal. Los kids modernos son más formales porque tienen prácticas comunitarias de autoría más estrictas.</p>
+</div>
+
+<h3>Reflejos por theme (concentración en Space)</h3>
+
+<table>
+  <thead><tr><th>Theme</th><th>Sets</th><th>Piezas</th><th>Reflejos</th><th>% reflejos</th><th>Barra</th></tr></thead>
+  <tbody>
+    <tr style="background: rgba(248,81,73,0.15)">
+      <td>Space > Classic Space</td><td class="num">8</td><td class="num">927</td><td class="num">196</td><td class="num" style="color:#f85149"><strong>21.14 %</strong></td>
+      <td><span class="bar orange" style="width: 100%"></span></td>
+    </tr>
+    <tr style="background: rgba(248,81,73,0.10)">
+      <td>Space > Unitron</td><td class="num">4</td><td class="num">2 488</td><td class="num">347</td><td class="num" style="color:#f85149"><strong>13.95 %</strong></td>
+      <td><span class="bar orange" style="width: 66%"></span></td>
+    </tr>
+    <tr style="background: rgba(248,81,73,0.08)">
+      <td>Space > Blacktron I</td><td class="num">6</td><td class="num">1 554</td><td class="num">192</td><td class="num" style="color:#f85149"><strong>12.36 %</strong></td>
+      <td><span class="bar orange" style="width: 58%"></span></td>
+    </tr>
+    <tr>
+      <td>Homemaker</td><td class="num">1</td><td class="num">243</td><td class="num">27</td><td class="num">11.11 %</td>
+      <td><span class="bar" style="width: 53%"></span></td>
+    </tr>
+    <tr>
+      <td>Space > M:Tron</td><td class="num">8</td><td class="num">1 234</td><td class="num">99</td><td class="num">8.02 %</td>
+      <td><span class="bar" style="width: 38%"></span></td>
+    </tr>
+    <tr>
+      <td>Space > Space Police I</td><td class="num">3</td><td class="num">862</td><td class="num">61</td><td class="num">7.08 %</td>
+      <td><span class="bar" style="width: 33%"></span></td>
+    </tr>
+    <tr>
+      <td>Space > Ice Planet 2002</td><td class="num">8</td><td class="num">720</td><td class="num">50</td><td class="num">6.94 %</td>
+      <td><span class="bar" style="width: 33%"></span></td>
+    </tr>
+    <tr>
+      <td>Space > Blacktron II</td><td class="num">8</td><td class="num">984</td><td class="num">50</td><td class="num">5.08 %</td>
+      <td><span class="bar" style="width: 24%"></span></td>
+    </tr>
+    <tr>
+      <td>Classic Town (109 sets)</td><td class="num">109</td><td class="num">18 819</td><td class="num">75</td><td class="num" style="color:#3fb950">0.40 %</td>
+      <td><span class="bar green" style="width: 2%"></span></td>
+    </tr>
+    <tr>
+      <td>Creator 3-in-1 (14 sets)</td><td class="num">14</td><td class="num">3 143</td><td class="num">4</td><td class="num" style="color:#3fb950">0.13 %</td>
+      <td><span class="bar green" style="width: 1%"></span></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="insight refuted">
+  <div class="insight-title">🚨 El "sesgo de reflejos" es del theme Space, no del corpus</div>
+  <p>Si el sesgo fuera del corpus clásico, Classic Town (109 sets) tendría un ratio alto. <strong>No</strong>: tiene 0.40 %, idéntico a kids. Los reflejos son <strong>estética de los autores OMR para Space-themed en los 80s-90s</strong> — duplicaban filas espejadas de <code>756.dat</code> en lugar de girar el modelo entero.</p>
+</div>
+
+<!-- ========================================================== -->
+<h2><span class="section-num">09.</span> Las 23 reglas aprendidas</h2>
+
+<h3>Reglas confirmadas (7) — universales en corpus 532</h3>
+
+<details><summary><span class="badge ok">R1</span> Y-layers múltiplos de 8 LDU</summary><div>100 % top-15 canónicos. Plate (8 LDU), brick (24 LDU), half-plate (4 LDU), slope (-46.1 firma).</div></details>
+
+<details><summary><span class="badge ok">R2</span> Deltas X/Z múltiplos de 20 LDU</summary><div>100 % top-15 canónicos. Encaje de stud (1 stud = 20 LDU). Firmas irregulares (Technic embebido) son &lt; 1.5 % del top-30.</div></details>
+
+<details><summary><span class="badge ok">R5</span> Top 10 piezas cubren ~30 % del corpus</summary><div>24.3 % en corpus 532 (vs 32.7 % en corpus 300). 6 piezas base en top-10 de las 3 cohortes: 3023, 3004, 6141, 3005, 3024, 3710.</div></details>
+
+<details><summary><span class="badge ok">R7</span> Bigramas son self-bigrams</summary><div>Top-15: 100 % self-bigrams. Sets se arman mayormente con filas paralelas de la misma pieza.</div></details>
+
+<details><summary><span class="badge ok">R12</span> <code>4-4cyli.dat</code> es universal, no outlier</summary><div>6 093 usos (5.60 % corpus), distribuido en 3 cohortes. Pin-holes, mástiles y Technic embebido genérico.</div></details>
+
+<details><summary><span class="badge ok">R16</span> Fabuland tiene identidad propia (~25 piezas <code>u91xx</code>)</summary><div>23 sets Fabuland, 9.3 % custom parts. Piezas exclusivas serie u91xx.</div></details>
+
+<details><summary><span class="badge ok">R17</span> Friends es el theme más decorativo</summary><div><code>6141</code> round plate dominante (16/17 sets = 94 % usan esta pieza).</div></details>
+
+<h3>Reglas refutadas (2)</h3>
+
+<details><summary><span class="badge bad">R3</span> Reflejos &lt; 0.3 %</summary><div><strong>Refutada.</strong> Corpus 532 = 1.345 % reflejos. Pero el "sesgo" es del theme Space (5-21 %), no del corpus clásico. Classic Town: 0.40 %.</div></details>
+
+<details><summary><span class="badge bad">R10</span> BFC CERTIFY crece con el tiempo</summary><div><strong>Refutada.</strong> Clásicos 16.4 %, 80s/90s 21 %, kids 36.5 %. No monotónico.</div></details>
+
+<h3>Reglas nuevas con corpus 532 (5)</h3>
+
+<details><summary><span class="badge new">R19</span> Space-themed disparan reflejos</summary><div>73 sets Space acumulan 87.8 % de los reflejos del corpus. Ratios por sub-theme: Classic Space 21.14 %, Unitron 13.95 %, Blacktron I 12.36 %, M:Tron 8.02 %.</div></details>
+
+<details><summary><span class="badge new">R20</span> <code>756.dat</code> (baseplate Technic 16×32) es signature Space</summary><div>Entra al top-8 global con 1 627 usos. En 6990-1 Unitron Mobile HQ, 254 piezas 756 están reflejadas.</div></details>
+
+<details><summary><span class="badge new">R21</span> Clásicos tienen el BFC más bajo</summary><div>16.4 % vs 21 % vs 36.5 %. Las piezas pre-1990 están tan optimizadas que los autores obvian la cabecera formal.</div></details>
+
+<details><summary><span class="badge new">R22</span> Bigramas slope-slope son Space signature</summary><div>4 heterogéneos &gt; 30: <code>3818↔3820</code>, <code>3818↔3819</code>, <code>3816↔3817</code> — combinaciones de slopes 33° y 45° inv para cascos de nave.</div></details>
+
+<details><summary><span class="badge new">R23</span> Y = +8 LDU = antenas/mástiles</summary><div>1 389 piezas con Y positivo. Firmado por Blacktron/Unitron (antenas de nave sobresaliendo del bounding box).</div></details>
+
+<!-- ========================================================== -->
+<h2><span class="section-num">10.</span> Distribución por década</h2>
+
+<div class="chart">
+  <div class="chart-title">Sets por década (532 total)</div>
+  <svg viewBox="0 0 700 280" width="100%" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      .lbl6 { fill: #e6edf3; font-size: 12px; font-family: ui-monospace, monospace; }
+      .ct6 { fill: #8b949e; font-size: 10px; font-family: ui-monospace, monospace; }
+      .axis6 { stroke: #30363d; }
+    </style>
+    <g transform="translate(80, 30)">
+      <text x="60" y="-15" text-anchor="middle" class="ct6">50</text>
+      <text x="180" y="-15" text-anchor="middle" class="ct6">100</text>
+      <text x="300" y="-15" text-anchor="middle" class="ct6">150</text>
+      <line x1="0" y1="0" x2="600" y2="0" class="axis6"/>
+
+      <g transform="translate(0,0)">
+        <text x="-10" y="14" text-anchor="end" class="lbl6">1980s</text>
+        <rect width="140" height="20" fill="#58a6ff" opacity="0.85"/>
+        <text x="150" y="14" class="lbl6">140 sets · 11 506 piezas</text>
+      </g>
+      <g transform="translate(0,32)">
+        <text x="-10" y="14" text-anchor="end" class="lbl6">1990s</text>
+        <rect width="332" height="20" fill="#3fb950" opacity="0.85"/>
+        <text x="342" y="14" class="lbl6">165 sets · 22 052 piezas</text>
+      </g>
+      <g transform="translate(0,64)">
+        <text x="-10" y="14" text-anchor="end" class="lbl6">2000s</text>
+        <rect width="168" height="20" fill="#d29922" opacity="0.85"/>
+        <text x="178" y="14" class="lbl6">84 sets · 18 355 piezas</text>
+      </g>
+      <g transform="translate(0,96)">
+        <text x="-10" y="14" text-anchor="end" class="lbl6">2010s</text>
+        <rect width="252" height="20" fill="#bc8cff" opacity="0.85"/>
+        <text x="262" y="14" class="lbl6">126 sets · 27 728 piezas</text>
+      </g>
+      <g transform="translate(0,128)">
+        <text x="-10" y="14" text-anchor="end" class="lbl6">2020s</text>
+        <rect width="14" height="20" fill="#39c5cf" opacity="0.85"/>
+        <text x="24" y="14" class="lbl6">17 sets · 138 piezas</text>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<p>El corpus tiene <strong>pico en los 90s y 2010s</strong>. Los 90s porque LEGO renovó Space (Ice Planet, Unitron, Spyrius) y la mayoría de los Pirates del corpus. Los 2010s por los kids modernos y los Modern Building/Creator Expert. Los 2020s están subrepresentados (OMR solo tiene 23 sets del 2020s).</p>
+
+<!-- ========================================================== -->
+<h2><span class="section-num">11.</span> Generador y demos</h2>
+
+<p>El generador <code>generator/ldraw_gen.py</code> (1 161 líneas, stdlib-only) aplica las 23 reglas aprendidas. Tiene 5 demos validados:</p>
+
+<table>
+  <thead><tr><th>Demo</th><th>Tema</th><th>Piezas</th><th>STEPs</th><th>Files</th><th>Reflejos</th><th>Validación</th></tr></thead>
+  <tbody>
+    <tr><td><code>demo_town.ldr</code></td><td>Town 80s</td><td class="num">29</td><td class="num">12</td><td class="num">9</td><td class="num">0</td><td><span class="badge ok">0e/0w</span></td></tr>
+    <tr><td><code>demo_kid.ldr</code></td><td>City Modern</td><td class="num">18</td><td class="num">7</td><td class="num">6</td><td class="num">0</td><td><span class="badge ok">0e/0w</span></td></tr>
+    <tr><td><code>demo_classic.ldr</code></td><td>Sanity check</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td><span class="badge ok">0e/0w</span></td></tr>
+    <tr><td><code>demo_castle_lion_knights.ldr</code></td><td>Castle (con espejos)</td><td class="num">28</td><td class="num">9</td><td class="num">7</td><td class="num">4</td><td><span class="badge ok">0e/0w</span></td></tr>
+    <tr><td><code>demo_space_classic.ldr</code></td><td>Space Classic</td><td class="num">18</td><td class="num">8</td><td class="num">6</td><td class="num">0</td><td><span class="badge ok">0e/0w</span></td></tr>
+  </tbody>
+</table>
+
+<p>Para ejecutar el generador:</p>
+
+<pre><code>cd /home/user/Projects/ldraw/generator
+python3 ldraw_gen.py</code></pre>
+
+<!-- ========================================================== -->
+<h2><span class="section-num">12.</span> Limitaciones honestas</h2>
+
+<div class="insight">
+  <div class="insight-title">Lo que el corpus NO cubre</div>
+  <ul>
+    <li><strong>532 de 1 470 sets del OMR (~36 %)</strong>: muestra diversa pero no exhaustiva.</li>
+    <li><strong>OMR no contiene</strong> muchos sets LEGO modernos (Ninjago, Star Wars post-2010, varios Icons).</li>
+    <li><strong>Plan C shortfall</strong>: 68 sets no descargados (Pirates I, Forestmen, Black Knights, etc.) porque ya estaban en cohortes previos.</li>
+    <li><strong>Pirates outlier</strong>: 6286 + 6285 = 91.9 % del theme Pirates.</li>
+    <li><strong>Sub-builds anidados</strong>: la jerarquía dentro del MPD no se estudió a fondo.</li>
+    <li><strong>TEXMAP/texturas</strong>: muchos sets modernos usan PNG, no se estudió.</li>
+    <li><strong>Sin MOCs</strong>: la comunidad no-OMR puede tener convenciones distintas.</li>
+  </ul>
+</div>
+
+<footer>
+  <p><strong>Proyecto</strong>: análisis de OMR (Official Model Repository) de LDraw.org · <code>/home/user/Projects/ldraw/</code></p>
+  <p><strong>Documentos canónicos</strong>: <a href="../LDRAW_GUIDE.md">LDRAW_GUIDE.md</a> · <a href="../LEARNED_CONVENTIONS_532.md">LEARNED_CONVENTIONS_532.md</a> · <a href="../README.md">README.md</a> · <a href="../NEXT_SESSION.md">NEXT_SESSION.md</a></p>
+  <p><strong>Scripts</strong>: <a href="../analysis/batch_parse3.py">analysis/batch_parse3.py</a> (parser) · <a href="../generator/ldraw_gen.py">generator/ldraw_gen.py</a> (generador)</p>
+  <p><strong>Datos</strong>: <a href="../analysis/cross_corpus2_stats.json">cross_corpus2_stats.json</a> · <a href="../STATE.json">STATE.json</a></p>
+  <p style="margin-top: 16px;">LDraw™ es un trademark de la Estate of James Jessiman. LEGO® es un trademark del LEGO Group. Este proyecto es no oficial.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+0 Demo Classic Sanity
+0 Name: demo_classic_sanity.ldr
+0 Author: LdrawGen [opencode]
+0 !LDRAW_ORG Model
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+0 !THEME Classic Sanity
+0 !KEYWORDS sanity,check,minimal,brick-2x4,demo
+0 !HISTORY 2026-09-11 [LdrawGen] Demo classic sanity (single brick 2x4)
+
+0 // === Demo 3: Classic Sanity (single brick 2x4) ===
+1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat
