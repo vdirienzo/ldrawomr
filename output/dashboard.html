@@ -107,6 +107,7 @@
   }
   .chart-container.chart-large { height: 420px; }
   .chart-container.chart-small { height: 200px; }
+  .chart-container.table-box { height: auto; min-height: 0; overflow: visible; }
   .chart-container:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0,0,0,0.3);
@@ -588,7 +589,7 @@
   </div>
 
   <div class="section-wide">
-    <div class="chart-container">
+    <div class="chart-container table-box">
       <div class="chart-title">Top 20 themes (table)</div>
       <table>
         <thead><tr><th>Theme</th><th>Sets</th><th>Pieces</th></tr></thead>
