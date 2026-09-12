@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>LDraw Renders</title>
+<style>
+body { font-family: system-ui; padding: 20px; background: #1a1a1a; color: #eee; }
+h1 { color: #f0c000; }
+table { border-collapse: collapse; width: 100%; }
+th, td { padding: 8px; border: 1px solid #444; vertical-align: top; }
+th { background: #2a2a2a; text-align: left; }
+img { max-width: 400px; height: auto; display: block; }
+.name { font-family: monospace; }
+.method { font-size: 0.85em; color: #888; }
+.ref { max-width: 600px; margin: 20px 0; }
+.caption { color: #aaa; font-size: 0.9em; }
+</style></head><body>
+<h1>LegoGPT — Generated Models Rendered</h1>
+<p class="caption">Side-by-side: ML-generated samples vs rule-based reference.</p>
+
+<table>
+<thead><tr><th>Model</th><th>Render</th><th>Method</th></tr></thead>
+<tbody>
+
+        <tr>
+          <td class="name">demo_police_car</td>
+          <td><img src="ref_demo_police_car.png" alt="demo_police_car" /></td>
+          <td class="method">pil-side</td>
+        </tr>
+        <tr>
+          <td class="name">generated_1</td>
+          <td><img src="generated_1.png" alt="generated_1" /></td>
+          <td class="method">pil-side</td>
+        </tr>
+        <tr>
+          <td class="name">generated_2</td>
+          <td><img src="generated_2.png" alt="generated_2" /></td>
+          <td class="method">pil-side</td>
+        </tr>
+        <tr>
+          <td class="name">generated_3</td>
+          <td><img src="generated_3.png" alt="generated_3" /></td>
+          <td class="method">pil-side</td>
+        </tr>
+</tbody>
+</table>
+
+    <h2>Reference (rule-based)</h2>
+    <p>ref_demo_police_car.png</p>
+    <img src="ref_demo_police_car.png" class="ref" alt="reference" />
+</body></html>
