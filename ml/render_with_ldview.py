@@ -38,18 +38,50 @@ from ml.render_preview import parse as parse_ldr, render_topdown, render_side
 
 
 def find_ldview() -> str | None:
-    """Locate LDView binary. Returns path or None if not installed."""
+    """Locate LDView binary. Returns path or None if not installed.
+
+    Searches in order: PATH, common system locations, then Flatpak install.
+    Flatpak installs place the binary inside
+    ~/.local/share/flatpak/app/io.github.tcobbs.LDView/.../files/bin/LDView
+    """
+    flatpak_glob = list(Path.home().glob(
+        ".local/share/flatpak/app/io.github.tcobbs.LDView/*/*/files/bin/LDView"
+    ))
     candidates = [
         "ldview", "LDView",
         "/usr/bin/ldview", "/usr/local/bin/ldview",
         "/Applications/LDView.app/Contents/MacOS/LDView",
         "/snap/bin/ldview",
-    ]
+    ] + [str(p) for p in flatpak_glob]
     for c in candidates:
         found = shutil.which(c) if "/" not in c else (c if Path(c).exists() else None)
         if found:
             return found
     return None
+
+
+def render_with_ldview(ldr_path: Path, out_png: Path, ldview: str,
+                       width: int = 800, height: int = 600,
+                       view_angle: str = "0,45,45") -> bool:
+    """Render an LDraw file via LDView CLI. Returns True on success."""
+    if not Path(ldview).exists():
+        return False
+    out_png.parent.mkdir(parents=True, exist_ok=True)
+    cmd = [
+        ldview, str(ldr_path),
+        f"--Save={out_png}",
+        f"--SaveWidth={width}",
+        f"--SaveHeight={height}",
+        f"--ViewAngle={view_angle}",
+        "--DefaultColor=16",
+        "--HighlightNew=0",
+    ]
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+        return result.returncode == 0 and out_png.exists() and out_png.stat().st_size > 1000
+    except (subprocess.TimeoutExpired, FileNotFoundError) as e:
+        print(f"LDView failed for {ldr_path}: {e}", file=sys.stderr)
+        return False
 
 
 def render_with_ldview(ldr_path: Path, out_png: Path, ldview: str,
