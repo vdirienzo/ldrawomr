@@ -20,7 +20,44 @@
     line-height: 1.45; font-size: 14px;
   }
   .container { max-width: 1500px; margin: 0 auto; padding: 24px 24px 60px; }
-  /* Sticky nav */
+  
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideRight {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes popIn {
+    0% { opacity: 0; transform: scale(0.85); }
+    70% { transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  @keyframes drawLine {
+    from { stroke-dashoffset: 1000; }
+    to { stroke-dashoffset: 0; }
+  }
+  .animate-on-scroll {
+    opacity: 0;
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .animate-on-scroll.visible {
+    animation: fadeUp 0.6s ease-out forwards;
+  }
+  .animate-left {
+    opacity: 0;
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .animate-left.visible {
+    animation: slideRight 0.6s ease-out forwards;
+  }
+  
   nav.toc {
     position: sticky; top: 0; z-index: 100;
     background: rgba(13,17,23,0.97); backdrop-filter: blur(12px);
@@ -30,52 +67,78 @@
   nav.toc .nav-title { color: var(--accent); font-weight: 700; font-family: ui-monospace, monospace; }
   nav.toc a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border-radius: 4px; transition: all 0.15s; }
   nav.toc a:hover { color: var(--text); background: var(--bg-card); }
+  nav.toc .progress-bar { height: 2px; background: var(--accent); position: absolute; bottom: 0; left: 0; width: 0%; transition: width 0.1s linear; }
+  
   h1 { font-size: 2.2em; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 4px; }
   h1 .accent { color: var(--accent); }
-  h2 { font-size: 1.5em; margin: 36px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-weight: 700; letter-spacing: -0.02em; }
+  h2 { font-size: 1.4em; margin: 32px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-weight: 700; letter-spacing: -0.02em; }
   h2 .num { color: var(--accent); font-family: ui-monospace, monospace; opacity: 0.5; margin-right: 12px; font-size: 0.85em; }
-  h3 { font-size: 1.05em; margin: 18px 0 8px; color: var(--text); font-weight: 600; }
+  h3 { font-size: 1em; margin: 18px 0 8px; color: var(--text); font-weight: 600; }
   p { margin-bottom: 10px; color: var(--text-dim); max-width: 720px; font-size: 0.92em; }
   code { font-family: ui-monospace, "SF Mono", Consolas, monospace; }
   .code { font-family: ui-monospace, monospace; background: var(--bg-card); color: var(--accent); padding: 1px 5px; border-radius: 3px; font-size: 0.86em; }
-  /* Hero compact */
-  .hero { padding: 28px 0 20px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+  
+  .hero { padding: 24px 0 18px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
   .hero .lede { font-size: 1em; color: var(--text-dim); margin-top: 6px; }
   .hero-stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 0; margin-top: 18px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0; margin-top: 16px;
     border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
   }
-  .hero-stat { padding: 14px 16px; border-right: 1px solid var(--border); }
+  .hero-stat { padding: 14px 14px; border-right: 1px solid var(--border); }
   .hero-stat:last-child { border-right: none; }
-  .hero-stat .label { font-size: 0.66em; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 6px; }
-  .hero-stat .value { font-size: 2.4em; font-weight: 800; line-height: 1; letter-spacing: -0.04em; }
+  .hero-stat .label { font-size: 0.62em; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 6px; }
+  .hero-stat .value { font-size: 2.2em; font-weight: 800; line-height: 1; letter-spacing: -0.04em; }
   .hero-stat .sub { font-size: 0.74em; color: var(--text-dim); margin-top: 4px; }
-  /* Section: 2-column layout */
+  
   .section-2col {
-    display: grid; grid-template-columns: 1fr 320px; gap: 18px; align-items: start;
+    display: grid; grid-template-columns: 1fr 320px; gap: 16px; align-items: start;
     margin: 12px 0 28px;
   }
   .section-2col.reversed { grid-template-columns: 320px 1fr; }
+  .section-wide {
+    display: grid; grid-template-columns: 1fr; gap: 16px;
+    margin: 12px 0 28px;
+  }
   .chart-container {
     background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
-    padding: 14px 16px; position: relative;
+    padding: 14px 16px; position: relative; height: 340px;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
-  .chart-container canvas { max-height: 320px !important; }
+  .chart-container.chart-large { height: 420px; }
+  .chart-container.chart-small { height: 200px; }
+  .chart-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .chart-large { min-height: 380px; }
+  .chart-small { min-height: 180px; padding: 10px 12px; }
+  .chart-large canvas { max-height: 360px !important; }
+  .chart-small canvas { max-height: 160px !important; }
+  .chart-title {
+    font-size: 0.66em; text-transform: uppercase; letter-spacing: 0.7px;
+    color: var(--text-dim); margin-bottom: 8px; font-weight: 600;
+  }
   .explanation {
-    background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent);
-    border-radius: 0 8px 8px 0; padding: 14px 18px; font-size: 0.9em; color: var(--text-dim);
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 0.85em; color: var(--text-dim);
   }
   .explanation.reversed { border-left: 1px solid var(--border); border-right: 3px solid var(--accent); border-radius: 8px 0 0 8px; }
-  .explanation h4 { color: var(--text); font-size: 1em; margin-bottom: 8px; font-weight: 600; }
-  .explanation p { font-size: 0.92em; margin-bottom: 8px; }
+  .explanation h4 { color: var(--text); font-size: 0.95em; margin-bottom: 6px; font-weight: 600; }
+  .explanation p { font-size: 0.92em; margin-bottom: 6px; }
   .explanation .metric { color: var(--accent); font-family: ui-monospace, monospace; font-weight: 600; }
-  /* Compact KPI grid */
+  
+  /* Animations: counter */
+  .counter { display: inline-block; transition: color 0.3s; }
+  .counter.highlighted { color: var(--accent); }
+  
   .kpi-grid {
     display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px;
     margin: 12px 0;
   }
-  .kpi { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; position: relative; overflow: hidden; }
+  .kpi { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; position: relative; overflow: hidden; transition: transform 0.15s; cursor: default; }
+  .kpi:hover { transform: translateY(-2px); }
   .kpi::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; background: var(--accent); }
   .kpi.c-80s90s::before { background: #58a6ff; }
   .kpi.c-kids::before { background: #d29922; }
@@ -88,7 +151,7 @@
   .kpi-label { font-size: 0.62em; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
   .kpi-value { font-size: 1.3em; font-weight: 700; line-height: 1; font-feature-settings: "tnum"; }
   .kpi-sub { font-size: 0.68em; color: var(--text-muted); margin-top: 3px; }
-  /* Insights compact */
+  
   .insights {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 10px; margin: 12px 0 24px;
@@ -96,48 +159,54 @@
   .insight {
     background: var(--bg-card); border: 1px solid var(--border);
     border-radius: 6px; padding: 10px 12px;
-    border-left: 3px solid var(--accent);
+    border-left: 3px solid var(--accent); transition: transform 0.15s;
   }
+  .insight:hover { transform: translateX(2px); }
   .insight.refuted { border-left-color: var(--red); }
   .insight.confirmed { border-left-color: var(--green); }
   .insight.new { border-left-color: var(--purple); }
   .insight .head { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-  .insight .badge {
-    padding: 1px 5px; border-radius: 8px; font-size: 0.62em; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.5px;
-    background: rgba(255,255,255,0.1);
-  }
+  .insight .badge { padding: 1px 5px; border-radius: 8px; font-size: 0.62em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(255,255,255,0.1); }
   .insight .rule-id { color: var(--text); font-weight: 700; font-family: ui-monospace, monospace; font-size: 0.9em; }
   .insight .desc { color: var(--text); font-size: 0.92em; }
   .insight .ev { color: var(--text-dim); font-size: 0.78em; margin-top: 4px; font-family: ui-monospace, monospace; }
-  /* Tables compact */
-  table {
-    width: 100%; border-collapse: collapse; margin: 8px 0;
-    background: var(--bg-card); border-radius: 6px; overflow: hidden; border: 1px solid var(--border);
-    font-size: 0.85em;
+  
+  /* Treemap (CSS grid) */
+  .treemap { display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(6, 60px); gap: 2px; min-height: 360px; }
+  .treemap-prop { position: relative; width: 100%; height: 380px; }
+  .treemap-abs { position: absolute; border-radius: 4px; padding: 6px;
+    display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;
+    color: #0d1117; font-weight: 600; overflow: hidden; transition: transform 0.15s, box-shadow 0.15s;
+    cursor: pointer; border: 1px solid #0d1117; }
+  .treemap-abs:hover { transform: scale(1.03); box-shadow: 0 4px 16px rgba(255,255,255,0.3); z-index: 3; }
+  .treemap-abs .name { font-family: ui-monospace, monospace; white-space: nowrap; overflow: hidden; }
+  .treemap-abs .val { opacity: 0.85; }
+  .treemap-cell {
+    border-radius: 4px; padding: 6px;
+    display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;
+    color: #0d1117; font-weight: 600; overflow: hidden; transition: all 0.15s; cursor: pointer;
   }
+  .treemap-cell:hover { transform: scale(1.03); box-shadow: 0 4px 16px rgba(255,255,255,0.3); z-index: 3; position: relative; }
+  .treemap-cell .name { font-size: 0.78em; font-family: ui-monospace, monospace; }
+  .treemap-cell .val { font-size: 0.7em; opacity: 0.85; }
+  
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; background: var(--bg-card); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); font-size: 0.85em; }
   th, td { padding: 6px 10px; text-align: left; border-bottom: 1px solid var(--border); }
   th { background: var(--bg-elevated); color: var(--text-dim); font-weight: 600; font-size: 0.72em; text-transform: uppercase; letter-spacing: 0.5px; }
   tr:last-child td { border-bottom: none; }
   td.num { text-align: right; font-family: ui-monospace, monospace; }
-  td.file { font-family: ui-monospace, monospace; color: var(--accent); }
-  .pill {
-    display: inline-block; padding: 1px 6px; border-radius: 8px; font-size: 0.72em;
-    font-weight: 600; color: #0d1117;
-  }
-  /* Rules interactive */
+  .pill { display: inline-block; padding: 1px 6px; border-radius: 8px; font-size: 0.72em; font-weight: 600; color: #0d1117; }
+  
   .filter-bar { display: flex; gap: 6px; margin: 10px 0; flex-wrap: wrap; }
-  .filter-btn {
-    padding: 4px 10px; background: var(--bg-card); border: 1px solid var(--border);
-    border-radius: 12px; color: var(--text-dim); font-size: 0.8em; cursor: pointer; transition: all 0.15s;
-  }
+  .filter-btn { padding: 4px 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; color: var(--text-dim); font-size: 0.8em; cursor: pointer; transition: all 0.15s; }
   .filter-btn:hover { color: var(--text); }
   .filter-btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
   .filter-btn[data-status="confirmed"].active { background: var(--green); }
   .filter-btn[data-status="weakened"].active { background: var(--orange); }
   .filter-btn[data-status="refuted"].active { background: var(--red); }
   .filter-btn[data-status="new"].active { background: var(--purple); }
-  .rule-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; margin: 4px 0; border-left: 3px solid var(--accent); font-size: 0.88em; }
+  .rule-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; margin: 4px 0; border-left: 3px solid var(--accent); font-size: 0.88em; transition: transform 0.15s; }
+  .rule-card:hover { transform: translateX(3px); }
   .rule-card.confirmed { border-left-color: var(--green); }
   .rule-card.weakened { border-left-color: var(--orange); }
   .rule-card.refuted { border-left-color: var(--red); }
@@ -147,22 +216,21 @@
   .rule-card .id { font-family: ui-monospace, monospace; font-weight: 700; color: var(--text); }
   .rule-card .name { flex: 1; color: var(--text); font-size: 0.95em; }
   .rule-card .ev { color: var(--text-muted); font-size: 0.78em; margin-top: 2px; font-family: ui-monospace, monospace; }
-  .rule-card .badge {
-    padding: 1px 6px; border-radius: 8px; font-size: 0.7em; font-weight: 700;
-    text-transform: uppercase;
-    color: #0d1117;
+  .rule-card .badge { padding: 1px 6px; border-radius: 8px; font-size: 0.7em; font-weight: 700; text-transform: uppercase; color: #0d1117; }
+  
+  /* Donut / pie */
+  .donut-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 12px 0;
   }
-  /* Treemap */
-  .treemap { display: grid; gap: 2px; }
-  .treemap-cell {
-    border-radius: 4px; padding: 8px;
-    display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
-    color: #0d1117; font-weight: 600; overflow: hidden;
-    transition: transform 0.15s;
+  .donut-cell {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px; text-align: center; transition: transform 0.15s;
   }
-  .treemap-cell:hover { transform: scale(1.02); z-index: 2; position: relative; }
-  .treemap-cell .name { font-size: 0.85em; font-family: ui-monospace, monospace; }
-  .treemap-cell .val { font-size: 0.78em; opacity: 0.85; }
+  .donut-cell:hover { transform: translateY(-3px); }
+  .donut-cell canvas { max-height: 140px !important; max-width: 100%; }
+  .donut-cell .label { font-size: 0.74em; color: var(--text-dim); margin-top: 4px; }
+  .donut-cell .value { font-size: 1.3em; font-weight: 700; color: var(--accent); }
+  
   footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.78em; }
   footer a { color: var(--accent); text-decoration: none; }
 </style>
@@ -183,28 +251,27 @@
   <a href="#custom">Custom</a>
   <a href="#rules">Rules</a>
   <a href="#methodology">Methodology</a>
+  <div class="progress-bar" id="progress-bar"></div>
 </nav>
 
 <div class="container">
 
-<!-- HERO -->
-<section id="hero" class="hero">
+<section id="hero" class="hero animate-on-scroll">
   <h1>LDraw OMR <span class="accent">cross-corpus</span></h1>
   <p class="lede">Statistical analysis of <strong style="color:var(--text)">1,438</strong> official LEGO models from the OMR, across <strong style="color:var(--text)">8 cohorts</strong> and <strong style="color:var(--text)">23 learned conventions</strong>.</p>
   <div class="hero-stats">
-    <div class="hero-stat"><div class="label">Sets</div><div class="value">1,438</div><div class="sub">97.8% of OMR</div></div>
-    <div class="hero-stat"><div class="label">Pieces</div><div class="value">534K</div><div class="sub">371 / set mean</div></div>
-    <div class="hero-stat"><div class="label">Sub-builds</div><div class="value">4.7K</div><div class="sub">across cohorts</div></div>
-    <div class="hero-stat"><div class="label">Custom parts</div><div class="value">1,037</div><div class="sub">embedded</div></div>
-    <div class="hero-stat"><div class="label">Rules</div><div class="value">23</div><div class="sub">7+5+11</div></div>
+    <div class="hero-stat"><div class="label">Sets</div><div class="value counter" data-target="1438">0</div><div class="sub">97.8% of OMR</div></div>
+    <div class="hero-stat"><div class="label">Pieces</div><div class="value counter" data-target="534152">0</div><div class="sub">371 / set mean</div></div>
+    <div class="hero-stat"><div class="label">Sub-builds</div><div class="value counter" data-target="20074">0</div><div class="sub">across cohorts</div></div>
+    <div class="hero-stat"><div class="label">Custom parts</div><div class="value counter" data-target="4470">0</div><div class="sub">embedded</div></div>
+    <div class="hero-stat"><div class="label">Rules</div><div class="value counter" data-target="23">0</div><div class="sub">7+5+11</div></div>
   </div>
 </section>
 
-<script>const DATA = {"cohorts": {"80s90s": {"sets": 100, "pieces": 18670, "sub_builds": 839, "custom_parts": 112, "bfc_certify": 21, "neg_det_count": 50, "top_pieces": [["4-4cyli.dat", 1896], ["3023.dat", 590], ["3004.dat", 521], ["6141.dat", 372], ["3024.dat", 368]], "top_y_layers": [[0.0, 991], [-24.0, 942], [-32.0, 666], [-8.0, 650], [-56.0, 549], [-48.0, 515], [-40.0, 478], [-64.0, 418]]}, "kids": {"sets": 200, "pieces": 42947, "sub_builds": 1535, "custom_parts": 818, "bfc_certify": 73, "neg_det_count": 107, "top_pieces": [["4-4cyli.dat", 3502], ["3023.dat", 1401], ["6141.dat", 1382], ["3004.dat", 1353], ["3005.dat", 1093]], "top_y_layers": [[-24.0, 2616], [-8.0, 2373], [0.0, 2038], [-32.0, 1441], [-16.0, 1425], [-48.0, 1394], [-56.0, 1119], [-40.0, 969]]}, "classic": {"sets": 232, "pieces": 47143, "sub_builds": 2350, "custom_parts": 107, "bfc_certify": 38, "neg_det_count": 1306, "top_pieces": [["3023.dat", 1679], ["756.dat", 1481], ["3004.dat", 1419], ["3710.dat", 981], ["3005.dat", 980]], "top_y_layers": [[0.0, 3407], [-8.0, 3018], [-24.0, 2418], [-16.0, 1662], [-32.0, 1647], [-40.0, 1295], [-48.0, 1255], [-56.0, 1055]]}, "modern": {"sets": 287, "pieces": 114904, "sub_builds": 4128, "custom_parts": 769, "bfc_certify": 79, "neg_det_count": 42, "top_pieces": [["3023.dat", 5246], ["3024.dat", 3663], ["6141.dat", 3003], ["3004.dat", 2932], ["3069b.dat", 2907]], "top_y_layers": [[-8.0, 10362], [0.0, 8560], [-24.0, 6516], [-32.0, 5244], [-16.0, 4137], [-48.0, 3496], [-40.0, 3321], [-56.0, 2725]]}, "technic": {"sets": 175, "pieces": 169839, "sub_builds": 5243, "custom_parts": 1691, "bfc_certify": 138, "neg_det_count": 1162, "top_pieces": [["2780.dat", 15038], ["4-4cyli.dat", 11628], ["166.dat", 10159], ["u9218.dat", 7997], ["6558.dat", 7541]], "top_y_layers": [[0.0, 32606], [-20.0, 8239], [-40.0, 6466], [20.0, 5045], [-60.0, 3844], [-80.0, 3326], [40.0, 2767], [-10.0, 2204]]}, "specialty": {"sets": 165, "pieces": 63592, "sub_builds": 2744, "custom_parts": 351, "bfc_certify": 60, "neg_det_count": 112, "top_pieces": [["98138.dat", 7622], ["6141.dat", 4299], ["3023.dat", 3973], ["3024.dat", 2559], ["3069b.dat", 2043]], "top_y_layers": [[-8.0, 16427], [0.0, 5073], [-16.0, 4693], [-24.0, 3596], [-32.0, 2466], [-40.0, 1898], [-48.0, 1440], [-56.0, 1190]]}, "licensed": {"sets": 121, "pieces": 45227, "sub_builds": 1961, "custom_parts": 531, "bfc_certify": 60, "neg_det_count": 248, "top_pieces": [["3023.dat", 1784], ["6141.dat", 1030], ["3710.dat", 973], ["2780.dat", 962], ["3020.dat", 771]], "top_y_layers": [[0.0, 4629], [-8.0, 3317], [-24.0, 2686], [-32.0, 1801], [-16.0, 1734], [-48.0, 1620], [-40.0, 1457], [10.0, 1030]]}, "classic_gaps": {"sets": 158, "pieces": 31830, "sub_builds": 1274, "custom_parts": 91, "bfc_certify": 41, "neg_det_count": 641, "top_pieces": [["3004.dat", 988], ["3023.dat", 905], ["3024.dat", 727], ["6141.dat", 692], ["756.dat", 644]], "top_y_layers": [[-24.0, 1529], [-48.0, 1015], [-64.0, 986], [-8.0, 952], [-72.0, 946], [0.0, 932], [-96.0, 864], [-40.0, 850]]}}, "top_pieces_global": [["4-4cyli.dat", 20031], ["2780.dat", 17458], ["3023.dat", 16181], ["6141.dat", 11755], ["166.dat", 10617], ["3024.dat", 9844], ["3004.dat", 8746], ["u9218.dat", 8374], ["98138.dat", 8207], ["77.dat", 8188], ["6558.dat", 8135], ["3710.dat", 7620], ["3005.dat", 7204], ["3069b.dat", 6849], ["axlehol8.dat", 5607], ["box4o8a.dat", 5331], ["3020.dat", 4748], ["3623.dat", 4367], ["43093.dat", 4272], ["3070b.dat", 4132]], "top_y_layers_global": [[0.0, 58236], [-8.0, 37942], [-24.0, 20763], [-40.0, 16734], [-16.0, 15062], [-32.0, 14408], [-48.0, 10911], [-20.0, 9030], [-56.0, 8500], [-80.0, 7953], [-72.0, 6685], [-64.0, 6017], [20.0, 5180], [10.0, 4877], [8.0, 4812]], "top_deltas_global": [{"dx": 20.0, "dy": 0.0, "dz": 0.0, "count": 17714}, {"dx": 0.0, "dy": 0.0, "dz": 0.0, "count": 10119}, {"dx": 40.0, "dy": 0.0, "dz": 0.0, "count": 7785}, {"dx": 0.0, "dy": -8.0, "dz": 0.0, "count": 7532}, {"dx": 0.0, "dy": 0.0, "dz": -20.0, "count": 6035}, {"dx": 60.0, "dy": 0.0, "dz": 0.0, "count": 5793}, {"dx": 0.0, "dy": 0.0, "dz": 40.0, "count": 5500}, {"dx": 0.0, "dy": 0.0, "dz": -40.0, "count": 5479}, {"dx": 0.0, "dy": 0.0, "dz": 20.0, "count": 5191}, {"dx": -40.0, "dy": 0.0, "dz": 0.0, "count": 4597}], "top_bigrams_global": [{"a": "4-4cyli.dat", "b": "4-4cyli.dat", "count": 19842}, {"a": "166.dat", "b": "166.dat", "count": 10508}, {"a": "2780.dat", "b": "2780.dat", "count": 9114}, {"a": "u9218.dat", "b": "u9218.dat", "count": 8344}, {"a": "77.dat", "b": "77.dat", "count": 8129}, {"a": "98138.dat", "b": "98138.dat", "count": 7311}, {"a": "6141.dat", "b": "6141.dat", "count": 7009}, {"a": "3023.dat", "b": "3023.dat", "count": 6151}, {"a": "axlehol8.dat", "b": "axlehol8.dat", "count": 5574}, {"a": "box4o8a.dat", "b": "box4o8a.dat", "count": 5313}, {"a": "3024.dat", "b": "3024.dat", "count": 4423}, {"a": "3004.dat", "b": "3004.dat", "count": 3899}], "top_themes": [{"theme": "Technic", "sets": 155, "pieces": 152331}, {"theme": "Creator > Creator Expert", "sets": 20, "pieces": 30948}, {"theme": "Modular Buildings", "sets": 11, "pieces": 25127}, {"theme": "Town > Classic Town", "sets": 124, "pieces": 21096}, {"theme": "Icons", "sets": 8, "pieces": 18786}, {"theme": "Creator > Creator 3-in-1", "sets": 50, "pieces": 16726}, {"theme": "Architecture", "sets": 36, "pieces": 15943}, {"theme": "Star Wars > Ultimate Collector Series", "sets": 12, "pieces": 14754}, {"theme": "LEGO Ideas and CUUSOO", "sets": 12, "pieces": 13880}, {"theme": "Star Wars", "sets": 64, "pieces": 13241}, {"theme": "Brickheadz", "sets": 76, "pieces": 10889}, {"theme": "LEGO Art", "sets": 1, "pieces": 10703}, {"theme": "Technic > Star Wars", "sets": 3, "pieces": 10702}, {"theme": "Classic Town", "sets": 73, "pieces": 10002}, {"theme": "Racers", "sets": 76, "pieces": 9890}], "theme_scatter": [{"name": "Town", "bfc_pct": 11.9, "refl_pct": 2.617, "pieces": 7947}, {"name": "Fabuland", "bfc_pct": 70.7, "refl_pct": 0.0, "pieces": 1346}, {"name": "Space", "bfc_pct": 6.7, "refl_pct": 0.0, "pieces": 2088}, {"name": "Train", "bfc_pct": 18.2, "refl_pct": 0.0, "pieces": 3600}, {"name": "Boat", "bfc_pct": 81.8, "refl_pct": 0.0, "pieces": 1388}, {"name": "Castle", "bfc_pct": 30.0, "refl_pct": 0.0, "pieces": 1621}, {"name": "Model Team", "bfc_pct": 66.7, "refl_pct": 0.0, "pieces": 4092}, {"name": "Pirates", "bfc_pct": 40.0, "refl_pct": 0.03, "pieces": 3314}, {"name": "Promotional", "bfc_pct": 25.0, "refl_pct": 0.0, "pieces": 488}, {"name": "Universal Building Set", "bfc_pct": 10.0, "refl_pct": 0.0, "pieces": 258}, {"name": "Western", "bfc_pct": 58.8, "refl_pct": 0.0, "pieces": 3821}, {"name": "Star Wars", "bfc_pct": 25.0, "refl_pct": 0.74, "pieces": 13241}, {"name": "Town › Classic Town", "bfc_pct": 25.8, "refl_pct": 0.526, "pieces": 21096}, {"name": "Castle › Black Falcons", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 658}, {"name": "Castle › Forestmen", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 456}, {"name": "Town › Launch Command", "bfc_pct": 33.3, "refl_pct": 0.104, "pieces": 962}, {"name": "Creator › Early Creator", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 0}, {"name": "Creator › Designer Sets", "bfc_pct": 4.5, "refl_pct": 0.0, "pieces": 1162}, {"name": "City › Airport", "bfc_pct": 50.0, "refl_pct": 0.357, "pieces": 1402}, {"name": "City › Police", "bfc_pct": 7.1, "refl_pct": 0.0, "pieces": 2281}, {"name": "Creator › Creator 3-in-1", "bfc_pct": 22.0, "refl_pct": 0.0, "pieces": 16726}, {"name": "Creator", "bfc_pct": 6.1, "refl_pct": 0.0, "pieces": 1008}, {"name": "City › Hospital", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 548}, {"name": "City › Construction", "bfc_pct": 23.1, "refl_pct": 0.0, "pieces": 2523}, {"name": "City › Harbor", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 413}, {"name": "Seasonal › Halloween", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 60}, {"name": "Super Heroes DC › Batman", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 454}, {"name": "The Hobbit and Lord of the Rings › The Lord of the Rings", "bfc_pct": 20.0, "refl_pct": 0.084, "pieces": 1189}, {"name": "Friends", "bfc_pct": 69.0, "refl_pct": 0.0, "pieces": 5800}, {"name": "City › Fire", "bfc_pct": 60.0, "refl_pct": 0.0, "pieces": 2708}, {"name": "Promotional › Bricktober", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 1445}, {"name": "Harry Potter", "bfc_pct": 71.4, "refl_pct": 0.0, "pieces": 5060}, {"name": "Classic Town", "bfc_pct": 6.8, "refl_pct": 0.04, "pieces": 10002}, {"name": "Classic Space", "bfc_pct": 0.0, "refl_pct": 21.143, "pieces": 927}, {"name": "9V", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 2980}, {"name": "Futuron", "bfc_pct": 0.0, "refl_pct": 4.753, "pieces": 1073}, {"name": "4.5V", "bfc_pct": 37.5, "refl_pct": 0.0, "pieces": 372}, {"name": "Space Police III", "bfc_pct": 37.5, "refl_pct": 1.908, "pieces": 2201}, {"name": "12V", "bfc_pct": 50.0, "refl_pct": 0.0, "pieces": 2106}, {"name": "Blacktron II", "bfc_pct": 0.0, "refl_pct": 5.081, "pieces": 984}, {"name": "Res-Q", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 971}, {"name": "Lion Knights", "bfc_pct": 40.0, "refl_pct": 0.0, "pieces": 1620}, {"name": "M:Tron", "bfc_pct": 0.0, "refl_pct": 8.023, "pieces": 1234}, {"name": "Ice Planet 2002", "bfc_pct": 0.0, "refl_pct": 6.944, "pieces": 720}, {"name": "Space Police II", "bfc_pct": 0.0, "refl_pct": 0.62, "pieces": 967}, {"name": "Blacktron I", "bfc_pct": 0.0, "refl_pct": 12.355, "pieces": 1554}, {"name": "Space Police I", "bfc_pct": 0.0, "refl_pct": 7.077, "pieces": 862}, {"name": "Spyrius", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 308}, {"name": "Unitron", "bfc_pct": 25.0, "refl_pct": 13.947, "pieces": 2488}, {"name": "Town Plan", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 0}, {"name": "Launch Command", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 721}, {"name": "Divers", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 520}, {"name": "Outback", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 522}, {"name": "Creator › Creator Expert", "bfc_pct": 85.0, "refl_pct": 0.0, "pieces": 30948}, {"name": "Racers", "bfc_pct": 1.3, "refl_pct": 0.0, "pieces": 9890}, {"name": "City › Traffic", "bfc_pct": 21.4, "refl_pct": 0.0, "pieces": 2939}, {"name": "Legoland › Building", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 211}, {"name": "Modular Buildings", "bfc_pct": 100.0, "refl_pct": 0.167, "pieces": 25127}, {"name": "Legoland › Construction", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 0}, {"name": "Icons", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 18786}, {"name": "City › Farm", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 1297}, {"name": "Technic", "bfc_pct": 81.9, "refl_pct": 0.171, "pieces": 152331}, {"name": "Technic › Star Wars", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 10702}, {"name": "Technic › Competition", "bfc_pct": 100.0, "refl_pct": 33.065, "pieces": 2728}, {"name": "Technic › Expert Builder", "bfc_pct": 27.3, "refl_pct": 0.0, "pieces": 3553}, {"name": "Hobby Sets", "bfc_pct": 25.0, "refl_pct": 0.0, "pieces": 898}, {"name": "Brickheadz", "bfc_pct": 35.5, "refl_pct": 0.046, "pieces": 10889}, {"name": "LEGO Ideas and CUUSOO", "bfc_pct": 66.7, "refl_pct": 0.756, "pieces": 13880}, {"name": "Brick Sketches", "bfc_pct": 16.7, "refl_pct": 0.0, "pieces": 854}, {"name": "Other", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 2888}, {"name": "Architecture", "bfc_pct": 22.2, "refl_pct": 0.0, "pieces": 15943}, {"name": "Architecture › Skylines", "bfc_pct": 54.5, "refl_pct": 0.043, "pieces": 4673}, {"name": "Star Wars › Ultimate Collector Series", "bfc_pct": 75.0, "refl_pct": 0.0, "pieces": 14754}, {"name": "Pharaoh's Quest", "bfc_pct": 50.0, "refl_pct": 0.0, "pieces": 1225}, {"name": "Racers › Ferrari", "bfc_pct": 12.5, "refl_pct": 0.0, "pieces": 1310}, {"name": "Elves", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 652}, {"name": "Mixels", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 382}, {"name": "Speed Champions", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 1429}, {"name": "Super Heroes DC › Batman › UCS", "bfc_pct": 66.7, "refl_pct": 0.0, "pieces": 6093}, {"name": "Speed Racer", "bfc_pct": 75.0, "refl_pct": 0.0, "pieces": 1326}, {"name": "Train › 9V", "bfc_pct": 12.5, "refl_pct": 0.0, "pieces": 3846}, {"name": "Space › Space Police III", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 1435}, {"name": "Space › Classic Space", "bfc_pct": 23.5, "refl_pct": 3.029, "pieces": 3235}, {"name": "Space › Blacktron II", "bfc_pct": 0.0, "refl_pct": 19.72, "pieces": 928}, {"name": "Space › Blacktron I", "bfc_pct": 0.0, "refl_pct": 14.686, "pieces": 1321}, {"name": "Train › 12V", "bfc_pct": 66.7, "refl_pct": 0.0, "pieces": 2632}, {"name": "Train › 4.5V", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 1375}], "decades": [{"decade": "1960s", "sets": 17, "pieces": 2509}, {"decade": "1970s", "sets": 101, "pieces": 18777}, {"decade": "1980s", "sets": 265, "pieces": 46387}, {"decade": "1990s", "sets": 272, "pieces": 60626}, {"decade": "2000s", "sets": 245, "pieces": 75050}, {"decade": "2010s", "sets": 461, "pieces": 233492}, {"decade": "2020s", "sets": 77, "pieces": 97311}], "top_themes_refl": [{"theme": "Technic > Competition", "reflections": 902, "sets": 3, "pieces": 2728, "ratio": 0.33064516129032256}, {"theme": "Classic Space", "reflections": 196, "sets": 8, "pieces": 927, "ratio": 0.21143473570658036}, {"theme": "Space > Blacktron II", "reflections": 183, "sets": 4, "pieces": 928, "ratio": 0.19719827586206898}, {"theme": "Space > Blacktron I", "reflections": 194, "sets": 3, "pieces": 1321, "ratio": 0.1468584405753217}, {"theme": "Unitron", "reflections": 347, "sets": 4, "pieces": 2488, "ratio": 0.13946945337620578}, {"theme": "Space > Spyrius", "reflections": 50, "sets": 1, "pieces": 366, "ratio": 0.1366120218579235}, {"theme": "Blacktron I", "reflections": 192, "sets": 6, "pieces": 1554, "ratio": 0.12355212355212356}, {"theme": "The LEGO Movie", "reflections": 198, "sets": 2, "pieces": 1824, "ratio": 0.10855263157894737}, {"theme": "Town > City Center", "reflections": 49, "sets": 2, "pieces": 575, "ratio": 0.08521739130434783}, {"theme": "M:Tron", "reflections": 99, "sets": 8, "pieces": 1234, "ratio": 0.08022690437601297}], "total_sets": 1438, "total_pieces": 534152, "total_custom": 4470, "total_bfc": 510, "total_sub_builds": 20074, "cohort_colors": {"80s90s": "#58a6ff", "kids": "#d29922", "classic": "#3fb950", "classic_gaps": "#7ee787", "modern": "#bc8cff", "technic": "#f85149", "specialty": "#39c5cf", "licensed": "#f778ba"}, "top_custom_sets": [{"set": "42129-1", "theme": "Technic", "custom": 98}, {"set": "42131-1", "theme": "Technic", "custom": 94}, {"set": "10261-1", "theme": "Creator > Creator Expert", "custom": 91}, {"set": "60216-1", "theme": "City > Fire", "custom": 78}, {"set": "75870-1", "theme": "Speed Champions", "custom": 76}, {"set": "3185-1", "theme": "Friends", "custom": 69}, {"set": "42100-1", "theme": "Technic", "custom": 69}, {"set": "42125-1", "theme": "Technic", "custom": 63}, {"set": "10283-1", "theme": "Icons", "custom": 61}, {"set": "3189-1", "theme": "Friends", "custom": 59}], "rules": [{"id": "R1", "name": "Y-layers multiples of 8", "status": "confirmed", "description": "Plate (8 LDU), brick (24 LDU).", "evidence": "96.4% top-15 canonical"}, {"id": "R2", "name": "X/Z deltas multiples of 20", "status": "confirmed", "description": "Encaje de stud.", "evidence": "100% top-15 canonical"}, {"id": "R3", "name": "Reflections < 0.3%", "status": "refuted", "description": "Space-themed disparan a 5-21%.", "evidence": "1.345% corpus 1438"}, {"id": "R4", "name": "Custom parts = 0.6%", "status": "refuted", "description": "kids = 1.9%, Fabuland 9.3%.", "evidence": "0.95% global"}, {"id": "R5", "name": "Top 10 piezas cover ~24-30%", "status": "confirmed", "description": "Vocabulario base del System.", "evidence": "24.3% corpus 532"}, {"id": "R6", "name": "Y-irregular = Technic/slopes", "status": "weakened", "description": "Slope 33° signature Y=-46.1.", "evidence": "Exists but rare"}, {"id": "R7", "name": "Bigramas son self-bigrams", "status": "confirmed", "description": "Filas parallel de misma pieza.", "evidence": "90%+ self-bigrams"}, {"id": "R8", "name": "Technic embebido en no-Technic", "status": "weakened", "description": "0.27% in 80s/90s, 1.50% kids.", "evidence": "Era-dependent"}, {"id": "R9", "name": "90s are 1.7× larger than 80s", "status": "weakened", "description": "Kids 2010s 2× larger.", "evidence": "Era-dependent"}, {"id": "R10", "name": "BFC CERTIFY decrece con tiempo", "status": "refuted", "description": "kids 36.5% > classic 16.4%.", "evidence": "Not monotonic"}, {"id": "R11", "name": "Sub-builds crecen con tiempo", "status": "weakened", "description": "Classic 10.13 > kids 7.68.", "evidence": "Not monotonic"}, {"id": "R12", "name": "4-4cyli es universal", "status": "confirmed", "description": "20 031 usos en corpus 1438.", "evidence": "#1 global"}, {"id": "R13", "name": "Kids modern vocabulary", "status": "weakened", "description": "New pieces post-2000.", "evidence": "12 exclusivas"}, {"id": "R14", "name": "Bigrama 3005→3004 solo kids", "status": "confirmed", "description": "70 ocurrencias.", "evidence": "0 en 80s/90s"}, {"id": "R15", "name": "Kids Y deeper", "status": "weakened", "description": "Y=-168 en kids.", "evidence": "vs -128 en 80s/90s"}, {"id": "R16", "name": "Fabuland identidad propia", "status": "confirmed", "description": "~25 piezas exclusivas.", "evidence": "9.3% custom parts"}, {"id": "R17", "name": "Friends = most decorative", "status": "confirmed", "description": "94% usan 6141.", "evidence": "17 sets"}, {"id": "R18", "name": "Train eje Z-dominante", "status": "weakened", "description": "Boat too.", "evidence": "Ya no exclusivo"}, {"id": "R19", "name": "Space-themed disparan reflejos", "status": "new", "description": "73 sets Space = 87.8% reflejos.", "evidence": "Classic Space 21%"}, {"id": "R20", "name": "756.dat signature Space", "status": "new", "description": "Baseplate Technic 16×32.", "evidence": "#8 global"}, {"id": "R21", "name": "Classic have lowest BFC", "status": "new", "description": "16.4% vs kids 36.5%.", "evidence": "Not monotonic"}, {"id": "R22", "name": "Bigramas slope-slope = Space", "status": "new", "description": "3818↔3820 etc.", "evidence": "4 pares >30"}, {"id": "R23", "name": "Y = +8 LDU = antenas", "status": "new", "description": "1 389 piezas (antenas).", "evidence": "Blacktron/Unitron"}]};</script>
 
-<section id="insights">
+<section id="insights" class="animate-on-scroll">
   <h2><span class="num">01.</span>The 7 biggest findings</h2>
-  <p>Each insight links to a derived rule. Click for details.</p>
+  <p>Each insight links to a derived rule.</p>
   <div class="insights">
     <div class="insight refuted"><div class="head"><span class="badge">REFUTED</span><span class="rule-id">R3</span></div><div class="desc">Reflections are NOT rare</div><div class="ev">73 Space sets = 87.8% of all 1,463 reflections</div></div>
     <div class="insight refuted"><div class="head"><span class="badge">REFUTED</span><span class="rule-id">R10</span></div><div class="desc">BFC does NOT grow with time</div><div class="ev">classic 16.4% < kids 36.5% (not monotonic)</div></div>
@@ -217,9 +284,9 @@
 </section>
 
 
-<section id="cohorts">
+<section id="cohorts" class="animate-on-scroll">
   <h2><span class="num">02.</span>Cohorts</h2>
-  <p>Eight sampling cohorts that cover the corpus. Cohorts are colored consistently throughout the dashboard.</p>
+  <p>Eight sampling cohorts. Cohort colors are consistent across the dashboard.</p>
 
   <div class="kpi-grid">
 
@@ -273,32 +340,31 @@
     </div>
 </div>
 
-<div class="section-2col">
-  <div class="chart-container">
+<div class="section-2col animate-left">
+  <div class="chart-container chart-large">
+    <div class="chart-title">Total pieces per cohort</div>
     <canvas id="cohort-pieces"></canvas>
   </div>
   <div class="explanation">
     <h4>What is this chart?</h4>
-    <p>Total <strong>pieces per cohort</strong>. Each bar shows the cumulative number of LEGO parts analyzed from the MPDs of that cohort. Technic dominates (<span class="metric">170K pieces</span>) due to large Technic sets with thousands of small Technic pieces.</p>
-    <p>The bars are <strong>horizontal bars</strong> sorted by size. Cohort colors match the KPI strip above for visual continuity.</p>
+    <p>Horizontal bar chart of total pieces analyzed per cohort. Each color matches the cohort KPI above. Technic (<span class="metric">170K pieces</span>) dominates due to large Technic sets.</p>
   </div>
 </div>
 
-
-<div class="section-2col">
-  <div class="chart-container">
-    <canvas id="cohort-radar"></canvas>
-  </div>
-  <div class="explanation">
+<div class="section-2col reversed animate-left">
+  <div class="explanation reversed">
     <h4>What is a radar chart?</h4>
-    <p>A <strong>radar chart</strong> shows multiple variables on axes radiating from a center. Each cohort has a colored polygon.</p>
-    <p>Axes (normalized 0-100%): Sets, Pieces, Sub-builds, Custom, BFC, Reflections. <strong>Bigger area = more of everything.</strong></p>
-    <p>Note how Modern covers most axes (big, formal, many pieces) while Classic has zero reflections (the inner dent on that axis).</p>
+    <p>A radar shows multiple axes from a center point. Each cohort is a colored polygon. 6 axes: Sets, Pieces, Sub-builds, Custom, BFC, Reflections. <strong>Bigger polygon = more of everything</strong>.</p>
+    <p>Modern covers all axes. Classic has the inner dent on Reflections.</p>
+  </div>
+  <div class="chart-container">
+    <div class="chart-title">Cohort comparison (normalized)</div>
+    <canvas id="cohort-radar"></canvas>
   </div>
 </div>
 
 <div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-top:8px">
-  <h3 style="font-size:0.8em;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">All cohorts side-by-side (raw numbers)</h3>
+  <div class="chart-title">All cohorts side-by-side</div>
   <table>
     <thead><tr><th>Cohort</th><th>Sets</th><th>Pieces</th><th>Custom</th><th>BFC</th><th>Reflections</th></tr></thead>
     <tbody>
@@ -378,93 +444,155 @@
 </tbody></table></div>
 </section>
 
-<section id="vocab">
+<section id="vocab" class="animate-on-scroll">
   <h2><span class="num">03.</span>Vocabulary: top parts</h2>
   <p>The most-used LEGO parts. Click any cell for details.</p>
+
+  <div class="section-wide">
+    <div class="chart-container chart-large">
+      <div class="chart-title">Top 24 parts by usage (treemap — cell area = usage count)</div>
+      <div class="treemap-prop" id="treemap">
+<div class="treemap-abs" style="left:0.00%;top:0.00%;width:53.43%;height:21.10%;background:hsl(210,80%,43%)" title="4-4cyli: 20,031 uses"><div class="name" style="font-size:13px">4-4cyli</div><div class="val" style="font-size:11px">20.0K (11.3%)</div></div>
+<div class="treemap-abs" style="left:53.43%;top:0.00%;width:46.57%;height:21.10%;background:hsl(210,80%,46%)" title="2780: 17,458 uses"><div class="name" style="font-size:13px">2780</div><div class="val" style="font-size:11px">17.5K (9.8%)</div></div>
+<div class="treemap-abs" style="left:0.00%;top:21.10%;width:57.92%;height:15.72%;background:hsl(210,80%,48%)" title="3023: 16,181 uses"></div>
+<div class="treemap-abs" style="left:57.92%;top:21.10%;width:42.08%;height:15.72%;background:hsl(210,80%,53%)" title="6141: 11,755 uses"></div>
+<div class="treemap-abs" style="left:0.00%;top:36.82%;width:51.89%;height:11.52%;background:hsl(210,80%,55%)" title="166: 10,617 uses"></div>
+<div class="treemap-abs" style="left:51.89%;top:36.82%;width:48.11%;height:11.52%;background:hsl(210,80%,56%)" title="3024: 9,844 uses"></div>
+<div class="treemap-abs" style="left:0.00%;top:48.34%;width:51.09%;height:9.64%;background:hsl(210,80%,57%)" title="3004: 8,746 uses"></div>
+<div class="treemap-abs" style="left:51.09%;top:48.34%;width:48.91%;height:9.64%;background:hsl(210,80%,58%)" title="u9218: 8,374 uses"></div>
+<div class="treemap-abs" style="left:0.00%;top:57.98%;width:50.06%;height:9.23%;background:hsl(210,80%,58%)" title="98138: 8,207 uses"></div>
+<div class="treemap-abs" style="left:50.06%;top:57.98%;width:49.94%;height:9.23%;background:hsl(210,80%,58%)" title="77: 8,188 uses"></div>
+<div class="treemap-abs" style="left:0.00%;top:67.21%;width:51.63%;height:8.87%;background:hsl(210,80%,58%)" title="6558: 8,135 uses"></div>
+<div class="treemap-abs" style="left:51.63%;top:67.21%;width:48.37%;height:8.87%;background:hsl(210,80%,59%)" title="3710: 7,620 uses"></div>
+<div class="treemap-abs" style="left:0.00%;top:76.07%;width:51.26%;height:7.91%;background:hsl(210,80%,59%)" title="3005: 7,204 uses"></div>
+<div class="treemap-abs" style="left:51.26%;top:76.07%;width:48.74%;height:7.91%;background:hsl(210,80%,60%)" title="3069b: 6,849 uses"></div>
+<div class="treemap-abs" style="left:0.00%;top:83.98%;width:51.26%;height:6.16%;background:hsl(210,80%,61%)" title="axlehol8: 5,607 uses"></div>
+<div class="treemap-abs" style="left:51.26%;top:83.98%;width:48.74%;height:6.16%;background:hsl(210,80%,61%)" title="box4o8a: 5,331 uses"></div>
+<div class="treemap-abs" style="left:0.00%;top:90.14%;width:52.09%;height:5.13%;background:hsl(210,80%,62%)" title="3020: 4,748 uses"></div>
+<div class="treemap-abs" style="left:52.09%;top:90.14%;width:47.91%;height:5.13%;background:hsl(210,80%,63%)" title="3623: 4,367 uses"></div>
+<div class="treemap-abs" style="left:0.00%;top:95.27%;width:50.83%;height:4.73%;background:hsl(210,80%,63%)" title="43093: 4,272 uses"></div>
+<div class="treemap-abs" style="left:50.83%;top:95.27%;width:49.17%;height:4.73%;background:hsl(210,80%,63%)" title="3070b: 4,132 uses"></div>
+</div>
+    </div>
+  </div>
+
   <div class="section-2col">
-    <div class="chart-container" style="height:340px">
-      <div id="treemap" style="display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(6,1fr);gap:2px;height:100%"></div>
+    <div class="chart-container">
+      <div class="chart-title">Top 15 parts (horizontal bars)</div>
+      <canvas id="vocab-bars"></canvas>
     </div>
     <div class="explanation">
       <h4>What is a treemap?</h4>
-      <p>A <strong>treemap</strong> divides a rectangle into tiles sized proportionally to a value. Each tile is a part; the area = usage count.</p>
-      <p><span class="metric">4-4cyli.dat</span> (Technic cylinder) occupies <span class="metric">~36%</span> of the visible area: 20,031 uses, the most-used primitive in the corpus.</p>
-      <p>Hover for part names. <strong>Click</strong> a tile to highlight it across the dashboard.</p>
+      <p>A treemap divides a rectangle into tiles <strong>sized proportionally to a value</strong>. Each tile is a part; the area = usage count.</p>
+      <p><span class="metric">4-4cyli.dat</span> (Technic cylinder) is the biggest cell: 20,031 uses (11.3% of top-20), the most-used primitive.</p>
+      <p><strong>Hover</strong> any cell for part name. <strong>Click</strong> for details.</p>
     </div>
   </div>
-  <div class="section-2col reversed" style="margin-top:18px">
-    <div class="explanation reversed">
-      <h4>How to read the treemap</h4>
-      <p>Parts are sorted by frequency. The first 4-5 parts cover the bulk. The remaining 20 fill the gaps.</p>
-      <p><strong>4-4cyli.dat</strong> is the Technic cylinder primitive used for pin holes, axles, and pivots. Its dominance reflects how Technic sets (175 in the corpus) use thousands of these.</p>
+
+  <div class="donut-grid">
+    <div class="donut-cell animate-left">
+      <div class="label">Top part in each cohort</div>
+      <div id="top-by-cohort"></div>
     </div>
-    <div class="chart-container" style="height:340px">
-      <canvas id="vocab-bars"></canvas>
+    <div class="donut-cell animate-left">
+      <div class="label">Vocabulary diversity (unique parts per cohort)</div>
+      <div id="diversity-chart"></div>
+    </div>
+    <div class="donut-cell animate-left">
+      <div class="label">Technic concentration</div>
+      <div id="technic-share"></div>
     </div>
   </div>
 </section>
 
 
-<section id="ylayers">
+<section id="ylayers" class="animate-on-scroll">
   <h2><span class="num">04.</span>Y-layers (vertical rhythm)</h2>
   <p>How high pieces sit in models. Multiples of 8 = plate, 24 = brick.</p>
   <div class="section-2col">
     <div class="chart-container">
+      <div class="chart-title">Top 15 Y-layers (color: green=base, blue=plate, amber=brick)</div>
       <canvas id="y-bars"></canvas>
     </div>
     <div class="explanation">
       <h4>What are Y-layers?</h4>
       <p>The Y-axis in LDraw is <strong>vertical</strong>. Y=0 is the ground; Y=-24 is one brick up. Most pieces sit at <strong>multiples of 8 LDU</strong> (plate height).</p>
-      <p>The bar chart shows the <strong>15 most common Y values</strong> across all 534K pieces. Notice the spike at Y=0 (base plane) and the alternation -8 / -24 (plate, brick, plate, brick...).</p>
+      <p>Notice the spike at Y=0 and the alternation -8 / -24 (plate, brick).</p>
+    </div>
+  </div>
+
+  <div class="section-2col reversed">
+    <div class="explanation reversed">
+      <h4>Y-distribution per cohort</h4>
+      <p>The line chart shows how <strong>each cohort distributes its Y values</strong>. Some cohorts (Technic) have negative Y values (parts below base), some have positive Y (antennas sticking up).</p>
+    </div>
+    <div class="chart-container">
+      <div class="chart-title">Y-layers per cohort (line)</div>
+      <canvas id="y-lines"></canvas>
     </div>
   </div>
 </section>
 
 
-<section id="chaining">
+<section id="chaining" class="animate-on-scroll">
   <h2><span class="num">05.</span>Chaining: how pieces fit together</h2>
-  <p>Deltas (Δx, Δy, Δz) measure the offset between consecutive placed pieces.</p>
+  <p>Deltas (dx, dy, dz) measure the offset between consecutive placed pieces.</p>
 
   <div class="section-2col">
     <div class="chart-container">
+      <div class="chart-title">Top 10 deltas (horizontal bars)</div>
       <canvas id="deltas-bars"></canvas>
     </div>
     <div class="explanation">
       <h4>What are deltas?</h4>
-      <p>When an LDraw file says <code>place piece A at (0,0,0), then piece B at (20, -8, 0)</code>, the <strong>delta</strong> is (20, -8, 0) — meaning "20 LDU in +X, 8 LDU down".</p>
+      <p>When an LDraw file says <code>place piece A at (0,0,0), then piece B at (20, -8, 0)</code>, the <strong>delta</strong> is (20, -8, 0).</p>
       <p>Multiples of <strong>20 LDU</strong> in X/Z = perfect stud alignment. Multiples of <strong>8 LDU</strong> in Y = plate height.</p>
     </div>
   </div>
 
-  <div class="section-2col reversed" style="margin-top:14px">
+  <div class="section-2col reversed">
     <div class="explanation reversed">
       <h4>What are bigrams?</h4>
-      <p>A <strong>bigram</strong> is a 2-piece sequence: which part B tends to follow which part A. They reveal assembly patterns.</p>
-      <p>E.g., <span class="code">3004 -> 3004</span> = "another brick 1x2 follows the previous brick 1x2" (90% of bigrams are self-bigrams, meaning rows of the same part).</p>
+      <p>A <strong>bigram</strong> is a 2-piece sequence: which part B tends to follow which part A.</p>
+      <p>E.g., <span class="code">3004 -> 3004</span> = "another brick 1x2 follows the previous" (90% are self-bigrams).</p>
     </div>
     <div class="chart-container">
+      <div class="chart-title">Top 12 bigrams</div>
       <canvas id="bigrams-bars"></canvas>
+    </div>
+  </div>
+
+  <div class="section-wide">
+    <div class="chart-container chart-large">
+      <div class="chart-title">Deltas as bubble chart (X=dx, Y=dy, color=dz, size=count)</div>
+      <canvas id="deltas-bubble"></canvas>
     </div>
   </div>
 </section>
 
 
-<section id="themes">
+<section id="themes" class="animate-on-scroll">
   <h2><span class="num">06.</span>Themes: LEGO vocabulary by universe</h2>
-  <p>152 themes appear in the corpus. The top 15 are below.</p>
+  <p>152 themes appear in the corpus.</p>
+
   <div class="section-2col">
     <div class="chart-container">
+      <div class="chart-title">Top 15 themes by total pieces</div>
       <canvas id="themes-bars"></canvas>
     </div>
     <div class="explanation">
       <h4>What is this chart?</h4>
-      <p><strong>Horizontal bars</strong> of the top 15 LEGO themes by total pieces. Notice how <span class="code">Town > Classic Town</span> dominates with 18,819 pieces — Town/City is the LEGO backbone.</p>
+      <p><strong>Horizontal bars</strong> of the top 15 LEGO themes by total pieces. Notice how Technic (<span class="metric">152K pieces</span>) dominates.</p>
       <p>The Pirates bar is large (6,319 pieces from only 7 sets) due to two mega-ships (6286 + 6285).</p>
     </div>
   </div>
-  <table>
-    <thead><tr><th>Theme</th><th>Sets</th><th>Total pieces</th></tr></thead>
-    <tbody>
+
+  <div class="section-wide">
+    <div class="chart-container">
+      <div class="chart-title">Top 20 themes (table)</div>
+      <table>
+        <thead><tr><th>Theme</th><th>Sets</th><th>Pieces</th></tr></thead>
+        <tbody>
 
 <tr><td>Technic</td><td class="num">155</td><td class="num">152 331</td></tr>
 <tr><td>Creator > Creator Expert</td><td class="num">20</td><td class="num">30 948</td></tr>
@@ -478,69 +606,98 @@
 <tr><td>Star Wars</td><td class="num">64</td><td class="num">13 241</td></tr>
 <tr><td>Brickheadz</td><td class="num">76</td><td class="num">10 889</td></tr>
 <tr><td>LEGO Art</td><td class="num">1</td><td class="num">10 703</td></tr>
-</tbody></table></div></section>
+<tr><td>Technic > Star Wars</td><td class="num">3</td><td class="num">10 702</td></tr>
+<tr><td>Classic Town</td><td class="num">73</td><td class="num">10 002</td></tr>
+<tr><td>Racers</td><td class="num">76</td><td class="num">9 890</td></tr>
+</tbody></table></div></div>
+</section>
 
-<section id="reflections">
+<section id="reflections" class="animate-on-scroll">
   <h2><span class="num">07.</span>Reflections & BFC: the Space surprise</h2>
-  <p>The biggest revelation: Space-themed sets use reflections heavily.</p>
+  <p>Space-themed sets break the convention more than anywhere else.</p>
+
   <div class="section-2col">
-    <div class="chart-container">
+    <div class="chart-container chart-large">
+      <div class="chart-title">BFC ratio vs Reflections ratio (per theme)</div>
       <canvas id="scatter"></canvas>
     </div>
     <div class="explanation">
       <h4>What is a scatter plot?</h4>
-      <p>Each dot is one theme. <strong>X axis</strong> = % of sets with BFC CERTIFY. <strong>Y axis</strong> = % of pieces with reflections (matrices with det &lt; 0).</p>
-      <p>The <strong style="color:var(--red)">red dots in the top-right</strong> are Space-themed sets — they break the convention more than anywhere else.</p>
-      <p>Classic Town (109 sets) sits in the lower-left: low reflections, modest BFC.</p>
+      <p>Each dot = one theme. <strong>X</strong> = % of sets with BFC CERTIFY. <strong>Y</strong> = % of pieces with reflections.</p>
+      <p><strong style="color:var(--red)">Red dots</strong> in the top-right are Space-themed sets — they break conventions.</p>
+      <p>Classic Town (109 sets) is lower-left: low reflections, modest BFC.</p>
     </div>
   </div>
 
-  <div class="section-2col reversed" style="margin-top:14px">
+  <div class="section-2col reversed">
     <div class="explanation reversed">
-      <h4>Top themes by reflections count</h4>
-      <p>Classic Space has <span class="metric">196</span> reflections despite only 8 sets. Unitron has 347 (4 sets, 0.55% of corpus).</p>
-      <p>These numbers explain why the global ratio of <span class="metric">1.345%</span> reflections looks high: 87.8% come from Space-themed sets.</p>
+      <h4>Top themes by reflections</h4>
+      <p>Classic Space has <span class="metric">196</span> reflections despite only 8 sets. Unitron has 347 (4 sets).</p>
+      <p>87.8% of all 1,463 reflections come from Space-themed sets.</p>
     </div>
     <div class="chart-container">
+      <div class="chart-title">Top 10 themes by reflections count</div>
       <canvas id="refl-bars"></canvas>
     </div>
   </div>
 </section>
 
 
-<section id="time">
+<section id="time" class="animate-on-scroll">
   <h2><span class="num">08.</span>Temporal evolution</h2>
   <p>How the corpus is distributed across decades.</p>
+
   <div class="section-2col">
     <div class="chart-container">
+      <div class="chart-title">Sets + pieces per decade (dual axis)</div>
       <canvas id="time-bars"></canvas>
     </div>
     <div class="explanation">
       <h4>Decade distribution</h4>
-      <p>Two bars per decade: <strong style="color:#58a6ff">sets</strong> and <strong style="color:#bc8cff">pieces</strong>. The 1990s dominate (116 sets) because LEGO released many Space and Pirates sets in that decade.</p>
-      <p>The 2020s column is small (2 sets, 163 pieces) because OMR has few recent sets; OMR is curated, not comprehensive.</p>
+      <p>Two bars per decade: <strong style="color:#58a6ff">sets</strong> and <strong style="color:#bc8cff">pieces (÷100)</strong>. The 1990s dominate (272 sets, 60K pieces).</p>
+      <p>2020s small (77 sets, 97K pieces) because OMR is curated, not comprehensive.</p>
+    </div>
+  </div>
+
+  <div class="section-2col reversed">
+    <div class="explanation reversed">
+      <h4>What is a line chart?</h4>
+      <p>Shows <strong>trends over time</strong>. Lines connect data points across decades to reveal growth, decline, or stability in the corpus.</p>
+    </div>
+    <div class="chart-container">
+      <div class="chart-title">Sets over decades (line chart)</div>
+      <canvas id="time-line"></canvas>
     </div>
   </div>
 </section>
 
 
-<section id="custom">
+<section id="custom" class="animate-on-scroll">
   <h2><span class="num">09.</span>Custom parts (embedded)</h2>
   <p>Sets that include their own parts (not in the official library).</p>
+
   <div class="section-2col">
     <div class="chart-container">
+      <div class="chart-title">Top 10 sets by embedded custom parts</div>
       <canvas id="custom-bars"></canvas>
     </div>
     <div class="explanation">
       <h4>What are custom parts?</h4>
-      <p>An <strong>embedded custom part</strong> is a <span class="code">.dat</span> file inside an MPD whose name starts with the set number (e.g. <span class="code">10252 - 24599s01.dat</span>). It exists only for that set.</p>
-      <p>Fabuland sets often have many custom parts because the Fabuland theme has unique piece designs.</p>
+      <p>An <strong>embedded custom part</strong> is a <span class="code">.dat</span> file inside an MPD whose name starts with the set number (e.g. <span class="code">10252 - 24599s01.dat</span>).</p>
+      <p>Fabuland sets often have many custom parts due to unique piece designs.</p>
+    </div>
+  </div>
+
+  <div class="section-wide">
+    <div class="chart-container chart-large">
+      <div class="chart-title">Custom parts ratio by cohort (line chart)</div>
+      <canvas id="custom-line"></canvas>
     </div>
   </div>
 </section>
 
 
-<section id="rules">
+<section id="rules" class="animate-on-scroll">
   <h2><span class="num">10.</span>The 23 learned conventions</h2>
   <p>Filter by status to see only the rules of interest.</p>
   <div class="filter-bar">
@@ -568,7 +725,7 @@
         <span class="name">X/Z deltas multiples of 20</span>
         <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="ev">Encaje de stud. -> 100% top-15 canonical</div>
+      <div class="ev">Stud fit. -> 100% top-15 canonical</div>
     </div>
 
     <div class="rule-card refuted" data-status="refuted">
@@ -577,7 +734,7 @@
         <span class="name">Reflections < 0.3%</span>
         <span class="badge" style="background:#f85149">refuted</span>
       </div>
-      <div class="ev">Space-themed disparan a 5-21%. -> 1.345% corpus 1438</div>
+      <div class="ev">Space-themed spike to 5-21%. -> 1.345% corpus 1438</div>
     </div>
 
     <div class="rule-card refuted" data-status="refuted">
@@ -592,10 +749,10 @@
     <div class="rule-card confirmed" data-status="confirmed">
       <div class="head">
         <span class="id">R5</span>
-        <span class="name">Top 10 piezas cover ~24-30%</span>
+        <span class="name">Top 10 parts cover ~24-30%</span>
         <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="ev">Vocabulario base del System. -> 24.3% corpus 532</div>
+      <div class="ev">Base vocabulary of the System. -> 24.3% corpus 532</div>
     </div>
 
     <div class="rule-card weakened" data-status="weakened">
@@ -604,7 +761,7 @@
         <span class="name">Y-irregular = Technic/slopes</span>
         <span class="badge" style="background:#d29922">weakened</span>
       </div>
-      <div class="ev">Slope 33° signature Y=-46.1. -> Exists but rare</div>
+      <div class="ev">Slope 33° firma Y=-46.1. -> Exists but rare</div>
     </div>
 
     <div class="rule-card confirmed" data-status="confirmed">
@@ -613,7 +770,7 @@
         <span class="name">Bigramas son self-bigrams</span>
         <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="ev">Filas parallel de misma pieza. -> 90%+ self-bigrams</div>
+      <div class="ev">Filas paralelas de misma pieza. -> 90%+ self-bigrams</div>
     </div>
 
     <div class="rule-card weakened" data-status="weakened">
@@ -622,7 +779,7 @@
         <span class="name">Technic embebido en no-Technic</span>
         <span class="badge" style="background:#d29922">weakened</span>
       </div>
-      <div class="ev">0.27% in 80s/90s, 1.50% kids. -> Era-dependent</div>
+      <div class="ev">0.27% en 80s/90s, 1.50% kids. -> Era-dependent</div>
     </div>
 
     <div class="rule-card weakened" data-status="weakened">
@@ -658,13 +815,13 @@
         <span class="name">4-4cyli es universal</span>
         <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="ev">20 031 usos en corpus 1438. -> #1 global</div>
+      <div class="ev">20,031 uses in corpus 1438. -> #1 global</div>
     </div>
 
     <div class="rule-card weakened" data-status="weakened">
       <div class="head">
         <span class="id">R13</span>
-        <span class="name">Kids modern vocabulary</span>
+        <span class="name">Kids vocabulario moderno</span>
         <span class="badge" style="background:#d29922">weakened</span>
       </div>
       <div class="ev">New pieces post-2000. -> 12 exclusive</div>
@@ -676,7 +833,7 @@
         <span class="name">Bigrama 3005→3004 solo kids</span>
         <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="ev">70 ocurrencias. -> 0 en 80s/90s</div>
+      <div class="ev">70 occurrences. -> 0 in 80s/90s</div>
     </div>
 
     <div class="rule-card weakened" data-status="weakened">
@@ -685,7 +842,7 @@
         <span class="name">Kids Y deeper</span>
         <span class="badge" style="background:#d29922">weakened</span>
       </div>
-      <div class="ev">Y=-168 en kids. -> vs -128 en 80s/90s</div>
+      <div class="ev">Y=-168 in kids. -> vs -128 in 80s/90s</div>
     </div>
 
     <div class="rule-card confirmed" data-status="confirmed">
@@ -694,7 +851,7 @@
         <span class="name">Fabuland identidad propia</span>
         <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="ev">~25 piezas exclusivas. -> 9.3% custom parts</div>
+      <div class="ev">~25 exclusive parts. -> 9.3% custom parts</div>
     </div>
 
     <div class="rule-card confirmed" data-status="confirmed">
@@ -703,7 +860,7 @@
         <span class="name">Friends = most decorative</span>
         <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="ev">94% usan 6141. -> 17 sets</div>
+      <div class="ev">94% use 6141. -> 17 sets</div>
     </div>
 
     <div class="rule-card weakened" data-status="weakened">
@@ -712,7 +869,7 @@
         <span class="name">Train eje Z-dominante</span>
         <span class="badge" style="background:#d29922">weakened</span>
       </div>
-      <div class="ev">Boat too. -> Ya no exclusivo</div>
+      <div class="ev">Boat too. -> No longer exclusive</div>
     </div>
 
     <div class="rule-card new" data-status="new">
@@ -721,7 +878,7 @@
         <span class="name">Space-themed disparan reflejos</span>
         <span class="badge" style="background:#bc8cff">new</span>
       </div>
-      <div class="ev">73 sets Space = 87.8% reflejos. -> Classic Space 21%</div>
+      <div class="ev">73 Space sets = 87.8% of reflections. -> Classic Space 21%</div>
     </div>
 
     <div class="rule-card new" data-status="new">
@@ -730,7 +887,7 @@
         <span class="name">756.dat signature Space</span>
         <span class="badge" style="background:#bc8cff">new</span>
       </div>
-      <div class="ev">Baseplate Technic 16×32. -> #8 global</div>
+      <div class="ev">Baseplate Technic 16x32. -> #8 global</div>
     </div>
 
     <div class="rule-card new" data-status="new">
@@ -748,7 +905,7 @@
         <span class="name">Bigramas slope-slope = Space</span>
         <span class="badge" style="background:#bc8cff">new</span>
       </div>
-      <div class="ev">3818↔3820 etc. -> 4 pares >30</div>
+      <div class="ev">3818<->3820 etc. -> 4 pairs >30</div>
     </div>
 
     <div class="rule-card new" data-status="new">
@@ -757,11 +914,11 @@
         <span class="name">Y = +8 LDU = antenas</span>
         <span class="badge" style="background:#bc8cff">new</span>
       </div>
-      <div class="ev">1 389 piezas (antenas). -> Blacktron/Unitron</div>
+      <div class="ev">1,389 pieces (antennas). -> Blacktron/Unitron</div>
     </div>
 </div></section>
 
-<section id="methodology">
+<section id="methodology" class="animate-on-scroll">
   <h2><span class="num">11.</span>Methodology & limitations</h2>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
     <div>
@@ -799,24 +956,81 @@
 </div>
 
 <script>
-// === CHART.JS INITIALIZATION ===
+// === DATA ===
+const DATA = {"cohorts": {"80s90s": {"sets": 100, "pieces": 18670, "sub_builds": 839, "custom_parts": 112, "bfc_certify": 21, "neg_det_count": 50, "top_pieces": [["4-4cyli.dat", 1896], ["3023.dat", 590], ["3004.dat", 521], ["6141.dat", 372], ["3024.dat", 368]], "top_y_layers": [[0.0, 991], [-24.0, 942], [-32.0, 666], [-8.0, 650], [-56.0, 549], [-48.0, 515], [-40.0, 478], [-64.0, 418]]}, "kids": {"sets": 200, "pieces": 42947, "sub_builds": 1535, "custom_parts": 818, "bfc_certify": 73, "neg_det_count": 107, "top_pieces": [["4-4cyli.dat", 3502], ["3023.dat", 1401], ["6141.dat", 1382], ["3004.dat", 1353], ["3005.dat", 1093]], "top_y_layers": [[-24.0, 2616], [-8.0, 2373], [0.0, 2038], [-32.0, 1441], [-16.0, 1425], [-48.0, 1394], [-56.0, 1119], [-40.0, 969]]}, "classic": {"sets": 232, "pieces": 47143, "sub_builds": 2350, "custom_parts": 107, "bfc_certify": 38, "neg_det_count": 1306, "top_pieces": [["3023.dat", 1679], ["756.dat", 1481], ["3004.dat", 1419], ["3710.dat", 981], ["3005.dat", 980]], "top_y_layers": [[0.0, 3407], [-8.0, 3018], [-24.0, 2418], [-16.0, 1662], [-32.0, 1647], [-40.0, 1295], [-48.0, 1255], [-56.0, 1055]]}, "modern": {"sets": 287, "pieces": 114904, "sub_builds": 4128, "custom_parts": 769, "bfc_certify": 79, "neg_det_count": 42, "top_pieces": [["3023.dat", 5246], ["3024.dat", 3663], ["6141.dat", 3003], ["3004.dat", 2932], ["3069b.dat", 2907]], "top_y_layers": [[-8.0, 10362], [0.0, 8560], [-24.0, 6516], [-32.0, 5244], [-16.0, 4137], [-48.0, 3496], [-40.0, 3321], [-56.0, 2725]]}, "technic": {"sets": 175, "pieces": 169839, "sub_builds": 5243, "custom_parts": 1691, "bfc_certify": 138, "neg_det_count": 1162, "top_pieces": [["2780.dat", 15038], ["4-4cyli.dat", 11628], ["166.dat", 10159], ["u9218.dat", 7997], ["6558.dat", 7541]], "top_y_layers": [[0.0, 32606], [-20.0, 8239], [-40.0, 6466], [20.0, 5045], [-60.0, 3844], [-80.0, 3326], [40.0, 2767], [-10.0, 2204]]}, "specialty": {"sets": 165, "pieces": 63592, "sub_builds": 2744, "custom_parts": 351, "bfc_certify": 60, "neg_det_count": 112, "top_pieces": [["98138.dat", 7622], ["6141.dat", 4299], ["3023.dat", 3973], ["3024.dat", 2559], ["3069b.dat", 2043]], "top_y_layers": [[-8.0, 16427], [0.0, 5073], [-16.0, 4693], [-24.0, 3596], [-32.0, 2466], [-40.0, 1898], [-48.0, 1440], [-56.0, 1190]]}, "licensed": {"sets": 121, "pieces": 45227, "sub_builds": 1961, "custom_parts": 531, "bfc_certify": 60, "neg_det_count": 248, "top_pieces": [["3023.dat", 1784], ["6141.dat", 1030], ["3710.dat", 973], ["2780.dat", 962], ["3020.dat", 771]], "top_y_layers": [[0.0, 4629], [-8.0, 3317], [-24.0, 2686], [-32.0, 1801], [-16.0, 1734], [-48.0, 1620], [-40.0, 1457], [10.0, 1030]]}, "classic_gaps": {"sets": 158, "pieces": 31830, "sub_builds": 1274, "custom_parts": 91, "bfc_certify": 41, "neg_det_count": 641, "top_pieces": [["3004.dat", 988], ["3023.dat", 905], ["3024.dat", 727], ["6141.dat", 692], ["756.dat", 644]], "top_y_layers": [[-24.0, 1529], [-48.0, 1015], [-64.0, 986], [-8.0, 952], [-72.0, 946], [0.0, 932], [-96.0, 864], [-40.0, 850]]}}, "top_pieces_global": [["4-4cyli.dat", 20031], ["2780.dat", 17458], ["3023.dat", 16181], ["6141.dat", 11755], ["166.dat", 10617], ["3024.dat", 9844], ["3004.dat", 8746], ["u9218.dat", 8374], ["98138.dat", 8207], ["77.dat", 8188], ["6558.dat", 8135], ["3710.dat", 7620], ["3005.dat", 7204], ["3069b.dat", 6849], ["axlehol8.dat", 5607], ["box4o8a.dat", 5331], ["3020.dat", 4748], ["3623.dat", 4367], ["43093.dat", 4272], ["3070b.dat", 4132]], "top_y_layers_global": [[0.0, 58236], [-8.0, 37942], [-24.0, 20763], [-40.0, 16734], [-16.0, 15062], [-32.0, 14408], [-48.0, 10911], [-20.0, 9030], [-56.0, 8500], [-80.0, 7953], [-72.0, 6685], [-64.0, 6017], [20.0, 5180], [10.0, 4877], [8.0, 4812]], "top_deltas_global": [{"dx": 20.0, "dy": 0.0, "dz": 0.0, "count": 17714}, {"dx": 0.0, "dy": 0.0, "dz": 0.0, "count": 10119}, {"dx": 40.0, "dy": 0.0, "dz": 0.0, "count": 7785}, {"dx": 0.0, "dy": -8.0, "dz": 0.0, "count": 7532}, {"dx": 0.0, "dy": 0.0, "dz": -20.0, "count": 6035}, {"dx": 60.0, "dy": 0.0, "dz": 0.0, "count": 5793}, {"dx": 0.0, "dy": 0.0, "dz": 40.0, "count": 5500}, {"dx": 0.0, "dy": 0.0, "dz": -40.0, "count": 5479}, {"dx": 0.0, "dy": 0.0, "dz": 20.0, "count": 5191}, {"dx": -40.0, "dy": 0.0, "dz": 0.0, "count": 4597}], "top_bigrams_global": [{"a": "4-4cyli.dat", "b": "4-4cyli.dat", "count": 19842}, {"a": "166.dat", "b": "166.dat", "count": 10508}, {"a": "2780.dat", "b": "2780.dat", "count": 9114}, {"a": "u9218.dat", "b": "u9218.dat", "count": 8344}, {"a": "77.dat", "b": "77.dat", "count": 8129}, {"a": "98138.dat", "b": "98138.dat", "count": 7311}, {"a": "6141.dat", "b": "6141.dat", "count": 7009}, {"a": "3023.dat", "b": "3023.dat", "count": 6151}, {"a": "axlehol8.dat", "b": "axlehol8.dat", "count": 5574}, {"a": "box4o8a.dat", "b": "box4o8a.dat", "count": 5313}, {"a": "3024.dat", "b": "3024.dat", "count": 4423}, {"a": "3004.dat", "b": "3004.dat", "count": 3899}], "top_themes": [{"theme": "Technic", "sets": 155, "pieces": 152331}, {"theme": "Creator > Creator Expert", "sets": 20, "pieces": 30948}, {"theme": "Modular Buildings", "sets": 11, "pieces": 25127}, {"theme": "Town > Classic Town", "sets": 124, "pieces": 21096}, {"theme": "Icons", "sets": 8, "pieces": 18786}, {"theme": "Creator > Creator 3-in-1", "sets": 50, "pieces": 16726}, {"theme": "Architecture", "sets": 36, "pieces": 15943}, {"theme": "Star Wars > Ultimate Collector Series", "sets": 12, "pieces": 14754}, {"theme": "LEGO Ideas and CUUSOO", "sets": 12, "pieces": 13880}, {"theme": "Star Wars", "sets": 64, "pieces": 13241}, {"theme": "Brickheadz", "sets": 76, "pieces": 10889}, {"theme": "LEGO Art", "sets": 1, "pieces": 10703}, {"theme": "Technic > Star Wars", "sets": 3, "pieces": 10702}, {"theme": "Classic Town", "sets": 73, "pieces": 10002}, {"theme": "Racers", "sets": 76, "pieces": 9890}], "theme_scatter": [{"name": "Town", "bfc_pct": 11.9, "refl_pct": 2.617, "pieces": 7947}, {"name": "Fabuland", "bfc_pct": 70.7, "refl_pct": 0.0, "pieces": 1346}, {"name": "Space", "bfc_pct": 6.7, "refl_pct": 0.0, "pieces": 2088}, {"name": "Train", "bfc_pct": 18.2, "refl_pct": 0.0, "pieces": 3600}, {"name": "Boat", "bfc_pct": 81.8, "refl_pct": 0.0, "pieces": 1388}, {"name": "Castle", "bfc_pct": 30.0, "refl_pct": 0.0, "pieces": 1621}, {"name": "Model Team", "bfc_pct": 66.7, "refl_pct": 0.0, "pieces": 4092}, {"name": "Pirates", "bfc_pct": 40.0, "refl_pct": 0.03, "pieces": 3314}, {"name": "Promotional", "bfc_pct": 25.0, "refl_pct": 0.0, "pieces": 488}, {"name": "Universal Building Set", "bfc_pct": 10.0, "refl_pct": 0.0, "pieces": 258}, {"name": "Western", "bfc_pct": 58.8, "refl_pct": 0.0, "pieces": 3821}, {"name": "Star Wars", "bfc_pct": 25.0, "refl_pct": 0.74, "pieces": 13241}, {"name": "Town › Classic Town", "bfc_pct": 25.8, "refl_pct": 0.526, "pieces": 21096}, {"name": "Castle › Black Falcons", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 658}, {"name": "Castle › Forestmen", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 456}, {"name": "Town › Launch Command", "bfc_pct": 33.3, "refl_pct": 0.104, "pieces": 962}, {"name": "Creator › Designer Sets", "bfc_pct": 4.5, "refl_pct": 0.0, "pieces": 1162}, {"name": "City › Airport", "bfc_pct": 50.0, "refl_pct": 0.357, "pieces": 1402}, {"name": "City › Police", "bfc_pct": 7.1, "refl_pct": 0.0, "pieces": 2281}, {"name": "Creator › Creator 3-in-1", "bfc_pct": 22.0, "refl_pct": 0.0, "pieces": 16726}, {"name": "Creator", "bfc_pct": 6.1, "refl_pct": 0.0, "pieces": 1008}, {"name": "City › Hospital", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 548}, {"name": "City › Construction", "bfc_pct": 23.1, "refl_pct": 0.0, "pieces": 2523}, {"name": "City › Harbor", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 413}, {"name": "Seasonal › Halloween", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 60}, {"name": "Super Heroes DC › Batman", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 454}, {"name": "The Hobbit and Lord of the Rings › The Lord of the Rings", "bfc_pct": 20.0, "refl_pct": 0.084, "pieces": 1189}, {"name": "Friends", "bfc_pct": 69.0, "refl_pct": 0.0, "pieces": 5800}, {"name": "City › Fire", "bfc_pct": 60.0, "refl_pct": 0.0, "pieces": 2708}, {"name": "Promotional › Bricktober", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 1445}, {"name": "Harry Potter", "bfc_pct": 71.4, "refl_pct": 0.0, "pieces": 5060}, {"name": "Classic Town", "bfc_pct": 6.8, "refl_pct": 0.04, "pieces": 10002}, {"name": "Classic Space", "bfc_pct": 0.0, "refl_pct": 21.143, "pieces": 927}, {"name": "9V", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 2980}, {"name": "Futuron", "bfc_pct": 0.0, "refl_pct": 4.753, "pieces": 1073}, {"name": "4.5V", "bfc_pct": 37.5, "refl_pct": 0.0, "pieces": 372}, {"name": "Space Police III", "bfc_pct": 37.5, "refl_pct": 1.908, "pieces": 2201}, {"name": "12V", "bfc_pct": 50.0, "refl_pct": 0.0, "pieces": 2106}, {"name": "Blacktron II", "bfc_pct": 0.0, "refl_pct": 5.081, "pieces": 984}, {"name": "Res-Q", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 971}, {"name": "Lion Knights", "bfc_pct": 40.0, "refl_pct": 0.0, "pieces": 1620}, {"name": "M:Tron", "bfc_pct": 0.0, "refl_pct": 8.023, "pieces": 1234}, {"name": "Ice Planet 2002", "bfc_pct": 0.0, "refl_pct": 6.944, "pieces": 720}, {"name": "Space Police II", "bfc_pct": 0.0, "refl_pct": 0.62, "pieces": 967}, {"name": "Blacktron I", "bfc_pct": 0.0, "refl_pct": 12.355, "pieces": 1554}, {"name": "Space Police I", "bfc_pct": 0.0, "refl_pct": 7.077, "pieces": 862}, {"name": "Spyrius", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 308}, {"name": "Unitron", "bfc_pct": 25.0, "refl_pct": 13.947, "pieces": 2488}, {"name": "Launch Command", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 721}, {"name": "Divers", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 520}, {"name": "Outback", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 522}, {"name": "Creator › Creator Expert", "bfc_pct": 85.0, "refl_pct": 0.0, "pieces": 30948}, {"name": "Racers", "bfc_pct": 1.3, "refl_pct": 0.0, "pieces": 9890}, {"name": "City › Traffic", "bfc_pct": 21.4, "refl_pct": 0.0, "pieces": 2939}, {"name": "Legoland › Building", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 211}, {"name": "Modular Buildings", "bfc_pct": 100.0, "refl_pct": 0.167, "pieces": 25127}, {"name": "Icons", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 18786}, {"name": "City › Farm", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 1297}, {"name": "Technic", "bfc_pct": 81.9, "refl_pct": 0.171, "pieces": 152331}, {"name": "Technic › Star Wars", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 10702}, {"name": "Technic › Competition", "bfc_pct": 100.0, "refl_pct": 33.065, "pieces": 2728}, {"name": "Technic › Expert Builder", "bfc_pct": 27.3, "refl_pct": 0.0, "pieces": 3553}, {"name": "Hobby Sets", "bfc_pct": 25.0, "refl_pct": 0.0, "pieces": 898}, {"name": "Brickheadz", "bfc_pct": 35.5, "refl_pct": 0.046, "pieces": 10889}, {"name": "LEGO Ideas and CUUSOO", "bfc_pct": 66.7, "refl_pct": 0.756, "pieces": 13880}, {"name": "Brick Sketches", "bfc_pct": 16.7, "refl_pct": 0.0, "pieces": 854}, {"name": "Other", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 2888}, {"name": "Architecture", "bfc_pct": 22.2, "refl_pct": 0.0, "pieces": 15943}, {"name": "Architecture › Skylines", "bfc_pct": 54.5, "refl_pct": 0.043, "pieces": 4673}, {"name": "Star Wars › Ultimate Collector Series", "bfc_pct": 75.0, "refl_pct": 0.0, "pieces": 14754}, {"name": "Pharaoh's Quest", "bfc_pct": 50.0, "refl_pct": 0.0, "pieces": 1225}, {"name": "Racers › Ferrari", "bfc_pct": 12.5, "refl_pct": 0.0, "pieces": 1310}, {"name": "Elves", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 652}, {"name": "Mixels", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 382}, {"name": "Speed Champions", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 1429}, {"name": "Super Heroes DC › Batman › UCS", "bfc_pct": 66.7, "refl_pct": 0.0, "pieces": 6093}, {"name": "Speed Racer", "bfc_pct": 75.0, "refl_pct": 0.0, "pieces": 1326}, {"name": "Train › 9V", "bfc_pct": 12.5, "refl_pct": 0.0, "pieces": 3846}, {"name": "Space › Space Police III", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 1435}, {"name": "Space › Classic Space", "bfc_pct": 23.5, "refl_pct": 3.029, "pieces": 3235}, {"name": "Space › Blacktron II", "bfc_pct": 0.0, "refl_pct": 19.72, "pieces": 928}, {"name": "Space › Blacktron I", "bfc_pct": 0.0, "refl_pct": 14.686, "pieces": 1321}, {"name": "Train › 12V", "bfc_pct": 66.7, "refl_pct": 0.0, "pieces": 2632}, {"name": "Train › 4.5V", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 1375}], "decades": [{"decade": "1960s", "sets": 17, "pieces": 2509}, {"decade": "1970s", "sets": 101, "pieces": 18777}, {"decade": "1980s", "sets": 265, "pieces": 46387}, {"decade": "1990s", "sets": 272, "pieces": 60626}, {"decade": "2000s", "sets": 245, "pieces": 75050}, {"decade": "2010s", "sets": 461, "pieces": 233492}, {"decade": "2020s", "sets": 77, "pieces": 97311}], "top_themes_refl": [{"theme": "Technic > Competition", "reflections": 902, "sets": 3, "pieces": 2728, "ratio": 0.33064516129032256}, {"theme": "Classic Space", "reflections": 196, "sets": 8, "pieces": 927, "ratio": 0.21143473570658036}, {"theme": "Space > Blacktron II", "reflections": 183, "sets": 4, "pieces": 928, "ratio": 0.19719827586206898}, {"theme": "Space > Blacktron I", "reflections": 194, "sets": 3, "pieces": 1321, "ratio": 0.1468584405753217}, {"theme": "Unitron", "reflections": 347, "sets": 4, "pieces": 2488, "ratio": 0.13946945337620578}, {"theme": "Space > Spyrius", "reflections": 50, "sets": 1, "pieces": 366, "ratio": 0.1366120218579235}, {"theme": "Blacktron I", "reflections": 192, "sets": 6, "pieces": 1554, "ratio": 0.12355212355212356}, {"theme": "The LEGO Movie", "reflections": 198, "sets": 2, "pieces": 1824, "ratio": 0.10855263157894737}, {"theme": "Town > City Center", "reflections": 49, "sets": 2, "pieces": 575, "ratio": 0.08521739130434783}, {"theme": "M:Tron", "reflections": 99, "sets": 8, "pieces": 1234, "ratio": 0.08022690437601297}], "total_sets": 1438, "total_pieces": 534152, "total_custom": 4470, "total_bfc": 510, "total_sub_builds": 20074, "cohort_colors": {"80s90s": "#58a6ff", "kids": "#d29922", "classic": "#3fb950", "classic_gaps": "#7ee787", "modern": "#bc8cff", "technic": "#f85149", "specialty": "#39c5cf", "licensed": "#f778ba"}, "top_custom_sets": [{"set": "42129-1", "theme": "Technic", "custom": 98}, {"set": "42131-1", "theme": "Technic", "custom": 94}, {"set": "10261-1", "theme": "Creator > Creator Expert", "custom": 91}, {"set": "60216-1", "theme": "City > Fire", "custom": 78}, {"set": "75870-1", "theme": "Speed Champions", "custom": 76}, {"set": "3185-1", "theme": "Friends", "custom": 69}, {"set": "42100-1", "theme": "Technic", "custom": 69}, {"set": "42125-1", "theme": "Technic", "custom": 63}, {"set": "10283-1", "theme": "Icons", "custom": 61}, {"set": "3189-1", "theme": "Friends", "custom": 59}], "rules": [{"id": "R1", "name": "Y-layers multiples of 8", "status": "confirmed", "description": "Plate (8 LDU), brick (24 LDU).", "evidence": "96.4% top-15 canonical"}, {"id": "R2", "name": "X/Z deltas multiples of 20", "status": "confirmed", "description": "Stud fit.", "evidence": "100% top-15 canonical"}, {"id": "R3", "name": "Reflections < 0.3%", "status": "refuted", "description": "Space-themed spike to 5-21%.", "evidence": "1.345% corpus 1438"}, {"id": "R4", "name": "Custom parts = 0.6%", "status": "refuted", "description": "kids = 1.9%, Fabuland 9.3%.", "evidence": "0.95% global"}, {"id": "R5", "name": "Top 10 parts cover ~24-30%", "status": "confirmed", "description": "Base vocabulary of the System.", "evidence": "24.3% corpus 532"}, {"id": "R6", "name": "Y-irregular = Technic/slopes", "status": "weakened", "description": "Slope 33° signature Y=-46.1.", "evidence": "Exists but rare"}, {"id": "R7", "name": "Bigrams are self-bigrams", "status": "confirmed", "description": "Parallel rows of the same piece.", "evidence": "90%+ self-bigrams"}, {"id": "R8", "name": "Technic embedded in non-Technic", "status": "weakened", "description": "0.27% in 80s/90s, 1.50% kids.", "evidence": "Era-dependent"}, {"id": "R9", "name": "90s are 1.7x larger than 80s", "status": "weakened", "description": "Kids 2010s 2x larger.", "evidence": "Era-dependent"}, {"id": "R10", "name": "BFC CERTIFY does not grow over time", "status": "refuted", "description": "kids 36.5% > classic 16.4%.", "evidence": "Not monotonic"}, {"id": "R11", "name": "Sub-builds do not grow over time", "status": "weakened", "description": "Classic 10.13 > kids 7.68.", "evidence": "Not monotonic"}, {"id": "R12", "name": "4-4cyli is universal", "status": "confirmed", "description": "20,031 uses in corpus 1438.", "evidence": "#1 global"}, {"id": "R13", "name": "Kids modern vocabulary", "status": "weakened", "description": "New pieces post-2000.", "evidence": "12 exclusive"}, {"id": "R14", "name": "Bigram 3005 to 3004 only in kids", "status": "confirmed", "description": "70 occurrences.", "evidence": "0 in 80s/90s"}, {"id": "R15", "name": "Kids use deeper Y", "status": "weakened", "description": "Y=-168 in kids.", "evidence": "vs -128 in 80s/90s"}, {"id": "R16", "name": "Fabuland has its own identity", "status": "confirmed", "description": "~25 exclusive parts.", "evidence": "9.3% custom parts"}, {"id": "R17", "name": "Friends = most decorative", "status": "confirmed", "description": "94% use 6141.", "evidence": "17 sets"}, {"id": "R18", "name": "Train has Z-dominant axis", "status": "weakened", "description": "Boat too.", "evidence": "No longer exclusive"}, {"id": "R19", "name": "Space-themed spike reflections", "status": "new", "description": "73 Space sets = 87.8% of reflections.", "evidence": "Classic Space 21%"}, {"id": "R20", "name": "756.dat is Space signature", "status": "new", "description": "Baseplate Technic 16x32.", "evidence": "#8 global"}, {"id": "R21", "name": "Classic have lowest BFC", "status": "new", "description": "16.4% vs kids 36.5%.", "evidence": "Not monotonic"}, {"id": "R22", "name": "Slope-slope bigrams = Space", "status": "new", "description": "3818<->3820 etc.", "evidence": "4 pairs >30"}, {"id": "R23", "name": "Y = +8 LDU = antennas", "status": "new", "description": "1,389 pieces (antennas).", "evidence": "Blacktron/Unitron"}], "top_bigrams_cross": [{"a": "a", "b": "b", "count": "count"}, {"a": "a", "b": "b", "count": "count"}, {"a": "a", "b": "b", "count": "count"}, {"a": "a", "b": "b", "count": "count"}, {"a": "a", "b": "b", "count": "count"}, {"a": "a", "b": "b", "count": "count"}, {"a": "a", "b": "b", "count": "count"}, {"a": "a", "b": "b", "count": "count"}, {"a": "a", "b": "b", "count": "count"}, {"a": "a", "b": "b", "count": "count"}, {"a": "a", "b": "b", "count": "count"}, {"a": "a", "b": "b", "count": "count"}, {"a": "a", "b": "b", "count": "count"}, {"a": "a", "b": "b", "count": "count"}, {"a": "a", "b": "b", "count": "count"}], "deltas_scatter": [{"dx": 20.0, "dy": 0.0, "dz": 0.0, "count": 17714}, {"dx": 0.0, "dy": 0.0, "dz": 0.0, "count": 10119}, {"dx": 40.0, "dy": 0.0, "dz": 0.0, "count": 7785}, {"dx": 0.0, "dy": -8.0, "dz": 0.0, "count": 7532}, {"dx": 0.0, "dy": 0.0, "dz": -20.0, "count": 6035}, {"dx": 60.0, "dy": 0.0, "dz": 0.0, "count": 5793}, {"dx": 0.0, "dy": 0.0, "dz": 40.0, "count": 5500}, {"dx": 0.0, "dy": 0.0, "dz": -40.0, "count": 5479}, {"dx": 0.0, "dy": 0.0, "dz": 20.0, "count": 5191}, {"dx": -40.0, "dy": 0.0, "dz": 0.0, "count": 4597}, {"dx": -20.0, "dy": 0.0, "dz": 0.0, "count": 4393}, {"dx": 0.0, "dy": -24.0, "dz": 0.0, "count": 4220}, {"dx": 80.0, "dy": 0.0, "dz": 0.0, "count": 3760}, {"dx": -60.0, "dy": 0.0, "dz": 0.0, "count": 3633}, {"dx": 100.0, "dy": 0.0, "dz": 0.0, "count": 3114}], "theme_subtheme": {"Technic": ["Technic", "Technic > Competition", "Technic > Expert Builder", "Technic > Star Wars"], "Town/City": ["Town > Classic Town", "Town", "Town > City Center", "Town > World City", "City > Police", "City > Fire", "City > Airport", "City > Construction"], "Space": ["Space > Classic Space", "Space > Futuron", "Space > Blacktron I", "Space > Blacktron II", "Space > Spyrius", "Space > M:Tron", "Space > Ice Planet 2002", "Space > Space Police I", "Space > Space Police II", "Space > Space Police III", "Space > Unitron"], "Castle": ["Castle > Lion Knights", "Castle > Black Falcons", "Castle > Forestmen", "Castle > Black Knights", "Castle > Dragon Knights", "Castle > Knights Kingdom II"], "Pirates": ["Pirates > Pirates I"], "Star Wars": ["Star Wars", "Star Wars > Ultimate Collector Series"], "Modern": ["Creator > Creator 3-in-1", "Creator > Creator Expert", "Icons"], "Specialty": ["Brickheadz", "Architecture", "LEGO Ideas and CUUSOO", "Brick Sketches"]}};
 
+// === CHART.JS DEFAULTS ===
 Chart.defaults.color = '#8b949e';
 Chart.defaults.borderColor = '#30363d';
 Chart.defaults.font.family = '-apple-system, system-ui, sans-serif';
 Chart.defaults.font.size = 11;
-Chart.defaults.animation.duration = 400;
+Chart.defaults.animation.duration = 600;
 
-// Helper: cohort color
 const cohortColors = DATA.cohort_colors;
 function colorForCohort(name) { return cohortColors[name] || '#58a6ff'; }
+function colorForY(y) {
+  if (y === 0) return '#3fb950';
+  if (y === -8 || y === -16 || y === -24 || y === -32 || y === -40) return '#58a6ff';
+  if (y > 0) return '#f778ba';
+  return '#d29922';
+}
 
-// 1. Cohort pieces bar
+// === CHART HELPERS ===
+function responsiveChart(canvas, config) {
+  return new Chart(canvas, {
+    ...config,
+    options: {
+      ...(config.options || {}),
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 800, easing: 'easeOutQuart' }
+    }
+  });
+}
+
+// === COUNTER ANIMATIONS ===
+document.querySelectorAll('.counter').forEach(c => {
+  const target = parseInt(c.dataset.target);
+  const duration = 1500;
+  const start = performance.now();
+  function step(now) {
+    const t = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - t, 3);
+    c.textContent = Math.round(target * eased).toLocaleString();
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+});
+
+// === SCROLL PROGRESS BAR ===
+const progressBar = document.getElementById('progress-bar');
+function updateProgress() {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.width = (window.scrollY / h * 100) + '%';
+}
+window.addEventListener('scroll', updateProgress);
+
+// === INTERSECTION OBSERVER FOR SCROLL ANIMATIONS ===
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.animate-on-scroll, .animate-left').forEach(el => {
+  observer.observe(el);
+});
+
+// === 1. COHORT PIECES ===
 const cohortData = Object.entries(DATA.cohorts).map(([k, v]) => ({
   name: k.replace('_', ' '),
   pieces: v.pieces,
+  sets: v.sets,
 }));
-new Chart(document.getElementById('cohort-pieces'), {
+responsiveChart(document.getElementById('cohort-pieces'), {
   type: 'bar',
   data: {
     labels: cohortData.map(c => c.name),
@@ -828,36 +1042,26 @@ new Chart(document.getElementById('cohort-pieces'), {
   },
   options: {
     indexAxis: 'y',
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        callbacks: {
-          label: (ctx) => ctx.parsed.x.toLocaleString() + ' pieces'
-        }
-      }
-    },
-    scales: {
-      x: { ticks: { callback: v => (v/1000).toFixed(0) + 'K' } },
-      y: { grid: { display: false } }
-    }
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.x.toLocaleString() + ' pieces' } } },
+    scales: { x: { ticks: { callback: v => (v/1000).toFixed(0) + 'K' } }, y: { grid: { display: false } } }
   }
 });
 
-// 2. Radar chart
+// === 2. COHORT RADAR ===
 const radarCohorts = Object.entries(DATA.cohorts).map(([k, v]) => ({
   name: k.replace('_', ' '),
   color: colorForCohort(k),
-  sets: v.sets / 10, // normalize
-  pieces: v.pieces / 10000,
-  sub_builds: v.sub_builds / 100,
-  custom: v.custom_parts / 50,
-  bfc: v.bfc_certify / 5,
-  reflections: v.neg_det_count / 50,
+  sets: v.sets / 5,
+  pieces: v.pieces / 8000,
+  sub_builds: v.sub_builds / 80,
+  custom: v.custom_parts / 40,
+  bfc: v.bfc_certify / 4,
+  reflections: Math.min(20, v.neg_det_count / 50),
 }));
-new Chart(document.getElementById('cohort-radar'), {
+responsiveChart(document.getElementById('cohort-radar'), {
   type: 'radar',
   data: {
-    labels: ['Sets', 'Pieces', 'Sub-builds', 'Custom', 'BFC', 'Reflections'],
+    labels: ['Sets', 'Pieces (K)', 'Sub-builds', 'Custom', 'BFC', 'Reflections'],
     datasets: radarCohorts.map(c => ({
       label: c.name,
       data: [c.sets, c.pieces, c.sub_builds, c.custom, c.bfc, c.reflections],
@@ -868,17 +1072,13 @@ new Chart(document.getElementById('cohort-radar'), {
     }))
   },
   options: {
-    plugins: {
-      legend: { position: 'right', labels: { boxWidth: 12, padding: 6 } },
-    },
-    scales: {
-      r: { suggestedMin: 0, suggestedMax: 5, ticks: { display: false } }
-    }
+    plugins: { legend: { position: 'right', labels: { boxWidth: 12, padding: 6 } } },
+    scales: { r: { suggestedMin: 0, suggestedMax: 5, ticks: { display: false } } }
   }
 });
 
-// 3. Vocabulary horizontal bar
-new Chart(document.getElementById('vocab-bars'), {
+// === 3. VOCAB HORIZONTAL BARS ===
+responsiveChart(document.getElementById('vocab-bars'), {
   type: 'bar',
   data: {
     labels: DATA.top_pieces_global.slice(0,15).map(p => p[0].replace('.dat','')),
@@ -895,68 +1095,15 @@ new Chart(document.getElementById('vocab-bars'), {
   }
 });
 
-// 4. Treemap (manual, since Chart.js treemap needs extra plugin)
-const treemapContainer = document.getElementById('treemap');
-const treemapData = DATA.top_pieces_global.slice(0, 24);
-const total = treemapData.reduce((s, p) => s + p[1], 0);
-const cols = 8; const rows = 6; const cellW = 100/cols; const cellH = 100/rows;
-const sizes = treemapData.map(p => p[1] / total * 100);
-let placed = 0;
-const layout = [];
-const usedCells = new Set();
-function placeItem(areaPercent) {
-  // Greedy: find first available row, fill cells until area used up
-  let needed = Math.max(1, Math.round(areaPercent / (cellW * cellH)));
-  let placedCells = 0;
-  outer: for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      if (!usedCells.has(r * 100 + c)) {
-        for (let k = 0; k < needed; k++) {
-          const rr = r + Math.floor((c + k) / cols);
-          const cc = (c + k) % cols;
-          if (rr >= rows || usedCells.has(rr * 100 + cc)) continue outer;
-          layout.push({ row: r, col: c, span: needed });
-          for (let j = 0; j < needed; j++) {
-            const rrr = r + Math.floor((c + j) / cols);
-            const ccc = (c + j) % cols;
-            if (rrr < rows) usedCells.add(rrr * 100 + ccc);
-          }
-          placedCells += needed;
-          return;
-        }
-      }
-    }
-  }
-}
-for (let i = 0; i < treemapData.length; i++) {
-  placeItem(sizes[i]);
-}
-layout.forEach((cell, idx) => {
-  const item = treemapData[idx];
-  if (!item) return;
-  const div = document.createElement('div');
-  div.className = 'treemap-cell';
-  div.style.gridColumn = `${cell.col + 1} / span ${cell.span}`;
-  div.style.gridRow = `${cell.row + 1} / span 1`;
-  const colorSat = Math.min(1, 0.4 + (item[1] / total) * 3);
-  div.style.background = `hsl(210, 80%, ${65 - sizes[idx] * 0.6}%)`;
-  const fontSize = sizes[idx] > 5 ? 13 : sizes[idx] > 2 ? 11 : 9;
-  div.innerHTML = `<div class="name" style="font-size:${fontSize}px">${item[0].replace('.dat','')}</div><div class="val">${(item[1]/1000).toFixed(1)}K</div>`;
-  div.title = `${item[0]}: ${item[1].toLocaleString()} uses`;
-  treemapContainer.appendChild(div);
-});
 
-// 5. Y-layers
-new Chart(document.getElementById('y-bars'), {
+// === 5. Y-BARS ===
+responsiveChart(document.getElementById('y-bars'), {
   type: 'bar',
   data: {
     labels: DATA.top_y_layers_global.map(y => y[0] >= 0 ? '+' + y[0] : y[0]),
     datasets: [{
       data: DATA.top_y_layers_global.map(y => y[1]),
-      backgroundColor: (ctx) => {
-        const y = DATA.top_y_layers_global[ctx.dataIndex][0];
-        return y === 0 ? '#3fb950' : y === -8 || y === -16 || y === -24 || y === -32 ? '#58a6ff' : '#d29922';
-      },
+      backgroundColor: (ctx) => colorForY(DATA.top_y_layers_global[ctx.dataIndex][0]),
       borderRadius: 4,
     }]
   },
@@ -969,8 +1116,36 @@ new Chart(document.getElementById('y-bars'), {
   }
 });
 
-// 6. Deltas
-new Chart(document.getElementById('deltas-bars'), {
+// === 6. Y-LAYERS LINES PER COHORT ===
+const yLineCohorts = Object.entries(DATA.cohorts).map(([k, v]) => ({
+  name: k.replace('_', ' '),
+  color: colorForCohort(k),
+  data: v.top_y_layers.map(yl => ({ x: yl[0], y: yl[1] })).sort((a, b) => a.x - b.x),
+}));
+responsiveChart(document.getElementById('y-lines'), {
+  type: 'line',
+  data: {
+    datasets: yLineCohorts.map(c => ({
+      label: c.name,
+      data: c.data,
+      borderColor: c.color,
+      backgroundColor: c.color + '20',
+      fill: false,
+      tension: 0.3,
+      pointRadius: 3,
+    }))
+  },
+  options: {
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } },
+    scales: {
+      x: { type: 'linear', title: { display: true, text: 'Y (LDU)' } },
+      y: { title: { display: true, text: 'pieces' }, ticks: { callback: v => v >= 1000 ? (v/1000).toFixed(1) + 'K' : v } }
+    }
+  }
+});
+
+// === 7. DELTAS BAR ===
+responsiveChart(document.getElementById('deltas-bars'), {
   type: 'bar',
   data: {
     labels: DATA.top_deltas_global.slice(0,10).map(d => `(${d.dx},${d.dy},${d.dz})`),
@@ -987,11 +1162,11 @@ new Chart(document.getElementById('deltas-bars'), {
   }
 });
 
-// 7. Bigrams
-new Chart(document.getElementById('bigrams-bars'), {
+// === 8. BIGRAMS BAR ===
+responsiveChart(document.getElementById('bigrams-bars'), {
   type: 'bar',
   data: {
-    labels: DATA.top_bigrams_global.slice(0,12).map(b => `${b[0].replace('.dat','')} > ${b[1].replace('.dat','')}`),
+    labels: DATA.top_bigrams_global.slice(0,12).map(b => `${String(b.a||'').replace('.dat','')} > ${String(b.b||'').replace('.dat','')}`),
     datasets: [{
       data: DATA.top_bigrams_global.slice(0,12).map(b => b.count),
       backgroundColor: '#bc8cff',
@@ -1005,8 +1180,31 @@ new Chart(document.getElementById('bigrams-bars'), {
   }
 });
 
-// 8. Themes bar
-new Chart(document.getElementById('themes-bars'), {
+// === 9. DELTAS BUBBLE (SCATTER) ===
+const deltasForBubble = DATA.deltas_scatter.slice(0, 25);
+responsiveChart(document.getElementById('deltas-bubble'), {
+  type: 'bubble',
+  data: {
+    datasets: [{
+      data: deltasForBubble.map(d => ({ x: d.dx, y: d.dy, r: Math.max(4, Math.min(20, Math.sqrt(d.count/100))), label: `(${d.dx},${d.dy},${d.dz}): ${d.count}` })),
+      backgroundColor: (ctx) => ctx.raw.z >= 0 ? 'rgba(88,166,255,0.6)' : 'rgba(210,153,34,0.6)',
+      borderColor: '#0d1117',
+    }]
+  },
+  options: {
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ctx.raw.label } }
+    },
+    scales: {
+      x: { title: { display: true, text: 'dx (LDU)' } },
+      y: { title: { display: true, text: 'dy (LDU)' } }
+    }
+  }
+});
+
+// === 10. THEMES BAR ===
+responsiveChart(document.getElementById('themes-bars'), {
   type: 'bar',
   data: {
     labels: DATA.top_themes.slice(0,15).map(t => t.theme.replace(' > ', ' › ').slice(-22)),
@@ -1023,13 +1221,12 @@ new Chart(document.getElementById('themes-bars'), {
   }
 });
 
-// 9. Scatter (themes reflections vs BFC)
-const scatterData = DATA.theme_scatter;
-new Chart(document.getElementById('scatter'), {
+// === 11. SCATTER (THEMES) ===
+responsiveChart(document.getElementById('scatter'), {
   type: 'scatter',
   data: {
     datasets: [{
-      data: scatterData.map(t => ({ x: t.bfc_pct, y: t.refl_pct, name: t.name, r: Math.min(15, Math.max(3, Math.log(t.pieces))) })),
+      data: DATA.theme_scatter.map(t => ({ x: t.bfc_pct, y: t.refl_pct, name: t.name, r: Math.min(15, Math.max(3, Math.log(t.pieces/50))) })),
       backgroundColor: (ctx) => {
         const v = ctx.raw;
         return v.y > 5 ? '#f85149' : v.y > 1 ? '#d29922' : '#3fb950';
@@ -1050,13 +1247,13 @@ new Chart(document.getElementById('scatter'), {
   }
 });
 
-// 10. Reflections bar
-new Chart(document.getElementById('refl-bars'), {
+// === 12. REFL BAR ===
+responsiveChart(document.getElementById('refl-bars'), {
   type: 'bar',
   data: {
     labels: DATA.top_themes_refl.slice(0,10).map(t => t.theme.replace(' > ', ' › ').slice(-22)),
     datasets: [{
-      data: DATA.top_themes_refl.slice(0,10).map(t => t.refl),
+      data: DATA.top_themes_refl.slice(0,10).map(t => t.reflections),
       backgroundColor: '#f85149',
       borderRadius: 4,
     }]
@@ -1068,14 +1265,14 @@ new Chart(document.getElementById('refl-bars'), {
   }
 });
 
-// 11. Time (grouped bars per decade)
-new Chart(document.getElementById('time-bars'), {
+// === 13. TIME BARS (DUAL AXIS) ===
+responsiveChart(document.getElementById('time-bars'), {
   type: 'bar',
   data: {
     labels: DATA.decades.map(d => d.decade),
     datasets: [
       { label: 'Sets', data: DATA.decades.map(d => d.sets), backgroundColor: '#58a6ff', yAxisID: 'y', borderRadius: 3 },
-      { label: 'Pieces (÷100)', data: DATA.decades.map(d => d.pieces / 100), backgroundColor: '#bc8cff', yAxisID: 'y1', borderRadius: 3 },
+      { label: 'Pieces (/100)', data: DATA.decades.map(d => Math.round(d.pieces/100)), backgroundColor: '#bc8cff', yAxisID: 'y1', borderRadius: 3 },
     ]
   },
   options: {
@@ -1088,8 +1285,30 @@ new Chart(document.getElementById('time-bars'), {
   }
 });
 
-// 12. Custom parts
-new Chart(document.getElementById('custom-bars'), {
+// === 14. TIME LINE ===
+responsiveChart(document.getElementById('time-line'), {
+  type: 'line',
+  data: {
+    labels: DATA.decades.map(d => d.decade),
+    datasets: [{
+      label: 'Sets per decade',
+      data: DATA.decades.map(d => d.sets),
+      borderColor: '#58a6ff',
+      backgroundColor: 'rgba(88,166,255,0.15)',
+      fill: true,
+      tension: 0.4,
+      pointRadius: 5,
+      pointBackgroundColor: '#58a6ff',
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true } }
+  }
+});
+
+// === 15. CUSTOM BARS ===
+responsiveChart(document.getElementById('custom-bars'), {
   type: 'bar',
   data: {
     labels: DATA.top_custom_sets.map(s => s.set),
@@ -1106,7 +1325,154 @@ new Chart(document.getElementById('custom-bars'), {
   }
 });
 
-// === Rule filter ===
+// === 16. CUSTOM LINE ===
+const customByCohort = Object.entries(DATA.cohorts).map(([k, v]) => ({
+  name: k.replace('_', ' '),
+  ratio: 100 * v.custom_parts / Math.max(1, v.pieces),
+  color: colorForCohort(k),
+}));
+responsiveChart(document.getElementById('custom-line'), {
+  type: 'line',
+  data: {
+    labels: customByCohort.map(c => c.name),
+    datasets: [{
+      data: customByCohort.map(c => c.ratio),
+      borderColor: '#f778ba',
+      backgroundColor: 'rgba(247,120,186,0.2)',
+      fill: true,
+      tension: 0.4,
+      pointRadius: 6,
+      pointBackgroundColor: customByCohort.map(c => c.color),
+      pointBorderColor: '#0d1117',
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y.toFixed(2) + '%' } } },
+    scales: { y: { beginAtZero: true, title: { display: true, text: 'Custom parts (%)' }, ticks: { callback: v => v + '%' } } }
+  }
+});
+
+// === DONUT: Top by cohort ===
+function makeDonut(canvasId, labels, data, colors) {
+  if (!canvasId || !document.getElementById(canvasId)) return;
+  // Replace container with chart
+}
+const topCohortData = DATA.cohorts;
+const topByCohort = Object.entries(topCohortData).slice(0, 8).map(([k, v]) => ({
+  name: k.replace('_', ' '),
+  top: v.top_pieces[0] ? v.top_pieces[0][0].replace('.dat', '') : 'N/A',
+  color: colorForCohort(k),
+}));
+// Make donut for top by cohort
+const tbcContainer = document.getElementById('top-by-cohort');
+if (tbcContainer) {
+  const cohortList = Object.entries(DATA.cohorts).slice(0, 8);
+  tbcContainer.innerHTML = cohortList.map(([k, v]) => {
+    const top = v.top_pieces[0] ? v.top_pieces[0][0].replace('.dat', '') : '-';
+    const color = colorForCohort(k);
+    return `<div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:0.78em"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color}"></span><span style="flex:1;color:var(--text)">${k.replace('_', ' ')}</span><span style="font-family:ui-monospace,monospace;color:${color}">${top}</span></div>`;
+  }).join('');
+}
+
+// Donut: diversity
+const divContainer = document.getElementById('diversity-chart');
+if (divContainer) {
+  // Count unique parts per cohort from top_pieces
+  const divData = Object.entries(DATA.cohorts).map(([k, v]) => ({
+    name: k.replace('_', ' '),
+    count: v.top_pieces.length,
+    color: colorForCohort(k),
+  }));
+  const maxDiv = Math.max(...divData.map(d => d.count));
+  divContainer.innerHTML = `
+    <div style="position:relative;width:120px;height:120px;margin:0 auto">
+      <svg viewBox="0 0 36 36" style="transform:rotate(-90deg);width:120px;height:120px">
+        ${divData.map((d, i) => {
+          const offset = divData.slice(0, i).reduce((s, x) => s + (x.count/maxDiv)*100, 0);
+          const len = (d.count/maxDiv) * 100;
+          return `<circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="${d.color}" stroke-width="3" stroke-dasharray="${len} 100" stroke-dashoffset="${-offset}"></circle>`;
+        }).join('')}
+      </svg>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center">
+        <div style="font-size:1.3em;font-weight:700;color:var(--accent)">${maxDiv}</div>
+        <div style="font-size:0.62em;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px">Max top parts</div>
+      </div>
+    </div>
+    <div style="margin-top:6px;font-size:0.66em;color:var(--text-dim)">Unique top parts per cohort</div>
+  `;
+}
+
+// Donut: Technic share
+const techContainer = document.getElementById('technic-share');
+if (techContainer) {
+  const tech = DATA.cohorts['technic'];
+  const total = Object.values(DATA.cohorts).reduce((s, c) => s + c.pieces, 0);
+  const techPct = Math.round(100 * tech.pieces / total);
+  techContainer.innerHTML = `
+    <div style="position:relative;width:120px;height:120px;margin:0 auto">
+      <svg viewBox="0 0 36 36" style="transform:rotate(-90deg);width:120px;height:120px">
+        <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#21262d" stroke-width="3" stroke-dasharray="100 100" stroke-dashoffset="0"></circle>
+        <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#f85149" stroke-width="3" stroke-dasharray="${techPct} 100" stroke-dashoffset="0"></circle>
+      </svg>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center">
+        <div style="font-size:1.3em;font-weight:700;color:#f85149">${techPct}%</div>
+        <div style="font-size:0.62em;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px">Technic</div>
+      </div>
+    </div>
+    <div style="margin-top:6px;font-size:0.66em;color:var(--text-dim)">of total pieces</div>
+  `;
+}
+
+// === SCROLL ANIMATIONS (IntersectionObserver) ===
+(function() {
+  const els = document.querySelectorAll('.animate-on-scroll, .animate-left');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(e => e.classList.add('visible'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+        // Animate counters when hero becomes visible
+        if (e.target.id === 'hero' || e.target.closest('#hero')) {
+          runCounters();
+        }
+      }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(e => io.observe(e));
+  // Progress bar
+  const bar = document.getElementById('progress-bar');
+  if (bar) {
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (h > 0 ? (window.scrollY / h * 100) : 0) + '%';
+    }, { passive: true });
+  }
+})();
+
+// === ANIMATED COUNTERS ===
+let countersDone = false;
+function runCounters() {
+  if (countersDone) return;
+  countersDone = true;
+  document.querySelectorAll('.counter').forEach(c => {
+    const target = parseInt(c.dataset.target || '0', 10);
+    if (!target) return;
+    const dur = 1400;
+    const start = performance.now();
+    (function step(now) {
+      const t = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - t, 3);
+      c.textContent = Math.round(target * eased).toLocaleString().replace(/,/g, ' ');
+      if (t < 1) requestAnimationFrame(step);
+    })(start);
+  });
+}
+
+// === RULE FILTER ===
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));

@@ -68,7 +68,7 @@ def main():
         dropout=0.1,
     )
 
-    epochs = 30
+    epochs = 3
     batch_size = 16
     peak_lr = 3e-4
     min_lr = 3e-5
