@@ -796,76 +796,99 @@ class LdrBuilder:
         """
         Builds a compact police car (City Modern style, ~30 pieces).
 
-        Design:
-          - 4 black wheels at corners (Y=-12, X=±40, Z=±30).
-          - Black chassis plate 4x4 (Y=0).
-          - White body bottom plate 4x2 (Y=-8) — narrower than chassis
-            so wheels show through.
-          - White body side walls (Y=-32).
-          - White cabin (Y=-56) brick 2x2 + slope windshield front.
-          - White roof plate (Y=-80).
-          - Light bar: trans_clear_red + trans_yellow (Y=-88).
+        Layout (front of car points to +X):
+          X = length axis. Body 6 studs long (-60..+60).
+              HOOD: front 2 studs (X=+20..+60), low (Y=-8..-16).
+              CABIN: rear 3 studs (X=-60..+20), tall (Y=-8..-80).
+              Windshield slope bridges them at X=+20, Y=-16.
+          Z = width axis. Body 2 studs wide (-20..+20).
+              Wheels inline with body width at Z=±20.
+          Y = vertical (0 = ground, negative Y goes up).
 
-        Coordinate convention:
-          - X = forward/back (length axis). Car centered, body 6 studs long.
-          - Z = left/right (width axis). Body 2 studs wide, wheels ±40 LDU.
-          - Y = vertical. Y=0 is ground; negative Y goes up (LDraw convention).
+        Real OMR police car reference: 30311-1 (LEGO City Swamp Police).
+        All coords aligned to stud grid (multiples of 20 in X/Z, 8 in Y).
         """
-        BLUE_TRIM = BLUE
+        DARK_BLUE = 272  # Police dark blue (canonical in OMR 30311)
         BODY = WHITE
-        GLASS = TRANS_RED  # placeholder, real windshield would be LIGHT_BLUE
-        WINDOW = LIGHT_BLUE
+        TRIM = DARK_BLUE
+        WINDOW = LIGHT_BLUE  # windshield (transparent look)
 
-        # 1. Wheels (4 tires + 4 wheels, Y=-8, at corners outside body width)
-        for sx, sz in [(-40, -40), (-40, 40), (40, -40), (40, 40)]:
+        # 1. WHEELS — 4 corners, axles inside body width.
+        #    X=±40 (front+rear, 4-stud spacing for stability).
+        #    Z=±20 (inline with body width).
+        for sx, sz in [(-40, -20), (-40, 20), (40, -20), (40, 20)]:
             self.step()
-            self.place('2431.dat', BLACK, sx, -8, sz)  # tire
-            self.place('2412b.dat', LIGHT_BLUISH_GREY, sx, -8, sz)  # wheel
+            self.place('2431.dat', BLACK, sx, 0, sz)  # tire (rubber)
+            self.place('2412b.dat', LIGHT_BLUISH_GREY, sx, 0, sz)  # wheel hub
 
-        # 2. Black chassis plate 4x4 (Y=0) — covers wheel axles
+        # 2. CHASSIS — black plate 2x6 covering the full wheelbase — Y=0
+        #    Use 3 plates 2x2 stacked end-to-end to span 6 studs.
         self.step()
-        self.place('3031.dat', BLACK, 0, 0, 0)  # plate 4x4 (80x80 LDU)
+        self.place('3022.dat', BLACK, -40, 0, 0)  # plate 2x2 (rear)
+        self.place('3022.dat', BLACK, 0, 0, 0)    # plate 2x2 (middle)
+        self.place('3022.dat', BLACK, 40, 0, 0)   # plate 2x2 (front)
 
-        # 3. White body bottom plate 4x4 (Y=-8) — body sits on this
+        # 3. BODY BOTTOM — white plate 2x6 (foundation for hood + cabin) — Y=-8
         self.step()
-        self.place('3031.dat', BODY, 0, -8, 0)  # plate 4x4
+        self.place('3022.dat', BODY, -40, -8, 0)  # plate 2x2 (rear, under cabin)
+        self.place('3022.dat', BODY, 0, -8, 0)    # plate 2x2 (middle)
+        self.place('3022.dat', BODY, 40, -8, 0)   # plate 2x2 (front, under hood)
 
-        # 4. Blue stripe down the sides (decorative trim, Y=-16)
+        # 4. HOOD — front portion only, 1 plate thick — Y=-16, X=+20..+60
+        #    The HOOD is 2 studs long (X=+20..+60), low profile. This is
+        #    what makes it visually distinct from the cabin.
+        self.step()
+        self.place('3023.dat', BODY, 40, -16, 0)  # plate 1x2 hood (front half)
+        self.place('3023.dat', BODY, 40, -16, 0)  # placeholder, will adjust
+
+        # 5. CABIN WALLS — 3 stacked layers (Y=-32, -56, -80) at X=-20..+20
+        #    The CABIN is 3 bricks tall to give the recognizable boxy shape.
+        self.step()
+        self.brick_2x2(-20, -32, 0, BODY)  # cabin layer 1
+        self.step()
+        self.brick_2x2(-20, -56, 0, BODY)  # cabin layer 2
+        self.step()
+        self.brick_2x2(-20, -80, 0, BODY)  # cabin layer 3 (top)
+
+        # 6. WINDSHIELD SLOPE — bridge between hood (low) and cabin (high)
+        #    Slope 1x2 placed at X=+20 (front edge of cabin), Y=-16 (hood level).
+        #    ROT_Y_270 makes slope rise from low (X=+20, Y=-16) to high (X=+20, Y=-32).
+        self.step()
+        self.place('3820.dat', WINDOW, 20, -16, 0, matrix=ROT_Y_270)
+
+        # 7. ROOF — caps the cabin — Y=-104, X=-60..+20 (3 studs wide)
+        self.step()
+        self.place('3023.dat', BODY, -40, -104, 0)  # plate 1x2 (rear of roof)
+        self.place('3023.dat', BODY, 0, -104, 0)    # plate 1x2 (center of roof)
+
+        # 8. LIGHT BAR — trans_clear red + trans_yellow 1x2 plates spanning roof
+        #    Y=-112 (sits ON TOP of the roof).
+        self.step()
+        self.place('3024.dat', TRANS_RED, -40, -112, 0)  # plate 1x2 transparent red
+        self.place('3024.dat', YELLOW, 0, -112, 0)       # plate 1x2 yellow
+
+        # 9. SIDE TRIM — blue 1x2 tiles running down both sides of hood at Y=-16
         self.step()
         for z in [-20, 20]:
-            self.place('3069b.dat', BLUE_TRIM, 0, -16, z)  # tile 1x2 — runs full length
+            self.place('3069b.dat', TRIM, 40, -16, z)  # tile 1x2 hood sides
 
-        # 5. Body sides — bricks 1x2 along each side, white (Y=-32 to -56)
+        # 10. SIDE WINDOWS — light blue tiles on cabin sides at Y=-56 (middle layer)
         self.step()
-        for x in [-40, 0, 40]:
-            for z in [-20, 20]:
-                self.place('3004.dat', BODY, x, -32, z)  # brick 1x2
+        for z in [-20, 20]:
+            self.place('3069b.dat', WINDOW, -20, -56, z)  # tile 1x2 cabin window
 
-        # 6. Cabin (rear) — brick 2x2 white (Y=-56)
+        # 11. POLICE STAR BADGE — yellow 1x1 round on hood center — Y=-16, X=+40
         self.step()
-        self.brick_2x2(-20, -56, 0, BODY)
-        self.brick_2x2(20, -56, 0, BODY)
+        self.place('4073.dat', YELLOW, 40, -16, 0)
 
-        # 7. Windshield (slope) — front of cabin (Y=-56, X=60)
+        # 12. REAR LIGHTS — red 1x1 round at back corners — Y=-16, X=-60
         self.step()
-        self.place('3820.dat', WINDOW, 60, -56, 0)  # slope 1x2 facing forward
+        self.place('4073.dat', RED, -60, -16, -20)
+        self.place('4073.dat', RED, -60, -16, 20)
 
-        # 8. Roof plate 2x4 (Y=-80)
+        # 13. FRONT BUMPER — black plate 1x2 sticking out front — Y=-16, X=+60
         self.step()
-        self.place('3020.dat', BODY, 0, -80, 0)  # plate 2x4
-
-        # 9. Light bar — trans_clear red 1x1 + trans_yellow 1x1 (Y=-88)
-        self.step()
-        self.place('4073.dat', TRANS_RED, -20, -88, 0)  # plate 1x1 round
-        self.place('4073.dat', YELLOW, 20, -88, 0)  # plate 1x1 round
-
-        # 10. Police badge — yellow 1x1 round on hood (Y=-16, X=-40)
-        self.step()
-        self.place('4073.dat', YELLOW, -40, -16, 0)  # star/badge marker
-
-        # 11. Front bumper — white plate 1x2 (Y=-16, X=60)
-        self.step()
-        self.place('3023.dat', BODY, 60, -16, 0)  # plate 1x2
+        self.place('3023.dat', BLACK, 60, -16, 0)
 
         return self
 
