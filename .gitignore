@@ -1,8 +1,10 @@
 # LDraw Parts Library mirror (huge, regenerable from pybricks/ldraw git clone)
 corpus/ldraw/
 
-# Downloaded MPDs (regenerable from OMR with xargs+curl)
-corpus/mpds*/
+# Note: MPDs ARE committed to the repo (~250 MB total).
+# They can be regenerated with:
+#   cat corpus/setlist_<cohort>.txt | xargs -I {} -P 24 sh -c \
+#     'curl -sL --max-time 60 -o corpus/mpds_<cohort>/$(basename {}) {}'
 
 
 # Python caches
