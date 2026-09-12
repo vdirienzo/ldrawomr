@@ -2,7 +2,8 @@
 
 Project to understand the LDraw file format (open standard for LEGO CAD) and
 learn LEGO modeling conventions by analyzing official models in the OMR
-(Official Model Repository).
+(Official Model Repository). Includes a rule-based generator and a small
+Transformer (LegoGPT) trained on the corpus for novel generation.
 
 **Corpus**: **1,438 OMR sets** (534,152 pieces) across eight cohorts:
 - 100 sets from 80s/90s (non-Technic) — legacy.
@@ -16,32 +17,78 @@ learn LEGO modeling conventions by analyzing official models in the OMR
 
 This represents **97.8% of the OMR's 1,470 sets** (32 sets returned 404 from OMR and were skipped).
 
----
-
-## ⚡ RESUME FROM HERE (next session)
-
-If you want to continue the corpus, read first:
-- **[STATE.json](./STATE.json)** — persistent project state (what's there, what's missing).
-
-The corpus is now nearly complete (1,438/1,470 sets). Remaining gaps are 32 archived/renamed MPDs (404 responses). To go further:
-
-- (A) **Try harder on the 32 missing sets** — search Livewire API for archived MPD filenames.
-- (B) **Re-scrape OMR** to catch any newly added sets (sets get added monthly).
-- (C) **Pivot to other tasks**: TEXMAP analysis, MOC comparison, sub-build hierarchy, language model training.
+**Generators**:
+- `generator/ldraw_gen.py` — Rule-based template generator (7 validated demos, 0 errors).
+- `ml/generate.py` — LegoGPT: small Transformer (5M params) trained on corpus 1,438.
 
 ---
 
-## Quick start
+## Installation and tutorial (run end-to-end)
+
+### 1. Clone and install dependencies
 
 ```bash
-# Generate demo models with the learned rules
-cd generator/
-python3 ldraw_gen.py
+git clone https://github.com/vdirienzo/ldrawomr.git
+cd ldrawomr
 
-# Re-analyze the corpus if more MPDs are added
-cd /home/user/Projects/ldraw
-python3 analysis/batch_parse4.py    # 1,438 sets (8 cohorts)
-python3 analysis/batch_parse3.py    # 532 sets (legacy, 3 cohorts)
+# Python 3.10+ recommended. PyTorch CPU is the only required dependency.
+pip install --break-system-packages --user torch --index-url https://download.pytorch.org/whl/cpu
+# Other deps (already in standard library): numpy.
+```
+
+The corpus MPDs are already committed (~250 MB), so no download step is needed.
+
+### 2. Generate demo models (rule-based)
+
+```bash
+cd generator
+python3 ldraw_gen.py
+# Expected output: "=== All 7 demos generated and validated (0 errors, 0 warnings) ==="
+cd ..
+```
+
+This produces `generator/demo_town.ldr`, `demo_kid.ldr`, etc. — 7 validated MPD files.
+
+### 3. Generate novel models (ML, LegoGPT)
+
+```bash
+PYTHONPATH=. python3 ml/generate.py
+# Produces generator/generated_1.ldr, generated_2.ldr, generated_3.ldr
+```
+
+These are 29/39/49-piece novel builds produced by the trained Transformer with
+hard constraint enforcement (R1: Y multiple of 8; R2: X/Z multiples of 20).
+
+### 4. Validate any .ldr file
+
+```bash
+PYTHONPATH=. python3 ml/validate_ldr.py generator/generated_1.ldr
+PYTHONPATH=. python3 ml/validate_ldr.py generator/demo_castle_lion_knights.ldr
+```
+
+### 5. (Optional) Retrain LegoGPT from scratch
+
+```bash
+PYTHONPATH=. python3 ml/prep_dataset.py   # tokenize MPDs into ml/dataset.jsonl
+PYTHONPATH=. python3 ml/train.py          # ~8 min on CPU, writes ml/model.pt
+PYTHONPATH=. python3 ml/generate.py       # regenerate using your checkpoint
+```
+
+### 6. (Optional) Re-parse the corpus
+
+```bash
+python3 analysis/batch_parse4.py    # writes analysis/cross_corpus3_stats.json
+```
+
+---
+
+## Quick start (TL;DR)
+
+```bash
+# After install, the minimum useful commands are:
+cd generator && python3 ldraw_gen.py                # rule-based demos
+cd .. && PYTHONPATH=. python3 ml/generate.py        # ML novel generation
+PYTHONPATH=. python3 ml/validate_ldr.py generator/demo_town.ldr   # validate
 ```
 
 ---
@@ -96,6 +143,18 @@ python3 analysis/batch_parse3.py    # 532 sets (legacy, 3 cohorts)
 │   ├── findings_cohorts_themes_1438.md ← cohort/theme analysis corpus 1,438
 │   └── findings_*.md               ← all prior findings (kept for traceability)
 │
+├── ml/                             ← LegoGPT: ML generative designer
+│   ├── model.py                    ← Transformer architecture (RoPE, pre-norm, 5M params)
+│   ├── prep_dataset.py             ← MPD tokenizer → ml/dataset.jsonl
+│   ├── train.py                    ← training loop (AdamW, cosine LR, ~8 min CPU)
+│   ├── generate.py                 ← autoregressive sampling with constraint masks
+│   ├── validate_ldr.py             ← corpus-rules validator (R1/R2/R3/BFC)
+│   ├── dataset.jsonl               ← 566 sequences (343k tokens, mid-range 30-150 pieces)
+│   ├── vocab.json                  ← fixed vocab (256 pieces, 32 colors, 24 BFC matrices, ...)
+│   ├── model.pt                    ← trained checkpoint (gitignored, regenerable)
+│   ├── train.log                   ← per-epoch loss
+│   └── README.md                   ← architecture, SOTA choices, usage
+│
 └── generator/
     ├── ldraw_gen.py                ← Python model generator (1,161 lines, stdlib-only)
     ├── demo_town.ldr
@@ -104,7 +163,8 @@ python3 analysis/batch_parse3.py    # 532 sets (legacy, 3 cohorts)
     ├── demo_castle_lion_knights.ldr
     ├── demo_space_classic.ldr
     ├── demo_technic.ldr            ← Plan D new (technic beam + pin idiom)
-    └── demo_brickheadz.ldr         ← Plan D new (1x1 round tile display idiom)
+    ├── demo_brickheadz.ldr         ← Plan D new (1x1 round tile display idiom)
+    └── generated_{1,2,3}.ldr       ← LegoGPT novel samples (29/39/49 pieces)
 ```
 
 ---
@@ -121,7 +181,8 @@ python3 analysis/batch_parse3.py    # 532 sets (legacy, 3 cohorts)
 | **[analysis/findings_cohorts_themes_1438.md](./analysis/findings_cohorts_themes_1438.md)** | Per-cohort + per-theme analysis (1,438 sets). |
 | **[STATE.json](./STATE.json)** | Persistent project state. |
 | **[output/dashboard.html](./output/dashboard.html)** | Interactive HTML dashboard (open in browser). |
-| **[generator/ldraw_gen.py](./generator/ldraw_gen.py)** | Python generator that applies the 29 learned rules. |
+| **[generator/ldraw_gen.py](./generator/ldraw_gen.py)** | Rule-based generator: 7 demo templates, applies the 29 rules. |
+| **[ml/README.md](./ml/README.md)** | LegoGPT: ML generative designer (Transformer 5M params, training, validation). |
 
 ---
 
@@ -211,8 +272,10 @@ Metrics are compared against the corpus 1,438 average (371.6 pieces/set, 0.687% 
 
 ## Next steps suggested
 
+- ~~Train a language model on the 534k instances~~ — done in `ml/`.
 - Recover the 32 missing 404'd sets via Livewire API deep search.
 - Analyze textures (TEXMAP) in modern sets.
 - Structural clustering to detect recurring sub-assemblies.
-- Train a language model on the 534k instances.
 - Re-scrape OMR monthly to catch newly added sets.
+- Extend LegoGPT to theme-conditioned generation (THEME_* tokens).
+- Add reflection modeling (allow non-identity matrices, post-filter via `validate_ldr.py`).

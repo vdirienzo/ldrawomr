@@ -12,6 +12,38 @@ medium-complexity LEGO models (30-150 pieces).
 - **Top-p (nucleus) sampling** at generation time.
 - **Hard constraint enforcement** via vocabulary masking during sampling.
 
+## Installation
+
+```bash
+# Already cloned via the project root. Only PyTorch CPU needed.
+pip install --break-system-packages --user torch --index-url https://download.pytorch.org/whl/cpu
+```
+
+## Quick start (run end-to-end)
+
+```bash
+# 1. Tokenize corpus (one-time, ~10s on 1,438 sets)
+PYTHONPATH=. python3 ml/prep_dataset.py
+
+# 2. Train LegoGPT (~8 min on CPU for 3 epochs)
+PYTHONPATH=. python3 ml/train.py
+
+# 3. Generate 3 sample .ldr files
+PYTHONPATH=. python3 ml/generate.py
+
+# 4. Validate any .ldr against corpus rules
+PYTHONPATH=. python3 ml/validate_ldr.py generator/generated_1.ldr
+```
+
+**Expected output of step 2**: training log showing loss dropping from ~5.4
+to ~2.9 over 3 epochs.
+
+**Expected output of step 3**: files `generator/generated_{1,2,3}.ldr`
+with 29, 39, 49 pieces respectively.
+
+**Expected output of step 4**: `=== VALIDATION PASSED (clean) ===`
+for generated files; warnings/errors for files that violate corpus rules.
+
 ## Pipeline
 
 ```
@@ -102,7 +134,7 @@ PYTHONPATH=. python3 ml/validate_ldr.py generator/generated_1.ldr --allow-mirror
 - `ml/validate_ldr.py` — corpus-rules validator for generated .ldr.
 - `ml/dataset.jsonl` — tokenized sequences (one per line).
 - `ml/vocab.json` — vocabulary tables (pieces, colors, matrices, buckets).
-- `ml/model.pt` — trained checkpoint.
+- `ml/model.pt` — trained checkpoint (gitignored at 20MB; regenerable via train.py).
 - `ml/train.log` — per-epoch loss log.
 
 ## Results (3-epoch quick run)
@@ -134,3 +166,18 @@ sequences by sampling from a learned distribution over the corpus.
 
 Both are kept; the rule-based one is reliable for canonical builds,
 the ML one explores novel combinations. The validator is shared.
+
+## Testing from a fresh clone
+
+To verify the pipeline works on a clean checkout (assumes PyTorch already installed):
+
+```bash
+git clone https://github.com/vdirienzo/ldrawomr.git /tmp/ldrawomr-test
+cd /tmp/ldrawomr-test
+PYTHONPATH=. python3 ml/prep_dataset.py && \
+PYTHONPATH=. python3 ml/train.py && \
+PYTHONPATH=. python3 ml/generate.py && \
+PYTHONPATH=. python3 ml/validate_ldr.py generator/generated_1.ldr
+```
+
+All four commands should succeed; final output should be `=== VALIDATION PASSED (clean) ===`.

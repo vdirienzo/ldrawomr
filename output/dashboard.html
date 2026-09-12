@@ -197,6 +197,14 @@
   tr:last-child td { border-bottom: none; }
   td.num { text-align: right; font-family: ui-monospace, monospace; }
   .pill { display: inline-block; padding: 1px 6px; border-radius: 8px; font-size: 0.72em; font-weight: 600; color: #0d1117; }
+
+  /* About / glossary */
+  .glossary td:first-child { color: var(--text); font-family: ui-monospace, monospace; font-weight: 600; white-space: nowrap; }
+  .callout { background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.35); border-left: 3px solid var(--red); border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 0.88em; color: var(--text-dim); margin: 10px 0; }
+  .callout h4 { color: var(--red); font-size: 0.95em; margin-bottom: 6px; font-weight: 700; }
+  .chart-types { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+  .chart-type { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font-size: 0.85em; color: var(--text-dim); }
+  .chart-type strong { color: var(--text); display: block; margin-bottom: 4px; font-size: 0.95em; }
   
   .filter-bar { display: flex; gap: 6px; margin: 10px 0; flex-wrap: wrap; }
   .filter-btn { padding: 4px 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; color: var(--text-dim); font-size: 0.8em; cursor: pointer; transition: all 0.15s; }
@@ -241,6 +249,7 @@
 <nav class="toc">
   <span class="nav-title">LDraw OMR</span>
   <a href="#hero">Hero</a>
+  <a href="#about">About</a>
   <a href="#insights">Insights</a>
   <a href="#cohorts">Cohorts</a>
   <a href="#vocab">Vocab</a>
@@ -266,6 +275,74 @@
     <div class="hero-stat"><div class="label">Sub-builds</div><div class="value counter" data-target="20074">0</div><div class="sub">across cohorts</div></div>
     <div class="hero-stat"><div class="label">Custom parts</div><div class="value counter" data-target="4470">0</div><div class="sub">embedded</div></div>
     <div class="hero-stat"><div class="label">Rules</div><div class="value counter" data-target="23">0</div><div class="sub">7+5+11</div></div>
+  </div>
+</section>
+
+
+<section id="about" class="animate-on-scroll">
+  <h2><span class="num">00.</span>About this dashboard</h2>
+
+  <h3>What is this?</h3>
+  <p>
+    A statistical analysis of <strong style="color:var(--text)">1,438 official LEGO models</strong> downloaded from the LDraw <strong>Official Model Repository (OMR)</strong>, totalling <strong style="color:var(--text)">534,152 pieces</strong> across <strong style="color:var(--text)">8 cohorts</strong> and <strong style="color:var(--text)">20,074 sub-builds</strong>.
+  </p>
+  <p>
+    The goal is to learn the <em>implicit conventions</em> that real LEGO builders follow when authoring a model: how pieces are placed, at what heights, in what combinations, with what symmetry. Those conventions are then encoded as rules in <code class="code">generator/ldraw_gen.py</code>, so the generator can produce <code class="code">.ldr</code>/<code class="code">.mpd</code> files that look and behave like a real LEGO set.
+  </p>
+
+  <h3>Glossary</h3>
+  <table class="glossary">
+    <tbody>
+      <tr><td>LDraw</td><td>An open 3D format for LEGO parts and models. Each part is a <code class="code">.dat</code> file; each model is a <code class="code">.ldr</code> (single model) or <code class="code">.mpd</code> (multi-model).</td></tr>
+      <tr><td>OMR</td><td>Official Model Repository: the curated library of community-vetted official LEGO models in LDraw format. <code class="code">https://library.ldraw.org/omr/sets</code></td></tr>
+      <tr><td>MPD</td><td>Multi-Part Document: a single text file containing one or more sub-models separated by <code class="code">0 FILE</code> markers.</td></tr>
+      <tr><td>Sub-build</td><td>One model block inside an MPD. The first block is the "master"; the rest are referenced sub-models.</td></tr>
+      <tr><td>Cohort</td><td>A sampling bucket grouping sets by era or theme (e.g. <code class="code">80s90s</code>, <code class="code">classic</code>, <code class="code">technic</code>, <code class="code">modern</code>).</td></tr>
+      <tr><td>Theme</td><td>The LEGO product line a set belongs to (Town, Castle, Space, Pirates, Technic, Star Wars, etc.). 152 themes appear in the corpus.</td></tr>
+      <tr><td>LDU</td><td>LDraw Unit. 1 LDU = 0.4 mm. A plate is 8 LDU tall; a brick is 24 LDU (3 plates).</td></tr>
+      <tr><td>Y-layer</td><td>Vertical position of a piece. Most pieces sit at multiples of 8 LDU (plate height).</td></tr>
+      <tr><td>Delta</td><td>The X/Y/Z offset between two adjacent pieces (e.g. <code class="code">+20, 0, -8</code> = one stud to the side, one plate down).</td></tr>
+      <tr><td>Bigram</td><td>A pair of two piece types that commonly appear adjacent. Used to learn "what sits on top of what".</td></tr>
+      <tr><td>BFC</td><td>Back Face Culling. A declaration in the file telling the renderer which side of each part is "outside", so back faces can be skipped for speed.</td></tr>
+      <tr><td>Reflection</td><td>A piece placed with its front/back flipped in mirror (matrix determinant &lt; 0). The piece looks identical visually but its "front face" points the wrong way, which conflicts with BFC.</td></tr>
+      <tr><td>Custom part</td><td>An embedded <code class="code">.dat</code> file inside an MPD whose name starts with the set number (e.g. <code class="code">10252 - 24599s01.dat</code>). It is not in the official parts library.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>How to read the charts</h3>
+  <div class="chart-types">
+    <div class="chart-type"><strong>Treemap</strong>A rectangle split into tiles whose <em>area is proportional to a value</em>. Used for the top-24 parts: bigger tile = more uses.</div>
+    <div class="chart-type"><strong>Horizontal bar</strong>Categories on the Y axis, values on X. The longer the bar, the larger the value.</div>
+    <div class="chart-type"><strong>Radar</strong>Multiple axes from a center point. Each cohort is a coloured polygon; bigger polygon = more of everything.</div>
+    <div class="chart-type"><strong>Scatter</strong>Each dot is one item, positioned by two metrics (X and Y). Colour usually adds a third dimension.</div>
+    <div class="chart-type"><strong>Line chart</strong>Points connected across an axis (usually time or category) to reveal a trend.</div>
+    <div class="chart-type"><strong>Bubble</strong>A scatter where the dot <em>size</em> encodes a third metric (count, frequency).</div>
+  </div>
+
+  <h3>Data pipeline</h3>
+  <p>
+    <code class="code">corpus/mpds_*/</code> (raw MPD files)
+    &rarr; <code class="code">analysis/batch_parse4.py</code> (parser: pieces, sub-builds, Y-layers, deltas, bigrams, BFC, reflections)
+    &rarr; <code class="code">analysis/cross_corpus3_stats.json</code> (aggregated stats)
+    &rarr; this HTML (visualisations + insights).
+  </p>
+
+  <h3>The 23 rules</h3>
+  <p>
+    Each of the 23 learned conventions is tagged as <strong style="color:var(--green)">confirmed</strong>, <strong style="color:var(--orange)">weakened</strong>, <strong style="color:var(--red)">refuted</strong>, or <strong style="color:var(--purple)">new</strong>. The first corpus (532 sets) produced 23 hypotheses; the expanded 1,438-set corpus confirmed 7, weakened 8, refuted 2, and added 6 new ones. <code class="code">ldraw_gen.py</code> enforces every <em>confirmed</em> and <em>new</em> rule by default.
+  </p>
+
+  <div class="callout">
+    <h4>Why do Space-themed sets break the "reflections are rare" rule?</h4>
+    <p>
+      Across the 1,438-set corpus there are <strong style="color:var(--text)">1,463 reflections</strong> (pieces flipped in mirror). <strong style="color:var(--text)">87.8% of them come from just 73 Space-themed sets</strong> (Classic Space 21.14%, Unitron 13.95%, M:Tron, Blacktron, Ice Planet, etc.).
+    </p>
+    <p>
+      The cause is practical: Space models often contain pieces with <em>asymmetric decorations</em> &mdash; text, logos, hazard stripes &mdash; that look correct when mirrored rather than rotated 180&deg;. Authors duplicate and mirror the part instead of computing the correct orientation, and they skip the BFC <code class="code">CERTIFY</code> line for those pieces. The result is a working model that technically violates the "all parts face the right way" convention.
+    </p>
+    <p>
+      For the generator, this is exactly why <code class="code">LdrBuilder.place_mirrored(...)</code> exists and why the Castle Lion Knights / Black Falcons demos enable <code class="code">allow_mirrors=True</code>.
+    </p>
   </div>
 </section>
 
