@@ -23,3 +23,7 @@ output/dashboard_preview*.png
 # OS
 .DS_Store
 Thumbs.db
+
+# ML artifacts (large, regenerable)
+ml/model.pt
+ml/__pycache__/
