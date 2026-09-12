@@ -17,7 +17,7 @@ Análisis basado en los MPDs oficiales OMR de **10252-1.mpd** (VW Beetle, 9004 l
 
 Raíz del MPD (7 partes principales):
 
-| Línea  | Archivo                          | Líneas | Tipo1 | Tipo2 | Tipo3 | Tipo4 | Tipo5 |
+| Línea  | files                          | Líneas | Tipo1 | Tipo2 | Tipo3 | Tipo4 | Tipo5 |
 |-------:|----------------------------------|-------:|------:|------:|------:|------:|------:|
 |  5591  | `10252 - 24599.dat`              |     23 |     3 |     0 |     0 |     0 |    10 |
 |  5618  | `10252 - 10252_towel.dat`        |     38 |    22 |     0 |     0 |     0 |     0 |
@@ -29,20 +29,20 @@ Raíz del MPD (7 partes principales):
 
 Subpartes en `s\` (2):
 
-| Línea  | Archivo                              | Líneas | Tipo1 | Tipo2 | Tipo3 | Tipo4 | Tipo5 |
+| Línea  | files                              | Líneas | Tipo1 | Tipo2 | Tipo3 | Tipo4 | Tipo5 |
 |-------:|--------------------------------------|-------:|------:|------:|------:|------:|------:|
 |  5967  | `s\10252 - 24599s01.dat`             |    791 |    29 |   286 |    66 |   205 |   163 |
 |  6762  | `s\10252 - 24246s01.dat`             |     41 |    23 |     0 |     0 |     6 |     0 |
 
 Hi-res en `48\` (1):
 
-| Línea  | Archivo                              | Líneas | Tipo1 | Tipo2 | Tipo3 | Tipo4 | Tipo5 |
+| Línea  | files                              | Líneas | Tipo1 | Tipo2 | Tipo3 | Tipo4 | Tipo5 |
 |-------:|--------------------------------------|-------:|------:|------:|------:|------:|------:|
 |  6807  | `48\10252 - t08o2500.dat`            |    252 |     0 |     0 |     0 |    72 |   162 |
 
-Decoraciones / stickers (`p` suffix o 8 dígitos, 10 archivos): `98138p81/p82` ya listadas; las demás (`6153754q/o/n/m/p/j/k/l/d/c`, líneas 7388-8929) son **overlays 2D** que aplican triángulos sobre partes oficiales (`box5-12.dat`, `3815bpXY.dat`, etc.) usando `0 BFC NOCLIP`:
+Decoraciones / stickers (`p` suffix o 8 dígitos, 10 files): `98138p81/p82` ya listadas; las demás (`6153754q/o/n/m/p/j/k/l/d/c`, líneas 7388-8929) son **overlays 2D** que aplican triángulos sobre partes oficiales (`box5-12.dat`, `3815bpXY.dat`, etc.) usando `0 BFC NOCLIP`:
 
-| Línea  | Archivo                          | Líneas | Notas                                                |
+| Línea  | files                          | Líneas | Notas                                                |
 |-------:|----------------------------------|-------:|------------------------------------------------------|
 |  7388  | `10252 - 6153754q.dat`           |     14 | sticker 3.4×0.9 parabrisas trasero (`box5-12`)       |
 |  7404  | `10252 - 6153754o.dat`           |    515 | sticker Al's BOARDS                                  |
@@ -59,7 +59,7 @@ Decoraciones / stickers (`p` suffix o 8 dígitos, 10 archivos): `98138p81/p82` y
 
 ## 2. Inventario de custom parts embebidas — 10218 (Pet Shop)
 
-| Línea  | Archivo                                    | Líneas | Tipo1 | Tipo2 | Tipo3 | Tipo4 | Tipo5 |
+| Línea  | files                                    | Líneas | Tipo1 | Tipo2 | Tipo3 | Tipo4 | Tipo5 |
 |-------:|--------------------------------------------|-------:|------:|------:|------:|------:|------:|
 |  2885  | `10218 - ldcRigid3mmHoseCap.dat`           |     25 |     5 |     0 |     0 |     0 |     0 |
 |  2910  | `10218 - ldcRigid3mmHoseSeg.dat`           |     19 |     3 |     0 |     0 |     0 |     0 |
@@ -69,9 +69,9 @@ Sin subpartes `s\`, sin hi-res `48\`. Las 3 son donantes de **LDCad** para const
 
 ---
 
-## 3. Tres ejemplos concretos
+## 3. Tres examples concretos
 
-### 3.1 Ejemplo SIMPLE — `10252 - 24246.dat` (12 líneas)
+### 3.1 examples SIMPLE — `10252 - 24246.dat` (12 líneas)
 
 Tile 1×1 con borde redondeado. El más pequeño de las custom geométricas reales.
 
@@ -94,9 +94,9 @@ Tile 1×1 con borde redondeado. El más pequeño de las custom geométricas real
 - **Geometría propia:** un único quad tipo 4 cierra la cara superior cuadrada.
 - **Líneas tipo 1:** 2 (1 referencia a la subparte, 1 disco). **Líneas tipo 4:** 1.
 - **Headers:** 5 meta-líneas (`FILE`, título corto, `Name:`, `Author:`, `!LDRAW_ORG Unofficial_Part`) + 1 `!LICENSE` + 1 `BFC CERTIFY CCW`.
-- **Patrón:** "wrapper minimalista" — la parte compleja vive en `s\24246s01.dat` (41 líneas, 23 tipo 1) y el archivo raíz solo la referencia + 1 quad de tapa + 1 disco inferior.
+- **Patrón:** "wrapper minimalista" — la parte compleja vive en `s\24246s01.dat` (41 líneas, 23 tipo 1) y el files raíz solo la referencia + 1 quad de tapa + 1 disco inferior.
 
-### 3.2 Ejemplo MEDIO — `10252 - 10252_towel.dat` (38 líneas)
+### 3.2 examples MEDIO — `10252 - 10252_towel.dat` (38 líneas)
 
 Toalla enrollada del VW Beetle, hecha con cilindros escalados.
 
@@ -130,9 +130,9 @@ Toalla enrollada del VW Beetle, hecha con cilindros escalados.
 - **Headers:** mínimos — sin `!LDRAW_ORG`, sin `BFC` (no necesita BFC porque no usa CSG).
 - **Patrón:** "solo primitivas con overrides de color" — 16 cilindros paralelos de colores 14/15 alternados para simular el patrón a rayas de la toalla, más 2 cilindros interiores (Innen/Mitte) que conectan los extremos.
 
-### 3.3 Ejemplo COMPLEJO — `s\10252 - 24599s01.dat` (791 líneas)
+### 3.3 examples COMPLEJO — `s\10252 - 24599s01.dat` (791 líneas)
 
-Subparte del Brick 5×5 Corner Round. La pieza embebida más grande del MPD.
+Subparte del Brick 5×5 Corner Round. La parts embebida más grande del MPD.
 
 ```
 0 FILE s\10252 - 24599s01.dat
@@ -160,7 +160,7 @@ Subparte del Brick 5×5 Corner Round. La pieza embebida más grande del MPD.
 ... (163 conditional lines)
 ```
 
-- **Primitivas usadas:** **6 primitivas hi-res `48\`** (`t08o2500.dat`, `1-8ring3.dat`, `1-8edge.dat`, `1-8cyli.dat`, `1-4edge.dat`, `1-4chrd.dat`) — la pieza entera es hi-res para conseguir curvatura suave.
+- **Primitivas usadas:** **6 primitivas hi-res `48\`** (`t08o2500.dat`, `1-8ring3.dat`, `1-8edge.dat`, `1-8cyli.dat`, `1-4edge.dat`, `1-4chrd.dat`) — la parts entera es hi-res para conseguir curvatura suave.
 - **Geometría propia:** 286 tipo 2 + 205 tipo 4 + 163 tipo 5 = **654 líneas de geometría construida a mano** que trazan las "costillas" curvas del interior del ladrillo en esquina.
 - **Líneas tipo 1:** 29 referencias a primitivas; **tipo 2:** 286; **tipo 3:** 66; **tipo 4:** 205; **tipo 5:** 163.
 - **Headers:** 7 meta-líneas (`FILE`, título, `Name:`, `Author:`, `!LDRAW_ORG Unofficial_Subpart`, `!LICENSE`) + `BFC CERTIFY CCW`. La tilde `~` en el título indica subparte en LDraw.
@@ -211,7 +211,7 @@ Los nombres primitivos oficiales (`stud4a`, `stug3-1x4`, `box3u2p`, `1-4cylo`, `
 | `0 !LDRAW_ORG`        | 95% — `Unofficial_Part`, `Unofficial_Subpart`, `UNOFFICIAL PART`, `UNOFFICIAL PRIMITIVE` (Pet Shop usa el formato antiguo) |
 | `0 !LICENSE`          | 100% — siempre `CCAL version 2.0 : see CAreadme.txt`    |
 | `0 BFC CERTIFY CCW`   | 100% cuando hay CSG; ausente en partes solo-primitivas (ej. towel) |
-| `0 !HELP`             | ocasional (ej. 23443.dat incluye ejemplo de uso)        |
+| `0 !HELP`             | ocasional (ej. 23443.dat incluye examples de uso)        |
 | `0 !KEYWORDS`         | decoraciones (98138p81: "Volkswagen, Set 10252, Beetle") |
 | `0 !CATEGORY`         | solo en las donantes LDCad del Pet Shop                 |
 | Comentarios `0 //`    | comunes en LDCad (explican generación path-deform)      |
@@ -238,16 +238,16 @@ Observado en 10252:
 
 | Parte principal | Subparte(s) | Justificación |
 |-----------------|-------------|---------------|
-| 24599.dat (23 líneas) | s\24599s01.dat (791) | brick 5×5 corner es simétrico → una "mitad" rotada + reflejada forma la pieza completa |
+| 24599.dat (23 líneas) | s\24599s01.dat (791) | brick 5×5 corner es simétrico → una "mitad" rotada + reflejada forma la parts completa |
 | 24246.dat (12 líneas) | s\24246s01.dat (41)  | la cara superior redondeada se construye una vez y se referencia |
 
-**No se observa** descomposición en 3+ subpartes. Las piezas verdaderamente grandes (>500 líneas) son single-file (ej. `s\24599s01.dat` mismo, o `48\t08o2500.dat` con 252 líneas). La división se hace **solo cuando hay simetría clara** que el autor quiere explotar.
+**No se observa** descomposición en 3+ subpartes. Las parts verdaderamente grandes (>500 líneas) son single-file (ej. `s\24599s01.dat` mismo, o `48\t08o2500.dat` con 252 líneas). La división se hace **solo cuando hay simetría clara** que el autor quiere explotar.
 
 ### 4.5 Patrones de nomenclatura
 
 Verificados en todos los `.dat` embebidos:
 
-| Forma                       | Significado                                                | Ejemplos                              |
+| Forma                       | Significado                                                | examples                              |
 |-----------------------------|------------------------------------------------------------|---------------------------------------|
 | `NNNNN.dat`                 | Parte principal                                            | `24599.dat`, `24246.dat`, `23443.dat`, `24607.dat` |
 | `NNNNNsNN.dat` (en `s\`)    | Subparte N de la parte NNNNN                               | `s\24599s01.dat`, `s\24246s01.dat`    |
@@ -264,25 +264,25 @@ Verificados en todos los `.dat` embebidos:
 
 1. **Custom parts simples (<40 líneas)** suelen ser **composiciones de primitivas escaladas con override de color** (ver `10252_towel.dat`: 38 líneas, 0 geometría propia, 22 cilindros). El header puede incluso omitir `BFC` y `!LDRAW_ORG` cuando no hay CSG.
 
-2. **Custom parts medias (40-150 líneas)** mezclan 1-3 primitivas, un subconjunto de tipo 2/3/4 y un `BFC CERTIFY CCW`. Ejemplo: `23443.dat` (133 líneas, 19 tipo 1 + 34 tipo 2 + 30 tipo 4 + 22 tipo 5).
+2. **Custom parts medias (40-150 líneas)** mezclan 1-3 primitivas, un subconjunto de tipo 2/3/4 y un `BFC CERTIFY CCW`. examples: `23443.dat` (133 líneas, 19 tipo 1 + 34 tipo 2 + 30 tipo 4 + 22 tipo 5).
 
 3. **Custom parts complejas (>150 líneas)** o se mantienen single-file (`48\t08o2500.dat`, 252 líneas) o se **dividen en UNA subparte `s\X - Xs01.dat`** que concentra la geometría curva. La parte principal pasa a ser un wrapper de 10-25 líneas que refleja/rota la subparte (caso `24599.dat` ↔ `s\24599s01.dat`).
 
-4. **Curvatura suave = primitivas hi-res `48\`**. La única `48\` observada (`t08o2500.dat`) es un toro hi-res usado para construir la curvatura del ladrillo en esquina. La regla: si la pieza tiene una superficie curva de radio pequeño, se carga desde `48\`; si es eje-recta o polígono plano, basta con primitivas estándar.
+4. **Curvatura suave = primitivas hi-res `48\`**. La única `48\` observada (`t08o2500.dat`) es un toro hi-res usado para construir la curvatura del ladrillo en esquina. La regla: si la parts tiene una superficie curva de radio pequeño, se carga desde `48\`; si es eje-recta o polígono plano, basta con primitivas estándar.
 
 5. **Los nombres siguen un patrón fijo**: `FILE/Name: "{set} - {ldraw_name}.dat"`. La parte `ldraw_name` puede ser (a) el ID oficial (`24599.dat`), (b) un nombre descriptivo del autor (`10252_towel.dat`, `ldcRigid3mmHoseCap.dat`), (c) el ID + sufijo de decoración `pNN`/`q`/`o`…, o (d) el nombre hi-res estándar reusado (`t08o2500.dat`). **Nunca** se duplica el `FILE` con sólo el nombre oficial — siempre se antepone el set.
 
-6. **Subpartes en `s\` son alcance privado**: solo las referencia otra custom part embebida, nunca un `.ldr` del set. Equivalen a funciones helper del archivo.
+6. **Subpartes en `s\` son alcance privado**: solo las referencia otra custom part embebida, nunca un `.ldr` del set. Equivalen a funciones helper del files.
 
-7. **Las "decoraciones" (`p`/`q`/stickers, 10 archivos en 10252) son overlays 2D**, no geometría real: 0 tipo 1 (excepto una referencia al sustrato tipo `box5-12.dat`), docenas de triángulos tipo 3 y quads tipo 4, todo bajo `0 BFC NOCLIP`. Sirven para estarcir el patrón (logo VW, parabrisas, texto "Al's BOARDS") sobre una parte base ya existente.
+7. **Las "decoraciones" (`p`/`q`/stickers, 10 files en 10252) son overlays 2D**, no geometría real: 0 tipo 1 (excepto una referencia al sustrato tipo `box5-12.dat`), docenas de triángulos tipo 3 y quads tipo 4, todo bajo `0 BFC NOCLIP`. Sirven para estarcir el patrón (logo VW, parabrisas, texto "Al's BOARDS") sobre una parte base ya existente.
 
 ---
 
 ## Anexo: comparativa 10218 vs 10252
 
-10218 (Pet Shop) sólo embebe **3 archivos**, todos del autor `LDCad` y usados como **donantes para path-deform** (generador procedural de mangueras dentro del editor LDCad):
+10218 (Pet Shop) sólo embebe **3 files**, todos del autor `LDCad` y usados como **donantes para path-deform** (generador procedural de mangueras dentro del editor LDCad):
 
-| Archivo                     | Rol                                         |
+| files                     | Rol                                         |
 |-----------------------------|---------------------------------------------|
 | `ldcRigid3mmHoseSeg.dat`    | Segmento recto de manguera rígida           |
 | `ldcRigid3mmHoseCap.dat`    | Tapa del extremo                            |

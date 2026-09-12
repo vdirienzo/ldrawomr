@@ -2,10 +2,10 @@
 
 > Análisis comparativo de **dos cohortes** dentro de un corpus ampliado de
 > **300 sets OMR oficiales** (100 de los 80s/90s + 200 "kids" = modernos/pequeños).
-> Total: **61 617 piezas**, 2 374 sub-builds, 930 custom parts embebidas.
+> Total: **61 617 parts**, 2 374 sub-builds, 930 custom parts embebidas.
 >
-> **Cohorte A — 80s/90s** (n=100, 18 670 piezas, 839 sub-builds, 112 custom)
-> **Cohorte B — Kids** (n=200, 42 947 piezas, 1 535 sub-builds, 818 custom)
+> **Cohorte A — 80s/90s** (n=100, 18 670 parts, 839 sub-builds, 112 custom)
+> **Cohorte B — Kids** (n=200, 42 947 parts, 1 535 sub-builds, 818 custom)
 >
 > Fuentes: `analysis/cross_corpus2_stats.json` (claves `cohort_80s90s`,
 > `cohort_kids`, `cohort_all_300`) y `analysis/per_set_stats_300.json`.
@@ -15,11 +15,11 @@
 
 ---
 
-## 1. Top piezas cross-cohorte
+## 1. Top parts cross-cohorte
 
-### 1.1 Top 20 piezas en la cohorte 80s/90s
+### 1.1 Top 20 parts en la cohorte 80s/90s
 
-| # | Pieza | Cuenta | % cohorte |
+| # | parts | Cuenta | % cohorte |
 |--:|-------|-------:|----------:|
 | 1 | `4-4cyli.dat` | 1 896 | 10.16 % |
 | 2 | `3023.dat` (Plate 1×2) | 590 | 3.16 % |
@@ -42,11 +42,11 @@
 | 19 | `3021.dat` (Plate 2×3) | 149 | 0.80 % |
 | 20 | `3040b.dat` (Slope 45° 2×1) | 147 | 0.79 % |
 
-Top-10 cubre **5 171 piezas = 27.69 %** del corpus 80s/90s.
+Top-10 cubre **5 171 parts = 27.69 %** del corpus 80s/90s.
 
-### 1.2 Top 20 piezas en la cohorte kids
+### 1.2 Top 20 parts en la cohorte kids
 
-| # | Pieza | Cuenta | % cohorte |
+| # | parts | Cuenta | % cohorte |
 |--:|-------|-------:|----------:|
 | 1 | `4-4cyli.dat` | 3 502 | 8.15 % |
 | 2 | `3023.dat` | 1 401 | 3.26 % |
@@ -69,11 +69,11 @@ Top-10 cubre **5 171 piezas = 27.69 %** del corpus 80s/90s.
 | 19 | `2412b.dat` | 355 | 0.83 % |
 | 20 | **`54200.dat` (Slope 30° 1×1)** | **318** | **0.74 %** |
 
-Top-10 cubre **11 942 piezas = 27.81 %** del corpus kids.
+Top-10 cubre **11 942 parts = 27.81 %** del corpus kids.
 
-### 1.3 Top 20 piezas en los 300 sets (cohorte all_300)
+### 1.3 Top 20 parts en los 300 sets (cohorte all_300)
 
-| # | Pieza | Cuenta | % cohorte |
+| # | parts | Cuenta | % cohorte |
 |--:|-------|-------:|----------:|
 | 1 | `4-4cyli.dat` | 5 398 | 8.76 % |
 | 2 | `3023.dat` | 1 991 | 3.23 % |
@@ -96,14 +96,14 @@ Top-10 cubre **11 942 piezas = 27.81 %** del corpus kids.
 | 19 | `3040b.dat` | 433 | 0.70 % |
 | 20 | `166.dat` | 426 | 0.69 % |
 
-Top-10 cubre **17 907 piezas = 29.06 %** de los 300 sets.
+Top-10 cubre **17 907 parts = 29.06 %** de los 300 sets.
 
-### 1.4 Diferencias notables: piezas populares en kids pero NO en 80s/90s
+### 1.4 Diferencias notables: parts populares en kids pero NO en 80s/90s
 
-Las siguientes piezas entran al top-50 de kids pero **no aparecen** en el
+Las siguientes parts entran al top-50 de kids pero **no aparecen** en el
 top-50 de 80s/90s (marcadas con `Δ` = kid_only):
 
-| Pieza | Cuenta kids | Tipo | Posición kids | Signo |
+| parts | Cuenta kids | Tipo | Posición kids | Signo |
 |-------|------------:|------|--------------:|-------|
 | `166.dat` (Plate 1×1 round with hole) | 426 | Decorativa circular | #12 | **moderno** (post-2000) |
 | `3070b.dat` (Tile 1×4 smooth) | 409 | Tile lisa 1×4 | #13 | **moderno** |
@@ -118,14 +118,14 @@ top-50 de 80s/90s (marcadas con `Δ` = kid_only):
 | `15573.dat` (Plate 1×1 round + hole) | 112 | Decorativa técnica | #50 | **moderno** |
 | `4162.dat` (Tile 1×8) | 58 | Tile muy larga | #48 (top 50) | **moderno** |
 
-**Lectura**: el corpus kids introduce **12 piezas modernas** que
-sencillamente no existían o no se usaban en 80s/90s. Las piezas
+**Lectura**: el corpus kids introduce **12 parts modernas** que
+sencillamente no existían o no se usaban en 80s/90s. Las parts
 `166.dat`, `3070b.dat`, `54200.dat`, `6636.dat`, `98138.dat` son
 **estrictamente post-2000** (introducidas tras la era Creator/Modular).
 
-### 1.5 Diferencias notables: piezas populares en 80s/90s pero NO en kids
+### 1.5 Diferencias notables: parts populares en 80s/90s pero NO en kids
 
-| Pieza | 80s/90s | kids | Δ |
+| parts | 80s/90s | kids | Δ |
 |-------|--------:|-----:|---|
 | `754.dat` (Hinge plate 1×2) | 265 (#9) | 170 (#35) | –36 % en kids |
 | `4085c.dat` (Plate 1×1 with clip) | 93 (#32) | fuera top-50 | –100 % |
@@ -135,8 +135,8 @@ sencillamente no existían o no se usaban en 80s/90s. Las piezas
 | `3815b.dat` (Slope inverted 2×1) | 70 (#41) | 113 (#49) | –54 % |
 | `6014.dat` (Plate 1×2 round) | 56 (#50) | <58 | –100 % |
 
-**Lectura**: las piezas con **clips** y **hinges antiguas** (estilo
-años 80) han desaparecido del top. Los modelos kids ya no requieren
+**Lectura**: las parts con **clips** y **hinges antiguas** (estilo
+años 80) han desaparecido del top. Los models kids ya no requieren
 mecanismos de clip simples — prefieren Tiles lisas, Slopes 30° y
 arcos arquitectónicos.
 
@@ -145,7 +145,7 @@ arcos arquitectónicos.
 | Métrica | 80s/90s | Kids | All 300 |
 |---------|--------:|-----:|--------:|
 | Apariciones de `4-4cyli.dat` | 1 896 | 3 502 | 5 398 |
-| Total piezas cohorte | 18 670 | 42 947 | 61 617 |
+| Total parts cohorte | 18 670 | 42 947 | 61 617 |
 | **% del corpus** | **10.16 %** | **8.15 %** | **8.76 %** |
 | Media por set | 18.96 | 17.51 | 17.99 |
 
@@ -155,7 +155,7 @@ arcos arquitectónicos.
   el set `6286-1` (Skull's Eye Schooner, Pirates) aporta **1 792** de
   ellas (94.5 % del total cohorte). Esto fue el hallazgo R12 original.
 - En la cohorte kids, **NO existe un outlier de esa magnitud**. El
-  set más grande de kids es `76042-1` (Avengers SH) con 2 975 piezas,
+  set más grande de kids es `76042-1` (Avengers SH) con 2 975 parts,
   pero su uso de `4-4cyli.dat` está distribuido en sub-builds pequeños.
   3 502 apariciones en 200 sets = **17.51/set** vs 18.96/set en 80s/90s.
 - En los **300 sets agregados**, el % real baja al **8.76 %** — el
@@ -277,7 +277,7 @@ Sí. Aparecen dos firmas modernas:
   top-15 de 80s/90s (#30). Firmas de **vehículos modernos** (coches
   con ejes cada 40 LDU).
 - **`(2.8, -0.6, 0.8) × 229`** — NUEVO en kids, NO existe en 80s/90s.
-  Es la firma del **slope 30° 1×1** (`54200.dat`) que es una pieza
+  Es la firma del **slope 30° 1×1** (`54200.dat`) que es una parts
   post-2006.
 
 ### 2.6 Distribución general de deltas en all_300
@@ -368,7 +368,7 @@ Bigramas heterogéneos significativos en kids (top-50):
 
 **Hallazgo principal**: el **heterogéneo `3005 → 3004`** (Brick 1×1 → Brick 1×2)
 aparece **70 veces en kids pero NUNCA en 80s/90s**. Esto significa que
-los modelos modernos alternan entre brick pequeño y grande con más
+los models modernos alternan entre brick pequeño y grande con más
 fluidez que los antiguos, donde se tiende a homogeneizar el tamaño de
 brick en una sección.
 
@@ -416,8 +416,8 @@ muestra de 100.
 | 14 | -88 | -88 | 230 | -80 | -80 | 498 |
 | 15 | -128 | -128 | 214 | **-168** | -168 | 426 |
 
-**Top-15 Y total**: 80s/90s = **7 370 piezas**, kids = **17 835 piezas**.
-Kids tienen **2.42×** más piezas en sus 15 Y-layers principales.
+**Top-15 Y total**: 80s/90s = **7 370 parts**, kids = **17 835 parts**.
+Kids tienen **2.42×** más parts en sus 15 Y-layers principales.
 
 ### 4.2 ¿Los sets kids tienen Y más restringido?
 
@@ -434,15 +434,15 @@ Y = **-168** (un 31 % más profundo que el -128 de 80s/90s).
 
 ### 4.3 Diferencias notables
 
-- **80s/90s tiene `Y=+8` (#13, 266 piezas)**: el único Y positivo en
-  top-15. Corresponde a piezas cuya base queda ligeramente por encima
-  del origen (probablemente Technic pins centrados en eje, o piezas
+- **80s/90s tiene `Y=+8` (#13, 266 parts)**: el único Y positivo en
+  top-15. Corresponde a parts cuya base queda ligeramente por encima
+  del origen (probablemente Technic pins centrados en eje, o parts
   con offset vertical en Model Team).
 - **Kids NO tiene Y positivo** en top-15 (su Y más alto es 0 con
-  2 038 piezas). Esto sugiere una **convención distinta de origen**:
-  los sets kids colocan el origen en el "techo" del modelo, no en
+  2 038 parts). Esto sugiere una **convención distinta de origen**:
+  los sets kids colocan el origen en el "techo" del models, no en
   una capa central.
-- **Y=-144** (621 piezas) y **Y=-168** (426 piezas) son exclusivos
+- **Y=-144** (621 parts) y **Y=-168** (426 parts) son exclusivos
   de kids. Indican **construcciones más altas** (City skyscrapers,
   Creator 3-in-1 buildings, Harry Potter towers, Super Heroes HQ).
 
@@ -478,26 +478,26 @@ Y = **-168** (un 31 % más profundo que el -128 de 80s/90s).
 |--:|--------------|---------------------|-----------------|
 | **R1** | 95 % de Y-coords son múltiplos de 8 | ✅ **CONFIRMADA** | Top-15 300 sets: **15/15 = 100 % múltiplos de 8** |
 | **R2** | 99 % de deltas X/Z son múltiplos de 20 | ⚠️ **DEBILITADA** | En kids, 13.3 % del top-30 son deltas sub-20 (Technic + slope 30°); en 80s/90s solo 10 %. **Pero el % REAL del corpus completo es ≥ 92 %** cuando se pondera por todas las apariciones |
-| **R3** | 0.27 % piezas con det<0 | ✅ **CONFIRMADA** | all_300: **157/61 617 = 0.255 %** (incluso menor) |
+| **R3** | 0.27 % parts con det<0 | ✅ **CONFIRMADA** | all_300: **157/61 617 = 0.255 %** (incluso menor) |
 | **R4** | Custom parts raras (0.6 %) | ❌ **REFUTADA para kids** | 80s/90s: 0.60 %. **kids: 1.90 %** (3× más). all_300: 1.51 % |
 | **R5** | Top 10 cubren ~30 % | ✅ **CONFIRMADA** | all_300: top-10 = **29.06 %** |
 | **R6** | Y-layers irregulares vienen de Technic embebido o slopes | ✅ **CONFIRMADA** | 100 % canónico en top-15 de las 3 cohortes |
 | **R7** | Bigramas son 91 % self-bigrams | ✅ **CONFIRMADA** | all_300 top-10: **80 % self**; top-50: **84 % self** |
-| **R8** | Technic embebido en sets no-Technic | ⚠️ **DEBILITADA en %** | 80s/90s: `4-4cyli` = 10.16 %. **kids: 8.15 %**. Pero kids tienen **más piezas Technic-pin** (`2780.dat` = 236, `54200.dat` = 318) |
-| **R9** | 90s son 1.7× más grandes que 80s | ✅ **CONFIRMADA** | Media 90s: 207.7 piezas; 80s: 123.6 piezas (ratio 1.68) |
+| **R8** | Technic embebido en sets no-Technic | ⚠️ **DEBILITADA en %** | 80s/90s: `4-4cyli` = 10.16 %. **kids: 8.15 %**. Pero kids tienen **más parts Technic-pin** (`2780.dat` = 236, `54200.dat` = 318) |
+| **R9** | 90s son 1.7× más grandes que 80s | ✅ **CONFIRMADA** | Media 90s: 207.7 parts; 80s: 123.6 parts (ratio 1.68) |
 | **R10** | BFC CERTIFY en 21 % de sets | ⚠️ **DEBILITADA pero invertida** | 80s/90s: 21 %. **kids: 36.5 %** (mucho más). all_300: 31.3 % |
 | **R11** | Sub-builds/set crecen con el tiempo | ⚠️ **DEBILITADA** | 80s: 5.68, 90s: 9.29, kids mean: **7.68** (kids tienen MENOS sub-builds por set que 90s) |
 | **R12** | `4-4cyli.dat` es artefacto de outliers | ❌ **REFUTADA** | En 300 sets, `4-4cyli` = **8.76 %** del corpus distribuido. El sesgo de 94.5 % (6286) era solo del corpus 80s/90s. En kids está bien repartido (3 502/200 sets = 17.51/set) |
 
 ### 5.2 Reglas NUEVAS que solo emergen con 300 sets
 
-**R-NEW-1: Piezas "modern decorative" sustituyen a "vintage clip"**
+**R-NEW-1: parts "modern decorative" sustituyen a "vintage clip"**
 - kids: `166.dat` (Plate 1×1 round) = **426 usos**, `3070b.dat` (Tile 1×4)
   = **409 usos**, `54200.dat` (Slope 30° 1×1) = **318 usos**, `6636.dat`
   (Tile 1×6) = **132 usos**.
-- 80s/90s: estas 4 piezas suman **0 usos** en top-50.
+- 80s/90s: estas 4 parts suman **0 usos** en top-50.
 - **Implicación para el generador**: vocabularios kids deben incluir
-  piezas decorativas circulares, tiles lisas y micro-slopes.
+  parts decorativas circulares, tiles lisas y micro-slopes.
 
 **R-NEW-2: Custom parts rate TRIPLICA entre cohortes**
 - 80s/90s: 112 custom / 18 670 = **0.60 %**.
@@ -514,7 +514,7 @@ Y = **-168** (un 31 % más profundo que el -128 de 80s/90s).
 
 **R-NEW-4: El heterogéneo `3005 → 3004` (Brick 1×1 → Brick 1×2) es marca kids**
 - 70 ocurrencias en kids top-50; 0 en 80s/90s top-50.
-- Indica que **los modelos modernos alternan tamaños de brick con
+- Indica que **los models modernos alternan tamaños de brick con
   fluidez**; los antiguos tienden a homogeneizar.
 - **Aplicable al generador**: en chains kids, permitir transiciones
   1×1 → 1×2 más libremente.
@@ -531,7 +531,7 @@ Y = **-168** (un 31 % más profundo que el -128 de 80s/90s).
 - `166.dat → 166.dat` (425), `3070b.dat → 3070b.dat` (262),
   `30136.dat → 30136.dat` (149).
 - 0 ocurrencias en 80s/90s top-50.
-- **Piezas modernas son "tiles-like"**: se repiten en filas para
+- **parts modernas son "tiles-like"**: se repiten en filas para
   decoración superficial.
 
 ---
@@ -540,9 +540,9 @@ Y = **-168** (un 31 % más profundo que el -128 de 80s/90s).
 
 | Aspecto | 80s/90s (n=100) | Kids (n=200) | 300 sets |
 |---------|----------------:|-------------:|---------:|
-| Total piezas | 18 670 | 42 947 | 61 617 |
-| Media piezas/set | 186.7 | 214.7 | 205.4 |
-| Max piezas/set | 2 834 | 2 975 | 2 975 |
+| Total parts | 18 670 | 42 947 | 61 617 |
+| Media parts/set | 186.7 | 214.7 | 205.4 |
+| Max parts/set | 2 834 | 2 975 | 2 975 |
 | Sub-builds/set | 8.39 | 7.68 | 7.91 |
 | Custom parts/set | 1.12 | 4.09 | 3.10 |
 | % `4-4cyli.dat` | 10.16 % | 8.15 % | 8.76 % |
@@ -553,7 +553,7 @@ Y = **-168** (un 31 % más profundo que el -128 de 80s/90s).
 
 ### Hallazgos cuantitativos clave
 
-1. **`4-4cyli.dat` sigue siendo la pieza #1** en todas las cohortes
+1. **`4-4cyli.dat` sigue siendo la parts #1** en todas las cohortes
    (5 398 apariciones en 300 sets, 8.76 % del corpus), pero la regla
    R12 (artefacto de outlier) **se refuta**: en el corpus ampliado
    está uniformemente distribuido.
@@ -583,7 +583,7 @@ Y = **-168** (un 31 % más profundo que el -128 de 80s/90s).
   corpus 2× más grande).
 - **Refinar** R2, R8, R11 con datos de kids.
 - **Eliminar** R12 (refutada).
-- **Añadir soporte** para piezas modernas: `166.dat`, `3070b.dat`,
+- **Añadir soporte** para parts modernas: `166.dat`, `3070b.dat`,
   `54200.dat`, `6636.dat`, `30136.dat`, `2780.dat`, `98283.dat`.
 - **Ampliar** el rango Y permitido a **-168 LDU** (21 plates) en
   generadores kids.
@@ -596,7 +596,7 @@ Y = **-168** (un 31 % más profundo que el -128 de 80s/90s).
 
 1. La cohorte kids (n=200) tiene **menos sets grandes por theme** que
    la 80s/90s. Los promedios están influidos por outliers individuales
-   (p. ej. `76042-1` Avengers SH con 2 970 piezas).
+   (p. ej. `76042-1` Avengers SH con 2 970 parts).
 
 2. **No se han desglosado** los deltas irregulares por theme (kids
    incluye Friends, City, Creator, Harry Potter, Minecraft — todos
@@ -612,5 +612,5 @@ Y = **-168** (un 31 % más profundo que el -128 de 80s/90s).
    rotX, rotZ).
 
 5. **Bigramas estudiados solo en self/heterogéneo**, sin análisis de
-   orden (qué pieza tiende a preceder a qué otra, no solo qué pieza
+   orden (qué parts tiende a preceder a qué otra, no solo qué parts
    se repite).

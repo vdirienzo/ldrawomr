@@ -13,18 +13,18 @@
 LDraw™ is an **open standard** for LEGO CAD programs created by
 James Jessiman in 1995. It enables:
 
-- Documentar models LEGO físicos.
-- Crear instructions de construcción type LEGO.
-- render imágenes 3D foto-realistas.
+- Document physical LEGO físicos.
+- Create LEGO-style building instructions LEGO.
+- render photorealistic 3D images.
 - Hacer animaciones.
 
 The current official library contains **17,116 unique shapes/patterns**.
 
 - Web: <https://ldraw.org>
-- Documentación: <https://www.ldraw.org/docs-main.html>
+- Documentation: <https://www.ldraw.org/docs-main.html>
 - library/descargas: <https://library.ldraw.org>
 - Wiki: <https://wiki.ldraw.org>
-- Foros: <https://forums.ldraw.org>
+- Forums: <https://forums.ldraw.org>
 - Mirror oficial en GitHub: <https://github.com/pybricks/ldraw>
 
 ---
@@ -42,7 +42,7 @@ LDRAW/
 ```
 
 Reglas de nombres (oficial): **solo `a-z`, `0-9`, `_`, `-`; máx 25 caracteres;
-sin distinción de mayúsculas** (pero todo en minúsculas por convención).
+case-insensitive** (pero todo en minúsculas by convention).
 
 ---
 
@@ -63,7 +63,7 @@ sin distinción de mayúsculas** (pero todo en minúsculas por convención).
 
 ### LDraw Unit (LDU)
 
-| Pieza real             | Tamaño en LDU |
+| parts real             | Tamaño en LDU |
 |------------------------|---------------|
 | 1 brick width/depth | 20            |
 | 1 altura de brick      | 24            |
@@ -286,7 +286,7 @@ Convention: `boxF[-E][modifiers].dat`
 
 ### 6.3 `n-fcyli` family — cylinders (key!)
 
-`n-fcyli.dat` = **fraction n/f** of a complete cylinder. Por defecto radio 1
+`n-fcyli.dat` = **fraction n/f** of a complete cylinder. By default radio 1
 LDU, tall 1 LDU, en plano xz. Convenciones:
 
 - Centrado en el origin.
@@ -403,7 +403,7 @@ An official part follows this order:
 0 !KEYWORDS word1, word2, word3
 0 !HISTORY YYYY-MM-DD [<user>] descripción
 0 // comentarios libres
-1 16 ... <pieza base>
+1 16 ... <parts base>
 ```
 
 `!LDRAW_ORG` types:
@@ -586,7 +586,7 @@ rotan parts de la library**. example (`car.ldr`):
 
 **Comandos importantes en models**:
 
-- `1 <color> x y z a b c d e f g h i <file>` — colocar una pieza.
+- `1 <color> x y z a b c d e f g h i <file>` — colocar una parts.
 - `0 STEP` — marca fin de paso de construcción.
 - `0 FILE <name>` / `0 NOFILE` — delimitan sub-models dentro de MPD.
 - `0 !COLOUR ...` — definir colors locales.
@@ -596,11 +596,11 @@ rotan parts de la library**. example (`car.ldr`):
 
 - Studs (cylinders Ø12, tall 4) encajan en tubes (huecos cilíndricos Ø12,
   profundidad 4) en las faces opuestas.
-- Studs encajan sobre studs si la pieza lo permite (rotation 0°).
+- Studs encajan sobre studs si la parts lo permite (rotation 0°).
 - Tubes y studs están separados **20 LDU** en X/Z (centros de stud).
 - Los axes Technic (Ø5) encajan en cross-holes.
 
-**Para colocar una pieza exactamente**:
+**Para colocar una parts exactamente**:
 
 1. Decide la position del origin (centro de la base de studs).
 2. translation: `x y z` en LDU (multiplica studs por 20, plates por 8).
@@ -656,14 +656,14 @@ Technic, Minifig, Wheel, Hinge, Animal, Sticker, …). Lista completa en
 la [especificación](https://www.ldraw.org/article/340.html).
 
 `!KEYWORDS` son términos libres para búsqueda (separados por comas, máx
-80 chars/line, sin incluir el nombre de la pieza).
+80 chars/line, sin incluir el nombre de la parts).
 
 ---
 
 ## 15. Cualificadores opcionales para parts oficiales
 
-- `Alias` — pieza visualmente idéntica a otra con distinto nº.
-- `Flexible_Section` — sub-componente de pieza flexible.
+- `Alias` — parts visualmente idéntica a otra con distinto nº.
+- `Flexible_Section` — sub-componente de parts flexible.
 - `Physical_Colour` (deprecado).
 
 ---
@@ -682,7 +682,7 @@ models oficiales de sets LEGO documentados siguen el
 
 ---
 
-## 17. Plantilla mínima — cómo crear una pieza desde cero
+## 17. Minimal template — how to create a part from scratch
 
 Pasos (resumen):
 
@@ -764,7 +764,7 @@ el origin; el tube interior invertido crea el hueco para encajar.
 0 NOFILE
 ```
 
-Este model es apilable: cada pieza se coloca con su origin en el centro del
+Este model es apilable: cada parts se coloca con su origin en el centro del
 grupo de studs. Las plates están a `y=0`, `y=-8`, y el brick a `y=-8-24=-32`.
 
 ---
@@ -780,7 +780,7 @@ grupo de studs. Las plates están a `y=0`, `y=-8`, y el brick a `y=-8-24=-32`.
 | Forums                                         | <https://forums.ldraw.org>                           |
 | GitHub mirror                                 | <https://github.com/pybricks/ldraw>                  |
 | Tutorials                                    | <http://wiki.ldraw.org/index.php?title=Category:Tutorials> |
-| Part authoring tutorial (Holly-Wood)         | <https://www.holly-wood.it/ldraw/authoring-en.html> |
+| Part authoring tutorials (Holly-Wood)         | <https://www.holly-wood.it/ldraw/authoring-en.html> |
 | LDCad (recommended editor)                    | <https://www.melvintec.com/ldcad>                    |
 | LDView (viewer)                                | <https://tcobbs.github.io/ldview/>                   |
 | LeoCAD (another editor)                          | <https://www.leocad.org>                             |
@@ -812,7 +812,7 @@ grupo de studs. Las plates están a `y=0`, `y=-8`, y el brick a `y=-8-24=-32`.
 | Define a local color                 | `0 !COLOUR MiColor CODE 999 VALUE #FF0000 EDGE #800000`           |
 | Mark build step            | `0 STEP`                                                          |
 | Official part header               | See §8                                                            |
-| rotate pieza 90° alrededor de Y         | `1 c 0 0 z 0 0 1 0 1 0 -1 0 0` (CW) o `0 0 -1 0 1 0 1 0 0` (CCW)  |
+| rotate parts 90° alrededor de Y         | `1 c 0 0 z 0 0 1 0 1 0 -1 0 0` (CW) o `0 0 -1 0 1 0 1 0 0` (CCW)  |
 | Package complete set                | MPD with one `0 FILE` per sub-model                                |
 | Activate back face culling              | `0 BFC CERTIFY CCW` at the beginning                                     |
 
@@ -826,9 +826,9 @@ grupo de studs. Las plates están a `y=0`, `y=-8`, y el brick a `y=-8-24=-32`.
 - **Rim** — anillo elevado en la parte superior de bricks/plates (entre filas
   de studs).
 - **Primitive** — reusable geometric part from `p/` or `p/48/`.
-- **Subpart** — pieza intermedia en `parts/s/`, referenciada por una o más
+- **Subpart** — parts intermedia en `parts/s/`, referenciada por una o más
   partes.
-- **Shortcut** — assembly pre-fabricado tratado como una sola pieza
+- **Shortcut** — assembly pre-fabricado tratado como una sola parts
   (`NNNcNN.dat`).
 - **Patterned part** — piece with printing (`NNNpCC.dat`).
 - **Sticker** — decal applied to a piece.
