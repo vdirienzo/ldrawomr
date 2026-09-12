@@ -4,107 +4,166 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LDraw OMR — Cross-Corpus Analysis (1,438 sets · 534,152 pieces)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   :root {
-    --bg: #0d1117; --bg-elevated: #161b22; --bg-card: #1c2128;
+    --bg: #0d1117; --bg-card: #161b22; --bg-elevated: #1c2128;
     --border: #30363d; --text: #e6edf3; --text-dim: #8b949e; --text-muted: #6e7681;
     --accent: #58a6ff; --green: #3fb950; --orange: #d29922; --red: #f85149;
-    --purple: #bc8cff; --pink: #f778ba; --cyan: #39c5cf; --amber: #d29922;
+    --purple: #bc8cff; --pink: #f778ba; --cyan: #39c5cf;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
     background: var(--bg); color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-    line-height: 1.5; font-size: 15px;
+    line-height: 1.45; font-size: 14px;
   }
-  .container { max-width: 1400px; margin: 0 auto; padding: 40px 32px 80px; }
+  .container { max-width: 1500px; margin: 0 auto; padding: 24px 24px 60px; }
+  /* Sticky nav */
   nav.toc {
-    position: sticky; top: 0; z-index: 10;
-    background: rgba(13,17,23,0.95); backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border); padding: 12px 32px; font-size: 0.85em;
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,17,23,0.97); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border); padding: 10px 24px; font-size: 0.82em;
+    display: flex; gap: 18px; align-items: center; flex-wrap: wrap;
   }
-  nav.toc a { color: var(--text-dim); text-decoration: none; margin-right: 16px; transition: color 0.15s; }
-  nav.toc a:hover { color: var(--accent); }
-  nav.toc .nav-title { color: var(--text); font-weight: 600; margin-right: 24px; }
-  h1 { font-size: 2.8em; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 8px; line-height: 1.1; }
+  nav.toc .nav-title { color: var(--accent); font-weight: 700; font-family: ui-monospace, monospace; }
+  nav.toc a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border-radius: 4px; transition: all 0.15s; }
+  nav.toc a:hover { color: var(--text); background: var(--bg-card); }
+  h1 { font-size: 2.2em; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 4px; }
   h1 .accent { color: var(--accent); }
-  h2 { font-size: 1.8em; margin: 64px 0 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border); font-weight: 700; letter-spacing: -0.02em; }
-  h2 .num { color: var(--accent); font-family: ui-monospace, "SF Mono", monospace; opacity: 0.5; margin-right: 12px; }
-  h3 { font-size: 1.2em; margin: 32px 0 12px; color: var(--text); font-weight: 600; }
-  p { margin-bottom: 14px; color: var(--text-dim); max-width: 780px; }
+  h2 { font-size: 1.5em; margin: 36px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-weight: 700; letter-spacing: -0.02em; }
+  h2 .num { color: var(--accent); font-family: ui-monospace, monospace; opacity: 0.5; margin-right: 12px; font-size: 0.85em; }
+  h3 { font-size: 1.05em; margin: 18px 0 8px; color: var(--text); font-weight: 600; }
+  p { margin-bottom: 10px; color: var(--text-dim); max-width: 720px; font-size: 0.92em; }
   code { font-family: ui-monospace, "SF Mono", Consolas, monospace; }
-  .code { font-family: ui-monospace, "SF Mono", Consolas, monospace; background: var(--bg-card); color: var(--accent); padding: 2px 6px; border-radius: 4px; font-size: 0.88em; }
-  .hero { padding: 80px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
-  .hero .lede { font-size: 1.15em; color: var(--text-dim); max-width: 720px; margin-top: 12px; }
+  .code { font-family: ui-monospace, monospace; background: var(--bg-card); color: var(--accent); padding: 1px 5px; border-radius: 3px; font-size: 0.86em; }
+  /* Hero compact */
+  .hero { padding: 28px 0 20px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+  .hero .lede { font-size: 1em; color: var(--text-dim); margin-top: 6px; }
   .hero-stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0;
-    margin-top: 40px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0; margin-top: 18px;
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
   }
-  .hero-stat { padding: 32px 24px; border-right: 1px solid var(--border); }
+  .hero-stat { padding: 14px 16px; border-right: 1px solid var(--border); }
   .hero-stat:last-child { border-right: none; }
-  .hero-stat .label { font-size: 0.72em; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px; }
-  .hero-stat .value { font-size: 3.5em; font-weight: 800; line-height: 1; letter-spacing: -0.04em; font-feature-settings: "tnum"; }
-  .hero-stat .sub { font-size: 0.85em; color: var(--text-dim); margin-top: 8px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
-  .kpi { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; position: relative; overflow: hidden; }
-  .kpi::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; background: var(--accent); }
-  .kpi.cohort-80s90s::before { background: #58a6ff; }
-  .kpi.cohort-kids::before { background: #d29922; }
-  .kpi.cohort-classic::before { background: #3fb950; }
-  .kpi.cohort-classic_gaps::before { background: #7ee787; }
-  .kpi.cohort-modern::before { background: #bc8cff; }
-  .kpi.cohort-technic::before { background: #f85149; }
-  .kpi.cohort-specialty::before { background: #39c5cf; }
-  .kpi.cohort-licensed::before { background: #f778ba; }
-  .kpi-label { font-size: 0.7em; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 6px; }
-  .kpi-value { font-size: 1.85em; font-weight: 700; line-height: 1.05; font-feature-settings: "tnum"; }
-  .kpi-sub { font-size: 0.78em; color: var(--text-dim); margin-top: 6px; }
-  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin: 16px 0; }
-  .card-title { font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text-dim); margin-bottom: 14px; font-weight: 600; }
-  .insights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 20px 0; }
-  .insight {
-    background: linear-gradient(135deg, rgba(88,166,255,0.08), rgba(188,140,255,0.04));
-    border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 18px 20px;
+  .hero-stat .label { font-size: 0.66em; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 6px; }
+  .hero-stat .value { font-size: 2.4em; font-weight: 800; line-height: 1; letter-spacing: -0.04em; }
+  .hero-stat .sub { font-size: 0.74em; color: var(--text-dim); margin-top: 4px; }
+  /* Section: 2-column layout */
+  .section-2col {
+    display: grid; grid-template-columns: 1fr 320px; gap: 18px; align-items: start;
+    margin: 12px 0 28px;
   }
-  .insight.refuted { background: linear-gradient(135deg, rgba(248,81,73,0.08), rgba(247,120,186,0.04)); border-left-color: var(--red); }
-  .insight.confirmed { background: linear-gradient(135deg, rgba(63,185,80,0.08), rgba(57,197,207,0.04)); border-left-color: var(--green); }
-  .insight.new { background: linear-gradient(135deg, rgba(188,140,255,0.08), rgba(247,120,186,0.04)); border-left-color: var(--purple); }
-  .insight .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.7em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 6px; }
-  .insight.confirmed .badge { background: rgba(63,185,80,0.25); color: var(--green); }
-  .insight.refuted .badge { background: rgba(248,81,73,0.25); color: var(--red); }
-  .insight.new .badge { background: rgba(188,140,255,0.25); color: var(--purple); }
-  .insight .rule-id { color: var(--text); font-weight: 700; font-family: ui-monospace, monospace; }
-  .insight .desc { margin-top: 6px; color: var(--text); }
-  .insight .evidence { margin-top: 8px; color: var(--text-dim); font-size: 0.9em; }
-  table { width: 100%; border-collapse: collapse; margin: 16px 0; background: var(--bg-card); border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
-  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.88em; }
-  th { background: var(--bg-elevated); color: var(--text-dim); font-weight: 600; font-size: 0.74em; text-transform: uppercase; letter-spacing: 0.6px; }
+  .section-2col.reversed { grid-template-columns: 320px 1fr; }
+  .chart-container {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; position: relative;
+  }
+  .chart-container canvas { max-height: 320px !important; }
+  .explanation {
+    background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0; padding: 14px 18px; font-size: 0.9em; color: var(--text-dim);
+  }
+  .explanation.reversed { border-left: 1px solid var(--border); border-right: 3px solid var(--accent); border-radius: 8px 0 0 8px; }
+  .explanation h4 { color: var(--text); font-size: 1em; margin-bottom: 8px; font-weight: 600; }
+  .explanation p { font-size: 0.92em; margin-bottom: 8px; }
+  .explanation .metric { color: var(--accent); font-family: ui-monospace, monospace; font-weight: 600; }
+  /* Compact KPI grid */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px;
+    margin: 12px 0;
+  }
+  .kpi { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; position: relative; overflow: hidden; }
+  .kpi::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; background: var(--accent); }
+  .kpi.c-80s90s::before { background: #58a6ff; }
+  .kpi.c-kids::before { background: #d29922; }
+  .kpi.c-classic::before { background: #3fb950; }
+  .kpi.c-classic_gaps::before { background: #7ee787; }
+  .kpi.c-modern::before { background: #bc8cff; }
+  .kpi.c-technic::before { background: #f85149; }
+  .kpi.c-specialty::before { background: #39c5cf; }
+  .kpi.c-licensed::before { background: #f778ba; }
+  .kpi-label { font-size: 0.62em; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .kpi-value { font-size: 1.3em; font-weight: 700; line-height: 1; font-feature-settings: "tnum"; }
+  .kpi-sub { font-size: 0.68em; color: var(--text-muted); margin-top: 3px; }
+  /* Insights compact */
+  .insights {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px; margin: 12px 0 24px;
+  }
+  .insight {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 6px; padding: 10px 12px;
+    border-left: 3px solid var(--accent);
+  }
+  .insight.refuted { border-left-color: var(--red); }
+  .insight.confirmed { border-left-color: var(--green); }
+  .insight.new { border-left-color: var(--purple); }
+  .insight .head { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .insight .badge {
+    padding: 1px 5px; border-radius: 8px; font-size: 0.62em; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    background: rgba(255,255,255,0.1);
+  }
+  .insight .rule-id { color: var(--text); font-weight: 700; font-family: ui-monospace, monospace; font-size: 0.9em; }
+  .insight .desc { color: var(--text); font-size: 0.92em; }
+  .insight .ev { color: var(--text-dim); font-size: 0.78em; margin-top: 4px; font-family: ui-monospace, monospace; }
+  /* Tables compact */
+  table {
+    width: 100%; border-collapse: collapse; margin: 8px 0;
+    background: var(--bg-card); border-radius: 6px; overflow: hidden; border: 1px solid var(--border);
+    font-size: 0.85em;
+  }
+  th, td { padding: 6px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--bg-elevated); color: var(--text-dim); font-weight: 600; font-size: 0.72em; text-transform: uppercase; letter-spacing: 0.5px; }
   tr:last-child td { border-bottom: none; }
   td.num { text-align: right; font-family: ui-monospace, monospace; }
   td.file { font-family: ui-monospace, monospace; color: var(--accent); }
-  .cohort-pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.75em; font-weight: 600; margin-right: 4px; }
-  .filter-bar { display: flex; gap: 8px; margin: 16px 0; flex-wrap: wrap; }
-  .filter-btn { padding: 6px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; color: var(--text-dim); font-size: 0.85em; cursor: pointer; transition: all 0.15s; }
-  .filter-btn:hover { color: var(--text); border-color: var(--text-dim); }
+  .pill {
+    display: inline-block; padding: 1px 6px; border-radius: 8px; font-size: 0.72em;
+    font-weight: 600; color: #0d1117;
+  }
+  /* Rules interactive */
+  .filter-bar { display: flex; gap: 6px; margin: 10px 0; flex-wrap: wrap; }
+  .filter-btn {
+    padding: 4px 10px; background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; color: var(--text-dim); font-size: 0.8em; cursor: pointer; transition: all 0.15s;
+  }
+  .filter-btn:hover { color: var(--text); }
   .filter-btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
   .filter-btn[data-status="confirmed"].active { background: var(--green); }
   .filter-btn[data-status="weakened"].active { background: var(--orange); }
   .filter-btn[data-status="refuted"].active { background: var(--red); }
   .filter-btn[data-status="new"].active { background: var(--purple); }
-  .rule-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; margin: 8px 0; border-left: 3px solid var(--accent); transition: opacity 0.2s; }
+  .rule-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; margin: 4px 0; border-left: 3px solid var(--accent); font-size: 0.88em; }
   .rule-card.confirmed { border-left-color: var(--green); }
   .rule-card.weakened { border-left-color: var(--orange); }
   .rule-card.refuted { border-left-color: var(--red); }
   .rule-card.new { border-left-color: var(--purple); }
   .rule-card.hidden { display: none; }
-  .rule-card .head { display: flex; align-items: center; gap: 10px; }
+  .rule-card .head { display: flex; align-items: center; gap: 8px; }
   .rule-card .id { font-family: ui-monospace, monospace; font-weight: 700; color: var(--text); }
-  .rule-card .name { flex: 1; color: var(--text); }
-  .rule-card .desc { color: var(--text-dim); margin-top: 6px; font-size: 0.92em; }
-  .rule-card .ev { color: var(--text-muted); font-size: 0.82em; margin-top: 4px; font-family: ui-monospace, monospace; }
-  .subhead { color: var(--text-dim); font-size: 0.95em; margin: 8px 0 24px; max-width: 780px; }
-  footer { margin-top: 80px; padding-top: 32px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85em; }
+  .rule-card .name { flex: 1; color: var(--text); font-size: 0.95em; }
+  .rule-card .ev { color: var(--text-muted); font-size: 0.78em; margin-top: 2px; font-family: ui-monospace, monospace; }
+  .rule-card .badge {
+    padding: 1px 6px; border-radius: 8px; font-size: 0.7em; font-weight: 700;
+    text-transform: uppercase;
+    color: #0d1117;
+  }
+  /* Treemap */
+  .treemap { display: grid; gap: 2px; }
+  .treemap-cell {
+    border-radius: 4px; padding: 8px;
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+    color: #0d1117; font-weight: 600; overflow: hidden;
+    transition: transform 0.15s;
+  }
+  .treemap-cell:hover { transform: scale(1.02); z-index: 2; position: relative; }
+  .treemap-cell .name { font-size: 0.85em; font-family: ui-monospace, monospace; }
+  .treemap-cell .val { font-size: 0.78em; opacity: 0.85; }
+  footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.78em; }
   footer a { color: var(--accent); text-decoration: none; }
 </style>
 </head>
@@ -115,9 +174,9 @@
   <a href="#hero">Hero</a>
   <a href="#insights">Insights</a>
   <a href="#cohorts">Cohorts</a>
-  <a href="#vocabulary">Vocabulary</a>
+  <a href="#vocab">Vocab</a>
   <a href="#ylayers">Y-layers</a>
-  <a href="#deltas">Chaining</a>
+  <a href="#chaining">Chaining</a>
   <a href="#themes">Themes</a>
   <a href="#reflections">Reflections</a>
   <a href="#time">Time</a>
@@ -128,336 +187,281 @@
 
 <div class="container">
 
+<!-- HERO -->
 <section id="hero" class="hero">
   <h1>LDraw OMR <span class="accent">cross-corpus</span></h1>
-  <p class="lede">Statistical analysis of <strong style="color:var(--text)">1,438</strong> official LEGO models from the OMR (Official Model Repository), across <strong style="color:var(--text)">8 cohorts</strong> and <strong style="color:var(--text)">23 learned conventions</strong>.</p>
+  <p class="lede">Statistical analysis of <strong style="color:var(--text)">1,438</strong> official LEGO models from the OMR, across <strong style="color:var(--text)">8 cohorts</strong> and <strong style="color:var(--text)">23 learned conventions</strong>.</p>
   <div class="hero-stats">
-    <div class="hero-stat">
-      <div class="label">Sets analyzed</div>
-      <div class="value">1,438</div>
-      <div class="sub">97.8% of OMR total (1,470)</div>
-    </div>
-    <div class="hero-stat">
-      <div class="label">Total pieces</div>
-      <div class="value">534K</div>
-      <div class="sub">371 pieces/set mean</div>
-    </div>
-    <div class="hero-stat">
-      <div class="label">Sub-builds</div>
-      <div class="value">4.7K</div>
-      <div class="sub">across all cohorts</div>
-    </div>
-    <div class="hero-stat">
-      <div class="label">Custom parts</div>
-      <div class="value">1,037</div>
-      <div class="sub">embedded in MPDs</div>
-    </div>
-    <div class="hero-stat">
-      <div class="label">Rules learned</div>
-      <div class="value">23</div>
-      <div class="sub">7 confirmed + 5 new + 11 weakened/refuted</div>
-    </div>
+    <div class="hero-stat"><div class="label">Sets</div><div class="value">1,438</div><div class="sub">97.8% of OMR</div></div>
+    <div class="hero-stat"><div class="label">Pieces</div><div class="value">534K</div><div class="sub">371 / set mean</div></div>
+    <div class="hero-stat"><div class="label">Sub-builds</div><div class="value">4.7K</div><div class="sub">across cohorts</div></div>
+    <div class="hero-stat"><div class="label">Custom parts</div><div class="value">1,037</div><div class="sub">embedded</div></div>
+    <div class="hero-stat"><div class="label">Rules</div><div class="value">23</div><div class="sub">7+5+11</div></div>
   </div>
 </section>
 
+<script>const DATA = {"cohorts": {"80s90s": {"sets": 100, "pieces": 18670, "sub_builds": 839, "custom_parts": 112, "bfc_certify": 21, "neg_det_count": 50, "top_pieces": [["4-4cyli.dat", 1896], ["3023.dat", 590], ["3004.dat", 521], ["6141.dat", 372], ["3024.dat", 368]], "top_y_layers": [[0.0, 991], [-24.0, 942], [-32.0, 666], [-8.0, 650], [-56.0, 549], [-48.0, 515], [-40.0, 478], [-64.0, 418]]}, "kids": {"sets": 200, "pieces": 42947, "sub_builds": 1535, "custom_parts": 818, "bfc_certify": 73, "neg_det_count": 107, "top_pieces": [["4-4cyli.dat", 3502], ["3023.dat", 1401], ["6141.dat", 1382], ["3004.dat", 1353], ["3005.dat", 1093]], "top_y_layers": [[-24.0, 2616], [-8.0, 2373], [0.0, 2038], [-32.0, 1441], [-16.0, 1425], [-48.0, 1394], [-56.0, 1119], [-40.0, 969]]}, "classic": {"sets": 232, "pieces": 47143, "sub_builds": 2350, "custom_parts": 107, "bfc_certify": 38, "neg_det_count": 1306, "top_pieces": [["3023.dat", 1679], ["756.dat", 1481], ["3004.dat", 1419], ["3710.dat", 981], ["3005.dat", 980]], "top_y_layers": [[0.0, 3407], [-8.0, 3018], [-24.0, 2418], [-16.0, 1662], [-32.0, 1647], [-40.0, 1295], [-48.0, 1255], [-56.0, 1055]]}, "modern": {"sets": 287, "pieces": 114904, "sub_builds": 4128, "custom_parts": 769, "bfc_certify": 79, "neg_det_count": 42, "top_pieces": [["3023.dat", 5246], ["3024.dat", 3663], ["6141.dat", 3003], ["3004.dat", 2932], ["3069b.dat", 2907]], "top_y_layers": [[-8.0, 10362], [0.0, 8560], [-24.0, 6516], [-32.0, 5244], [-16.0, 4137], [-48.0, 3496], [-40.0, 3321], [-56.0, 2725]]}, "technic": {"sets": 175, "pieces": 169839, "sub_builds": 5243, "custom_parts": 1691, "bfc_certify": 138, "neg_det_count": 1162, "top_pieces": [["2780.dat", 15038], ["4-4cyli.dat", 11628], ["166.dat", 10159], ["u9218.dat", 7997], ["6558.dat", 7541]], "top_y_layers": [[0.0, 32606], [-20.0, 8239], [-40.0, 6466], [20.0, 5045], [-60.0, 3844], [-80.0, 3326], [40.0, 2767], [-10.0, 2204]]}, "specialty": {"sets": 165, "pieces": 63592, "sub_builds": 2744, "custom_parts": 351, "bfc_certify": 60, "neg_det_count": 112, "top_pieces": [["98138.dat", 7622], ["6141.dat", 4299], ["3023.dat", 3973], ["3024.dat", 2559], ["3069b.dat", 2043]], "top_y_layers": [[-8.0, 16427], [0.0, 5073], [-16.0, 4693], [-24.0, 3596], [-32.0, 2466], [-40.0, 1898], [-48.0, 1440], [-56.0, 1190]]}, "licensed": {"sets": 121, "pieces": 45227, "sub_builds": 1961, "custom_parts": 531, "bfc_certify": 60, "neg_det_count": 248, "top_pieces": [["3023.dat", 1784], ["6141.dat", 1030], ["3710.dat", 973], ["2780.dat", 962], ["3020.dat", 771]], "top_y_layers": [[0.0, 4629], [-8.0, 3317], [-24.0, 2686], [-32.0, 1801], [-16.0, 1734], [-48.0, 1620], [-40.0, 1457], [10.0, 1030]]}, "classic_gaps": {"sets": 158, "pieces": 31830, "sub_builds": 1274, "custom_parts": 91, "bfc_certify": 41, "neg_det_count": 641, "top_pieces": [["3004.dat", 988], ["3023.dat", 905], ["3024.dat", 727], ["6141.dat", 692], ["756.dat", 644]], "top_y_layers": [[-24.0, 1529], [-48.0, 1015], [-64.0, 986], [-8.0, 952], [-72.0, 946], [0.0, 932], [-96.0, 864], [-40.0, 850]]}}, "top_pieces_global": [["4-4cyli.dat", 20031], ["2780.dat", 17458], ["3023.dat", 16181], ["6141.dat", 11755], ["166.dat", 10617], ["3024.dat", 9844], ["3004.dat", 8746], ["u9218.dat", 8374], ["98138.dat", 8207], ["77.dat", 8188], ["6558.dat", 8135], ["3710.dat", 7620], ["3005.dat", 7204], ["3069b.dat", 6849], ["axlehol8.dat", 5607], ["box4o8a.dat", 5331], ["3020.dat", 4748], ["3623.dat", 4367], ["43093.dat", 4272], ["3070b.dat", 4132]], "top_y_layers_global": [[0.0, 58236], [-8.0, 37942], [-24.0, 20763], [-40.0, 16734], [-16.0, 15062], [-32.0, 14408], [-48.0, 10911], [-20.0, 9030], [-56.0, 8500], [-80.0, 7953], [-72.0, 6685], [-64.0, 6017], [20.0, 5180], [10.0, 4877], [8.0, 4812]], "top_deltas_global": [{"dx": 20.0, "dy": 0.0, "dz": 0.0, "count": 17714}, {"dx": 0.0, "dy": 0.0, "dz": 0.0, "count": 10119}, {"dx": 40.0, "dy": 0.0, "dz": 0.0, "count": 7785}, {"dx": 0.0, "dy": -8.0, "dz": 0.0, "count": 7532}, {"dx": 0.0, "dy": 0.0, "dz": -20.0, "count": 6035}, {"dx": 60.0, "dy": 0.0, "dz": 0.0, "count": 5793}, {"dx": 0.0, "dy": 0.0, "dz": 40.0, "count": 5500}, {"dx": 0.0, "dy": 0.0, "dz": -40.0, "count": 5479}, {"dx": 0.0, "dy": 0.0, "dz": 20.0, "count": 5191}, {"dx": -40.0, "dy": 0.0, "dz": 0.0, "count": 4597}], "top_bigrams_global": [{"a": "4-4cyli.dat", "b": "4-4cyli.dat", "count": 19842}, {"a": "166.dat", "b": "166.dat", "count": 10508}, {"a": "2780.dat", "b": "2780.dat", "count": 9114}, {"a": "u9218.dat", "b": "u9218.dat", "count": 8344}, {"a": "77.dat", "b": "77.dat", "count": 8129}, {"a": "98138.dat", "b": "98138.dat", "count": 7311}, {"a": "6141.dat", "b": "6141.dat", "count": 7009}, {"a": "3023.dat", "b": "3023.dat", "count": 6151}, {"a": "axlehol8.dat", "b": "axlehol8.dat", "count": 5574}, {"a": "box4o8a.dat", "b": "box4o8a.dat", "count": 5313}, {"a": "3024.dat", "b": "3024.dat", "count": 4423}, {"a": "3004.dat", "b": "3004.dat", "count": 3899}], "top_themes": [{"theme": "Technic", "sets": 155, "pieces": 152331}, {"theme": "Creator > Creator Expert", "sets": 20, "pieces": 30948}, {"theme": "Modular Buildings", "sets": 11, "pieces": 25127}, {"theme": "Town > Classic Town", "sets": 124, "pieces": 21096}, {"theme": "Icons", "sets": 8, "pieces": 18786}, {"theme": "Creator > Creator 3-in-1", "sets": 50, "pieces": 16726}, {"theme": "Architecture", "sets": 36, "pieces": 15943}, {"theme": "Star Wars > Ultimate Collector Series", "sets": 12, "pieces": 14754}, {"theme": "LEGO Ideas and CUUSOO", "sets": 12, "pieces": 13880}, {"theme": "Star Wars", "sets": 64, "pieces": 13241}, {"theme": "Brickheadz", "sets": 76, "pieces": 10889}, {"theme": "LEGO Art", "sets": 1, "pieces": 10703}, {"theme": "Technic > Star Wars", "sets": 3, "pieces": 10702}, {"theme": "Classic Town", "sets": 73, "pieces": 10002}, {"theme": "Racers", "sets": 76, "pieces": 9890}], "theme_scatter": [{"name": "Town", "bfc_pct": 11.9, "refl_pct": 2.617, "pieces": 7947}, {"name": "Fabuland", "bfc_pct": 70.7, "refl_pct": 0.0, "pieces": 1346}, {"name": "Space", "bfc_pct": 6.7, "refl_pct": 0.0, "pieces": 2088}, {"name": "Train", "bfc_pct": 18.2, "refl_pct": 0.0, "pieces": 3600}, {"name": "Boat", "bfc_pct": 81.8, "refl_pct": 0.0, "pieces": 1388}, {"name": "Castle", "bfc_pct": 30.0, "refl_pct": 0.0, "pieces": 1621}, {"name": "Model Team", "bfc_pct": 66.7, "refl_pct": 0.0, "pieces": 4092}, {"name": "Pirates", "bfc_pct": 40.0, "refl_pct": 0.03, "pieces": 3314}, {"name": "Promotional", "bfc_pct": 25.0, "refl_pct": 0.0, "pieces": 488}, {"name": "Universal Building Set", "bfc_pct": 10.0, "refl_pct": 0.0, "pieces": 258}, {"name": "Western", "bfc_pct": 58.8, "refl_pct": 0.0, "pieces": 3821}, {"name": "Star Wars", "bfc_pct": 25.0, "refl_pct": 0.74, "pieces": 13241}, {"name": "Town › Classic Town", "bfc_pct": 25.8, "refl_pct": 0.526, "pieces": 21096}, {"name": "Castle › Black Falcons", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 658}, {"name": "Castle › Forestmen", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 456}, {"name": "Town › Launch Command", "bfc_pct": 33.3, "refl_pct": 0.104, "pieces": 962}, {"name": "Creator › Early Creator", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 0}, {"name": "Creator › Designer Sets", "bfc_pct": 4.5, "refl_pct": 0.0, "pieces": 1162}, {"name": "City › Airport", "bfc_pct": 50.0, "refl_pct": 0.357, "pieces": 1402}, {"name": "City › Police", "bfc_pct": 7.1, "refl_pct": 0.0, "pieces": 2281}, {"name": "Creator › Creator 3-in-1", "bfc_pct": 22.0, "refl_pct": 0.0, "pieces": 16726}, {"name": "Creator", "bfc_pct": 6.1, "refl_pct": 0.0, "pieces": 1008}, {"name": "City › Hospital", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 548}, {"name": "City › Construction", "bfc_pct": 23.1, "refl_pct": 0.0, "pieces": 2523}, {"name": "City › Harbor", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 413}, {"name": "Seasonal › Halloween", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 60}, {"name": "Super Heroes DC › Batman", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 454}, {"name": "The Hobbit and Lord of the Rings › The Lord of the Rings", "bfc_pct": 20.0, "refl_pct": 0.084, "pieces": 1189}, {"name": "Friends", "bfc_pct": 69.0, "refl_pct": 0.0, "pieces": 5800}, {"name": "City › Fire", "bfc_pct": 60.0, "refl_pct": 0.0, "pieces": 2708}, {"name": "Promotional › Bricktober", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 1445}, {"name": "Harry Potter", "bfc_pct": 71.4, "refl_pct": 0.0, "pieces": 5060}, {"name": "Classic Town", "bfc_pct": 6.8, "refl_pct": 0.04, "pieces": 10002}, {"name": "Classic Space", "bfc_pct": 0.0, "refl_pct": 21.143, "pieces": 927}, {"name": "9V", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 2980}, {"name": "Futuron", "bfc_pct": 0.0, "refl_pct": 4.753, "pieces": 1073}, {"name": "4.5V", "bfc_pct": 37.5, "refl_pct": 0.0, "pieces": 372}, {"name": "Space Police III", "bfc_pct": 37.5, "refl_pct": 1.908, "pieces": 2201}, {"name": "12V", "bfc_pct": 50.0, "refl_pct": 0.0, "pieces": 2106}, {"name": "Blacktron II", "bfc_pct": 0.0, "refl_pct": 5.081, "pieces": 984}, {"name": "Res-Q", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 971}, {"name": "Lion Knights", "bfc_pct": 40.0, "refl_pct": 0.0, "pieces": 1620}, {"name": "M:Tron", "bfc_pct": 0.0, "refl_pct": 8.023, "pieces": 1234}, {"name": "Ice Planet 2002", "bfc_pct": 0.0, "refl_pct": 6.944, "pieces": 720}, {"name": "Space Police II", "bfc_pct": 0.0, "refl_pct": 0.62, "pieces": 967}, {"name": "Blacktron I", "bfc_pct": 0.0, "refl_pct": 12.355, "pieces": 1554}, {"name": "Space Police I", "bfc_pct": 0.0, "refl_pct": 7.077, "pieces": 862}, {"name": "Spyrius", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 308}, {"name": "Unitron", "bfc_pct": 25.0, "refl_pct": 13.947, "pieces": 2488}, {"name": "Town Plan", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 0}, {"name": "Launch Command", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 721}, {"name": "Divers", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 520}, {"name": "Outback", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 522}, {"name": "Creator › Creator Expert", "bfc_pct": 85.0, "refl_pct": 0.0, "pieces": 30948}, {"name": "Racers", "bfc_pct": 1.3, "refl_pct": 0.0, "pieces": 9890}, {"name": "City › Traffic", "bfc_pct": 21.4, "refl_pct": 0.0, "pieces": 2939}, {"name": "Legoland › Building", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 211}, {"name": "Modular Buildings", "bfc_pct": 100.0, "refl_pct": 0.167, "pieces": 25127}, {"name": "Legoland › Construction", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 0}, {"name": "Icons", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 18786}, {"name": "City › Farm", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 1297}, {"name": "Technic", "bfc_pct": 81.9, "refl_pct": 0.171, "pieces": 152331}, {"name": "Technic › Star Wars", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 10702}, {"name": "Technic › Competition", "bfc_pct": 100.0, "refl_pct": 33.065, "pieces": 2728}, {"name": "Technic › Expert Builder", "bfc_pct": 27.3, "refl_pct": 0.0, "pieces": 3553}, {"name": "Hobby Sets", "bfc_pct": 25.0, "refl_pct": 0.0, "pieces": 898}, {"name": "Brickheadz", "bfc_pct": 35.5, "refl_pct": 0.046, "pieces": 10889}, {"name": "LEGO Ideas and CUUSOO", "bfc_pct": 66.7, "refl_pct": 0.756, "pieces": 13880}, {"name": "Brick Sketches", "bfc_pct": 16.7, "refl_pct": 0.0, "pieces": 854}, {"name": "Other", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 2888}, {"name": "Architecture", "bfc_pct": 22.2, "refl_pct": 0.0, "pieces": 15943}, {"name": "Architecture › Skylines", "bfc_pct": 54.5, "refl_pct": 0.043, "pieces": 4673}, {"name": "Star Wars › Ultimate Collector Series", "bfc_pct": 75.0, "refl_pct": 0.0, "pieces": 14754}, {"name": "Pharaoh's Quest", "bfc_pct": 50.0, "refl_pct": 0.0, "pieces": 1225}, {"name": "Racers › Ferrari", "bfc_pct": 12.5, "refl_pct": 0.0, "pieces": 1310}, {"name": "Elves", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 652}, {"name": "Mixels", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 382}, {"name": "Speed Champions", "bfc_pct": 100.0, "refl_pct": 0.0, "pieces": 1429}, {"name": "Super Heroes DC › Batman › UCS", "bfc_pct": 66.7, "refl_pct": 0.0, "pieces": 6093}, {"name": "Speed Racer", "bfc_pct": 75.0, "refl_pct": 0.0, "pieces": 1326}, {"name": "Train › 9V", "bfc_pct": 12.5, "refl_pct": 0.0, "pieces": 3846}, {"name": "Space › Space Police III", "bfc_pct": 0.0, "refl_pct": 0.0, "pieces": 1435}, {"name": "Space › Classic Space", "bfc_pct": 23.5, "refl_pct": 3.029, "pieces": 3235}, {"name": "Space › Blacktron II", "bfc_pct": 0.0, "refl_pct": 19.72, "pieces": 928}, {"name": "Space › Blacktron I", "bfc_pct": 0.0, "refl_pct": 14.686, "pieces": 1321}, {"name": "Train › 12V", "bfc_pct": 66.7, "refl_pct": 0.0, "pieces": 2632}, {"name": "Train › 4.5V", "bfc_pct": 33.3, "refl_pct": 0.0, "pieces": 1375}], "decades": [{"decade": "1960s", "sets": 17, "pieces": 2509}, {"decade": "1970s", "sets": 101, "pieces": 18777}, {"decade": "1980s", "sets": 265, "pieces": 46387}, {"decade": "1990s", "sets": 272, "pieces": 60626}, {"decade": "2000s", "sets": 245, "pieces": 75050}, {"decade": "2010s", "sets": 461, "pieces": 233492}, {"decade": "2020s", "sets": 77, "pieces": 97311}], "top_themes_refl": [{"theme": "Technic > Competition", "reflections": 902, "sets": 3, "pieces": 2728, "ratio": 0.33064516129032256}, {"theme": "Classic Space", "reflections": 196, "sets": 8, "pieces": 927, "ratio": 0.21143473570658036}, {"theme": "Space > Blacktron II", "reflections": 183, "sets": 4, "pieces": 928, "ratio": 0.19719827586206898}, {"theme": "Space > Blacktron I", "reflections": 194, "sets": 3, "pieces": 1321, "ratio": 0.1468584405753217}, {"theme": "Unitron", "reflections": 347, "sets": 4, "pieces": 2488, "ratio": 0.13946945337620578}, {"theme": "Space > Spyrius", "reflections": 50, "sets": 1, "pieces": 366, "ratio": 0.1366120218579235}, {"theme": "Blacktron I", "reflections": 192, "sets": 6, "pieces": 1554, "ratio": 0.12355212355212356}, {"theme": "The LEGO Movie", "reflections": 198, "sets": 2, "pieces": 1824, "ratio": 0.10855263157894737}, {"theme": "Town > City Center", "reflections": 49, "sets": 2, "pieces": 575, "ratio": 0.08521739130434783}, {"theme": "M:Tron", "reflections": 99, "sets": 8, "pieces": 1234, "ratio": 0.08022690437601297}], "total_sets": 1438, "total_pieces": 534152, "total_custom": 4470, "total_bfc": 510, "total_sub_builds": 20074, "cohort_colors": {"80s90s": "#58a6ff", "kids": "#d29922", "classic": "#3fb950", "classic_gaps": "#7ee787", "modern": "#bc8cff", "technic": "#f85149", "specialty": "#39c5cf", "licensed": "#f778ba"}, "top_custom_sets": [{"set": "42129-1", "theme": "Technic", "custom": 98}, {"set": "42131-1", "theme": "Technic", "custom": 94}, {"set": "10261-1", "theme": "Creator > Creator Expert", "custom": 91}, {"set": "60216-1", "theme": "City > Fire", "custom": 78}, {"set": "75870-1", "theme": "Speed Champions", "custom": 76}, {"set": "3185-1", "theme": "Friends", "custom": 69}, {"set": "42100-1", "theme": "Technic", "custom": 69}, {"set": "42125-1", "theme": "Technic", "custom": 63}, {"set": "10283-1", "theme": "Icons", "custom": 61}, {"set": "3189-1", "theme": "Friends", "custom": 59}], "rules": [{"id": "R1", "name": "Y-layers multiples of 8", "status": "confirmed", "description": "Plate (8 LDU), brick (24 LDU).", "evidence": "96.4% top-15 canonical"}, {"id": "R2", "name": "X/Z deltas multiples of 20", "status": "confirmed", "description": "Encaje de stud.", "evidence": "100% top-15 canonical"}, {"id": "R3", "name": "Reflections < 0.3%", "status": "refuted", "description": "Space-themed disparan a 5-21%.", "evidence": "1.345% corpus 1438"}, {"id": "R4", "name": "Custom parts = 0.6%", "status": "refuted", "description": "kids = 1.9%, Fabuland 9.3%.", "evidence": "0.95% global"}, {"id": "R5", "name": "Top 10 piezas cover ~24-30%", "status": "confirmed", "description": "Vocabulario base del System.", "evidence": "24.3% corpus 532"}, {"id": "R6", "name": "Y-irregular = Technic/slopes", "status": "weakened", "description": "Slope 33° signature Y=-46.1.", "evidence": "Exists but rare"}, {"id": "R7", "name": "Bigramas son self-bigrams", "status": "confirmed", "description": "Filas parallel de misma pieza.", "evidence": "90%+ self-bigrams"}, {"id": "R8", "name": "Technic embebido en no-Technic", "status": "weakened", "description": "0.27% in 80s/90s, 1.50% kids.", "evidence": "Era-dependent"}, {"id": "R9", "name": "90s are 1.7× larger than 80s", "status": "weakened", "description": "Kids 2010s 2× larger.", "evidence": "Era-dependent"}, {"id": "R10", "name": "BFC CERTIFY decrece con tiempo", "status": "refuted", "description": "kids 36.5% > classic 16.4%.", "evidence": "Not monotonic"}, {"id": "R11", "name": "Sub-builds crecen con tiempo", "status": "weakened", "description": "Classic 10.13 > kids 7.68.", "evidence": "Not monotonic"}, {"id": "R12", "name": "4-4cyli es universal", "status": "confirmed", "description": "20 031 usos en corpus 1438.", "evidence": "#1 global"}, {"id": "R13", "name": "Kids modern vocabulary", "status": "weakened", "description": "New pieces post-2000.", "evidence": "12 exclusivas"}, {"id": "R14", "name": "Bigrama 3005→3004 solo kids", "status": "confirmed", "description": "70 ocurrencias.", "evidence": "0 en 80s/90s"}, {"id": "R15", "name": "Kids Y deeper", "status": "weakened", "description": "Y=-168 en kids.", "evidence": "vs -128 en 80s/90s"}, {"id": "R16", "name": "Fabuland identidad propia", "status": "confirmed", "description": "~25 piezas exclusivas.", "evidence": "9.3% custom parts"}, {"id": "R17", "name": "Friends = most decorative", "status": "confirmed", "description": "94% usan 6141.", "evidence": "17 sets"}, {"id": "R18", "name": "Train eje Z-dominante", "status": "weakened", "description": "Boat too.", "evidence": "Ya no exclusivo"}, {"id": "R19", "name": "Space-themed disparan reflejos", "status": "new", "description": "73 sets Space = 87.8% reflejos.", "evidence": "Classic Space 21%"}, {"id": "R20", "name": "756.dat signature Space", "status": "new", "description": "Baseplate Technic 16×32.", "evidence": "#8 global"}, {"id": "R21", "name": "Classic have lowest BFC", "status": "new", "description": "16.4% vs kids 36.5%.", "evidence": "Not monotonic"}, {"id": "R22", "name": "Bigramas slope-slope = Space", "status": "new", "description": "3818↔3820 etc.", "evidence": "4 pares >30"}, {"id": "R23", "name": "Y = +8 LDU = antenas", "status": "new", "description": "1 389 piezas (antenas).", "evidence": "Blacktron/Unitron"}]};</script>
 
 <section id="insights">
   <h2><span class="num">01.</span>The 7 biggest findings</h2>
-  <p class="subhead">The most surprising patterns that emerged from the corpus. Each one is backed by data and a derived rule.</p>
-  <div class="insights-grid">
-
-
-    <div class="insight refuted">
-      <span class="badge">refuted</span>
-      <span class="rule-id">R3</span>
-      <span class="desc"><strong>Reflections are NOT rare</strong></span>
-      <div class="evidence">Space-themed sets have 5-21% reflections — 8-35x more than the cross-corpus average.</div>
-      <div class="evidence"><span class="code">73 sets Space = 87.8% of all 1,463 reflections</span></div>
-    </div>
-
-    <div class="insight refuted">
-      <span class="badge">refuted</span>
-      <span class="rule-id">R10</span>
-      <span class="desc"><strong>BFC does NOT grow with time</strong></span>
-      <div class="evidence">Classic sets (1980s) have LOWER BFC CERTIFY (16.4%) than modern kids (36.5%). Non-monotonic.</div>
-      <div class="evidence"><span class="code">classic 16.4% < 80s/90s 21% < kids 36.5%</span></div>
-    </div>
-
-    <div class="insight new">
-      <span class="badge">new</span>
-      <span class="rule-id">R20</span>
-      <span class="desc"><strong>756.dat is the Space signature</strong></span>
-      <div class="evidence">Baseplate Technic 16x32 was not in top-30 of corpus 100; with corpus 1438 it ranks #8 globally.</div>
-      <div class="evidence"><span class="code">1,627 uses, 1,481 in classic Space alone</span></div>
-    </div>
-
-    <div class="insight confirmed">
-      <span class="badge">confirmed</span>
-      <span class="rule-id">R12</span>
-      <span class="desc"><strong>4-4cyli is universal</strong></span>
-      <div class="evidence">The cylinder primitive is the #1 most-used part in the entire corpus, not an outlier as initially thought.</div>
-      <div class="evidence"><span class="code">20,031 uses in 1,438 sets</span></div>
-    </div>
-
-    <div class="insight new">
-      <span class="badge">new</span>
-      <span class="rule-id">R19</span>
-      <span class="desc"><strong>Space-themed dominate reflections</strong></span>
-      <div class="evidence">87.8% of all reflections come from 73 Space-themed sets (5% of corpus).</div>
-      <div class="evidence"><span class="code">Classic Space 21.14% · Unitron 13.95% · Blacktron I 12.36%</span></div>
-    </div>
-
-    <div class="insight confirmed">
-      <span class="badge">confirmed</span>
-      <span class="rule-id">R14</span>
-      <span class="desc"><strong>3005 -> 3004 is kids-exclusive</strong></span>
-      <div class="evidence">This bigram appears 70 times in kids sets and 0 times in 80s/90s or classic sets.</div>
-      <div class="evidence"><span class="code">Brick 1x1 on 1x2 — modern decoration pattern</span></div>
-    </div>
-
-    <div class="insight refuted">
-      <span class="badge">refuted</span>
-      <span class="rule-id">R4</span>
-      <span class="desc"><strong>Custom parts vary 8x by theme</strong></span>
-      <div class="evidence">Fabuland 9.3% · Friends 4.1% · Classic Town 0% — custom parts are theme-dependent, not rare.</div>
-      <div class="evidence"><span class="code">From 0.2% (classic) to 9.3% (Fabuland)</span></div>
-    </div>
-
+  <p>Each insight links to a derived rule. Click for details.</p>
+  <div class="insights">
+    <div class="insight refuted"><div class="head"><span class="badge">REFUTED</span><span class="rule-id">R3</span></div><div class="desc">Reflections are NOT rare</div><div class="ev">73 Space sets = 87.8% of all 1,463 reflections</div></div>
+    <div class="insight refuted"><div class="head"><span class="badge">REFUTED</span><span class="rule-id">R10</span></div><div class="desc">BFC does NOT grow with time</div><div class="ev">classic 16.4% < kids 36.5% (not monotonic)</div></div>
+    <div class="insight new"><div class="head"><span class="badge">NEW</span><span class="rule-id">R20</span></div><div class="desc">756.dat is Space signature</div><div class="ev">Baseplate Technic 16x32, 1,627 uses (#8 global)</div></div>
+    <div class="insight confirmed"><div class="head"><span class="badge">CONFIRMED</span><span class="rule-id">R12</span></div><div class="desc">4-4cyli is universal</div><div class="ev">20,031 uses in 1,438 sets</div></div>
+    <div class="insight new"><div class="head"><span class="badge">NEW</span><span class="rule-id">R19</span></div><div class="desc">Space-themed dominate reflections</div><div class="ev">Classic Space 21.14% · Unitron 13.95%</div></div>
+    <div class="insight confirmed"><div class="head"><span class="badge">CONFIRMED</span><span class="rule-id">R14</span></div><div class="desc">3005 -> 3004 is kids-exclusive</div><div class="ev">70 occurrences, 0 in 80s/90s</div></div>
+    <div class="insight refuted"><div class="head"><span class="badge">REFUTED</span><span class="rule-id">R4</span></div><div class="desc">Custom parts vary 8x by theme</div><div class="ev">Fabuland 9.3% vs Classic 0%</div></div>
   </div>
 </section>
 
 
 <section id="cohorts">
-  <h2><span class="num">02.</span>Cohort comparison</h2>
-  <p class="subhead">The 8 cohorts cover different eras and themes.</p>
+  <h2><span class="num">02.</span>Cohorts</h2>
+  <p>Eight sampling cohorts that cover the corpus. Cohorts are colored consistently throughout the dashboard.</p>
 
-<div class="grid">
+  <div class="kpi-grid">
 
-    <div class="kpi cohort-80s90s">
+
+    <div class="kpi c-80s90s">
       <div class="kpi-label">80s90s</div>
       <div class="kpi-value">100</div>
-      <div class="kpi-sub">18 670 pieces · 839 sub-builds</div>
+      <div class="kpi-sub">18 670 pc · 839 sb</div>
     </div>
 
-    <div class="kpi cohort-kids">
+    <div class="kpi c-kids">
       <div class="kpi-label">kids</div>
       <div class="kpi-value">200</div>
-      <div class="kpi-sub">42 947 pieces · 1535 sub-builds</div>
+      <div class="kpi-sub">42 947 pc · 1535 sb</div>
     </div>
 
-    <div class="kpi cohort-classic">
+    <div class="kpi c-classic">
       <div class="kpi-label">classic</div>
       <div class="kpi-value">232</div>
-      <div class="kpi-sub">47 143 pieces · 2350 sub-builds</div>
+      <div class="kpi-sub">47 143 pc · 2350 sb</div>
     </div>
 
-    <div class="kpi cohort-classic_gaps">
+    <div class="kpi c-classic_gaps">
       <div class="kpi-label">classic gaps</div>
       <div class="kpi-value">158</div>
-      <div class="kpi-sub">31 830 pieces · 1274 sub-builds</div>
+      <div class="kpi-sub">31 830 pc · 1274 sb</div>
     </div>
 
-    <div class="kpi cohort-modern">
+    <div class="kpi c-modern">
       <div class="kpi-label">modern</div>
       <div class="kpi-value">287</div>
-      <div class="kpi-sub">114 904 pieces · 4128 sub-builds</div>
+      <div class="kpi-sub">114 904 pc · 4128 sb</div>
     </div>
 
-    <div class="kpi cohort-technic">
+    <div class="kpi c-technic">
       <div class="kpi-label">technic</div>
       <div class="kpi-value">175</div>
-      <div class="kpi-sub">169 839 pieces · 5243 sub-builds</div>
+      <div class="kpi-sub">169 839 pc · 5243 sb</div>
     </div>
 
-    <div class="kpi cohort-specialty">
+    <div class="kpi c-specialty">
       <div class="kpi-label">specialty</div>
       <div class="kpi-value">165</div>
-      <div class="kpi-sub">63 592 pieces · 2744 sub-builds</div>
+      <div class="kpi-sub">63 592 pc · 2744 sb</div>
     </div>
 
-    <div class="kpi cohort-licensed">
+    <div class="kpi c-licensed">
       <div class="kpi-label">licensed</div>
       <div class="kpi-value">121</div>
-      <div class="kpi-sub">45 227 pieces · 1961 sub-builds</div>
+      <div class="kpi-sub">45 227 pc · 1961 sb</div>
     </div>
 </div>
 
-<div class="card">
-  <div class="card-title">All cohorts side by side</div>
+<div class="section-2col">
+  <div class="chart-container">
+    <canvas id="cohort-pieces"></canvas>
+  </div>
+  <div class="explanation">
+    <h4>What is this chart?</h4>
+    <p>Total <strong>pieces per cohort</strong>. Each bar shows the cumulative number of LEGO parts analyzed from the MPDs of that cohort. Technic dominates (<span class="metric">170K pieces</span>) due to large Technic sets with thousands of small Technic pieces.</p>
+    <p>The bars are <strong>horizontal bars</strong> sorted by size. Cohort colors match the KPI strip above for visual continuity.</p>
+  </div>
+</div>
+
+
+<div class="section-2col">
+  <div class="chart-container">
+    <canvas id="cohort-radar"></canvas>
+  </div>
+  <div class="explanation">
+    <h4>What is a radar chart?</h4>
+    <p>A <strong>radar chart</strong> shows multiple variables on axes radiating from a center. Each cohort has a colored polygon.</p>
+    <p>Axes (normalized 0-100%): Sets, Pieces, Sub-builds, Custom, BFC, Reflections. <strong>Bigger area = more of everything.</strong></p>
+    <p>Note how Modern covers most axes (big, formal, many pieces) while Classic has zero reflections (the inner dent on that axis).</p>
+  </div>
+</div>
+
+<div class="card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-top:8px">
+  <h3 style="font-size:0.8em;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">All cohorts side-by-side (raw numbers)</h3>
   <table>
-    <thead>
-      <tr><th>Cohort</th><th>Sets</th><th>Pieces</th><th>Sub-builds</th><th>Custom</th><th>BFC</th><th>Reflections</th></tr>
-    </thead>
+    <thead><tr><th>Cohort</th><th>Sets</th><th>Pieces</th><th>Custom</th><th>BFC</th><th>Reflections</th></tr></thead>
     <tbody>
 
 
       <tr>
-        <td><span class="cohort-pill" style="background:#58a6ff;color:#0d1117">80s90s</span></td>
+        <td><span class="pill" style="background:#58a6ff">80s90s</span></td>
         <td class="num">100</td>
         <td class="num">18 670</td>
-        <td class="num">839</td>
         <td class="num">112</td>
-        <td class="num">21/100 (21%)</td>
+        <td class="num">21 (21%)</td>
         <td class="num">50 (0.27%)</td>
       </tr>
 
       <tr>
-        <td><span class="cohort-pill" style="background:#d29922;color:#0d1117">kids</span></td>
+        <td><span class="pill" style="background:#d29922">kids</span></td>
         <td class="num">200</td>
         <td class="num">42 947</td>
-        <td class="num">1 535</td>
         <td class="num">818</td>
-        <td class="num">73/200 (36%)</td>
+        <td class="num">73 (36%)</td>
         <td class="num">107 (0.25%)</td>
       </tr>
 
       <tr>
-        <td><span class="cohort-pill" style="background:#3fb950;color:#0d1117">classic</span></td>
+        <td><span class="pill" style="background:#3fb950">classic</span></td>
         <td class="num">232</td>
         <td class="num">47 143</td>
-        <td class="num">2 350</td>
         <td class="num">107</td>
-        <td class="num">38/232 (16%)</td>
+        <td class="num">38 (16%)</td>
         <td class="num">1 306 (2.77%)</td>
       </tr>
 
       <tr>
-        <td><span class="cohort-pill" style="background:#7ee787;color:#0d1117">classic gaps</span></td>
+        <td><span class="pill" style="background:#7ee787">classic_gaps</span></td>
         <td class="num">158</td>
         <td class="num">31 830</td>
-        <td class="num">1 274</td>
         <td class="num">91</td>
-        <td class="num">41/158 (26%)</td>
+        <td class="num">41 (26%)</td>
         <td class="num">641 (2.01%)</td>
       </tr>
 
       <tr>
-        <td><span class="cohort-pill" style="background:#bc8cff;color:#0d1117">modern</span></td>
+        <td><span class="pill" style="background:#bc8cff">modern</span></td>
         <td class="num">287</td>
         <td class="num">114 904</td>
-        <td class="num">4 128</td>
         <td class="num">769</td>
-        <td class="num">79/287 (28%)</td>
+        <td class="num">79 (28%)</td>
         <td class="num">42 (0.04%)</td>
       </tr>
 
       <tr>
-        <td><span class="cohort-pill" style="background:#f85149;color:#0d1117">technic</span></td>
+        <td><span class="pill" style="background:#f85149">technic</span></td>
         <td class="num">175</td>
         <td class="num">169 839</td>
-        <td class="num">5 243</td>
         <td class="num">1 691</td>
-        <td class="num">138/175 (79%)</td>
+        <td class="num">138 (79%)</td>
         <td class="num">1 162 (0.68%)</td>
       </tr>
 
       <tr>
-        <td><span class="cohort-pill" style="background:#39c5cf;color:#0d1117">specialty</span></td>
+        <td><span class="pill" style="background:#39c5cf">specialty</span></td>
         <td class="num">165</td>
         <td class="num">63 592</td>
-        <td class="num">2 744</td>
         <td class="num">351</td>
-        <td class="num">60/165 (36%)</td>
+        <td class="num">60 (36%)</td>
         <td class="num">112 (0.18%)</td>
       </tr>
 
       <tr>
-        <td><span class="cohort-pill" style="background:#f778ba;color:#0d1117">licensed</span></td>
+        <td><span class="pill" style="background:#f778ba">licensed</span></td>
         <td class="num">121</td>
         <td class="num">45 227</td>
-        <td class="num">1 961</td>
         <td class="num">531</td>
-        <td class="num">60/121 (50%)</td>
+        <td class="num">60 (50%)</td>
         <td class="num">248 (0.55%)</td>
       </tr>
 </tbody></table></div>
-
-<div class="card">
-  <div class="card-title">Total pieces by cohort</div>
-  <svg viewBox="0 0 850 272" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="24" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">80s90s</text><rect x="0" y="0" width="76.94934614546717" height="26" fill="#58a6ff" opacity="0.85" rx="3"/><text x="82.94934614546717" y="24" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">18 670</text></g><g transform="translate(0,34)"><text x="-10" y="24" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">kids</text><rect x="0" y="0" width="177.00822543703154" height="26" fill="#d29922" opacity="0.85" rx="3"/><text x="183.00822543703154" y="24" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">42 947</text></g><g transform="translate(0,68)"><text x="-10" y="24" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">classic</text><rect x="0" y="0" width="194.3022509553165" height="26" fill="#3fb950" opacity="0.85" rx="3"/><text x="200.3022509553165" y="24" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">47 143</text></g><g transform="translate(0,102)"><text x="-10" y="24" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">classic_gaps</text><rect x="0" y="0" width="131.18894953455919" height="26" fill="#7ee787" opacity="0.85" rx="3"/><text x="137.18894953455919" y="24" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">31 830</text></g><g transform="translate(0,136)"><text x="-10" y="24" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">modern</text><rect x="0" y="0" width="473.58262825381684" height="26" fill="#bc8cff" opacity="0.85" rx="3"/><text x="479.58262825381684" y="24" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">114 904</text></g><g transform="translate(0,170)"><text x="-10" y="24" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">technic</text><rect x="0" y="0" width="700.0" height="26" fill="#f85149" opacity="0.85" rx="3"/><text x="706.0" y="24" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">169 839</text></g><g transform="translate(0,204)"><text x="-10" y="24" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">specialty</text><rect x="0" y="0" width="262.097633641272" height="26" fill="#39c5cf" opacity="0.85" rx="3"/><text x="268.097633641272" y="24" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">63 592</text></g><g transform="translate(0,238)"><text x="-10" y="24" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">licensed</text><rect x="0" y="0" width="186.40536037070405" height="26" fill="#f778ba" opacity="0.85" rx="3"/><text x="192.40536037070405" y="24" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">45 227</text></g></svg>
-</div>
-
 </section>
 
-<section id="vocabulary">
+<section id="vocab">
   <h2><span class="num">03.</span>Vocabulary: top parts</h2>
-  <p class="subhead">The top 30 parts by frequency. Rectangle size = usage count.</p>
-
-
-<div class="card">
-  <div class="card-title">Top 25 parts by usage</div>
-  <svg viewBox="0 0 1000 420" width="100%" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="436.74548690567" height="97.95566215681252" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="218.372743452835" y="44.97783107840626" text-anchor="middle" fill="#0d1117" font-size="12" font-family="ui-monospace,monospace" font-weight="700">4-4cyli</text><text x="218.372743452835" y="56.97783107840626" text-anchor="middle" fill="#0d1117" font-size="10" font-family="ui-monospace,monospace">20.0K</text><rect x="0" y="97.95566215681252" width="436.74548690567" height="85.37316908460052" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="218.372743452835" y="137.30891336577943" text-anchor="middle" fill="#0d1117" font-size="10" font-family="ui-monospace,monospace" font-weight="700">2780</text><text x="218.372743452835" y="147.30891336577943" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace">17.5K</text><rect x="0" y="183.32883124141304" width="436.74548690567" height="79.12837947977552" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="218.372743452835" y="219.8930209813008" text-anchor="middle" fill="#0d1117" font-size="9" font-family="ui-monospace,monospace" font-weight="700">3023</text><text x="218.372743452835" y="228.8930209813008" text-anchor="middle" fill="#0d1117" font-size="7" font-family="ui-monospace,monospace">16.2K</text><rect x="0" y="262.4572107211886" width="436.74548690567" height="57.48433970612207" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="218.372743452835" y="288.53271390758295" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">6141</text><text x="218.372743452835" y="296.53271390758295" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">11.8K</text><rect x="0" y="319.94155042731063" width="436.74548690567" height="51.919288358987494" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="218.372743452835" y="343.2345279401377" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">166</text><text x="218.372743452835" y="351.2345279401377" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">10.6K</text><rect x="0" y="371.86083878629813" width="436.74548690567" height="48.13916121370188" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="218.372743452835" y="393.2637527264824" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">3024</text><text x="218.372743452835" y="401.2637527264824" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">9.8K</text><rect x="436.74548690567" y="0" width="423.98169336384433" height="44.057282671272304" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="648.7363335875922" y="19.361974668969484" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">3004</text><text x="648.7363335875922" y="27.361974668969484" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">8.7K</text><rect x="436.74548690567" y="44.057282671272304" width="423.98169336384433" height="42.18336211859528" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="648.7363335875922" y="62.48229706390328" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">u9218</text><text x="648.7363335875922" y="70.48229706390327" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">8.4K</text><rect x="436.74548690567" y="86.24064478986759" width="423.98169336384433" height="41.34211283822683" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="648.7363335875922" y="104.24503454231433" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">98138</text><text x="648.7363335875922" y="112.24503454231433" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">8.2K</text><rect x="436.74548690567" y="127.58275762809441" width="423.98169336384433" height="41.246401842256766" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="648.7363335875922" y="145.53929188255614" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">77</text><text x="648.7363335875922" y="153.53929188255614" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">8.2K</text><rect x="436.74548690567" y="168.8291594703512" width="423.98169336384433" height="40.979418537708696" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="648.7363335875922" y="186.65220207253887" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">6558</text><text x="648.7363335875922" y="194.65220207253887" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">8.1K</text><rect x="436.74548690567" y="209.8085780080599" width="423.98169336384433" height="38.38514680483592" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="648.7363335875922" y="226.3344847438112" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">3710</text><text x="648.7363335875922" y="234.3344847438112" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">7.6K</text><rect x="436.74548690567" y="248.19372481289582" width="423.98169336384433" height="36.28957973517559" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="648.7363335875922" y="263.67184801381694" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">3005</text><text x="648.7363335875922" y="271.67184801381694" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">7.2K</text><rect x="436.74548690567" y="284.48330454807143" width="423.98169336384433" height="34.501295336787564" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="648.7363335875922" y="299.06728554979856" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">3069b</text><text x="648.7363335875922" y="307.06728554979856" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">6.8K</text><rect x="436.74548690567" y="318.984599884859" width="423.98169336384433" height="28.24481865284974" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="648.7363335875922" y="330.4403425446172" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">axlehol8</text><text x="648.7363335875922" y="338.4403425446172" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">5.6K</text><rect x="436.74548690567" y="347.22941853770874" width="423.98169336384433" height="26.854490500863555" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="648.7363335875922" y="357.98999712147383" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">box4o8a</text><text x="648.7363335875922" y="365.98999712147383" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">5.3K</text><rect x="436.74548690567" y="374.0839090385723" width="423.98169336384433" height="23.917674150834774" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="648.7363335875922" y="383.376079447323" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">3020</text><text x="648.7363335875922" y="391.376079447323" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">4.7K</text><rect x="436.74548690567" y="398.0015831894071" width="423.98169336384433" height="21.99841681059298" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="648.7363335875922" y="406.3341249280369" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">3623</text><text x="648.7363335875922" y="414.3341249280369" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">4.4K</text><rect x="860.7271802695143" y="0" width="70.7964642894615" height="128.87688038557033" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="896.125412414245" y="61.7717735261185" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">43093</text><text x="896.125412414245" y="69.7717735261185" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">4.3K</text><rect x="931.5236445589758" y="0" width="68.4763554410241" height="128.87688038557033" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="965.7618222794878" y="61.7717735261185" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">3070b</text><text x="965.7618222794878" y="69.7717735261185" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">4.1K</text><rect x="860.7271802695143" y="128.87688038557033" width="70.8413720177722" height="123.18752738425589" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="896.1478662784004" y="187.8039774110316" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">3010</text><text x="896.1478662784004" y="195.8039774110316" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">4.1K</text><rect x="931.5685522872865" y="128.87688038557033" width="68.43144771271338" height="123.18752738425589" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><text x="965.7842761436432" y="187.8039774110316" text-anchor="middle" fill="#0d1117" font-size="8" font-family="ui-monospace,monospace" font-weight="700">3666</text><text x="965.7842761436432" y="195.8039774110316" text-anchor="middle" fill="#0d1117" font-size="6" font-family="ui-monospace,monospace">3.9K</text><rect x="860.7271802695143" y="252.06440776982623" width="70.5577701439573" height="115.90331532057837" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><rect x="931.2849504134716" y="252.06440776982623" width="68.7150495865283" height="115.90331532057837" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/><rect x="860.7271802695143" y="367.9677230904046" width="139.2728197304856" height="52.03227690959545" fill="#58a6ff" stroke="#0d1117" stroke-width="2" rx="2"/></svg>
-</div>
-
-<div class="card"><div class="card-title">Top 5 parts per cohort</div>
-<h4 style="color:#58a6ff;margin:20px 0 8px">80s90s</h4>
-<svg viewBox="0 0 650 110" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">4-4cyli</text><rect x="0" y="0" width="500.0" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="506.0" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 896</text></g><g transform="translate(0,22)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3023</text><rect x="0" y="0" width="155.59071729957805" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="161.59071729957805" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">590</text></g><g transform="translate(0,44)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3004</text><rect x="0" y="0" width="137.3945147679325" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="143.3945147679325" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">521</text></g><g transform="translate(0,66)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">6141</text><rect x="0" y="0" width="98.10126582278481" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="104.10126582278481" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">372</text></g><g transform="translate(0,88)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3024</text><rect x="0" y="0" width="97.0464135021097" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="103.0464135021097" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">368</text></g></svg>
-<h4 style="color:#d29922;margin:20px 0 8px">kids</h4>
-<svg viewBox="0 0 650 110" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">4-4cyli</text><rect x="0" y="0" width="500.0" height="14" fill="#d29922" opacity="0.85" rx="3"/><text x="506.0" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">3 502</text></g><g transform="translate(0,22)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3023</text><rect x="0" y="0" width="200.02855511136494" height="14" fill="#d29922" opacity="0.85" rx="3"/><text x="206.02855511136494" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 401</text></g><g transform="translate(0,44)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">6141</text><rect x="0" y="0" width="197.31581953169615" height="14" fill="#d29922" opacity="0.85" rx="3"/><text x="203.31581953169615" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 382</text></g><g transform="translate(0,66)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3004</text><rect x="0" y="0" width="193.1753283837807" height="14" fill="#d29922" opacity="0.85" rx="3"/><text x="199.1753283837807" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 353</text></g><g transform="translate(0,88)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3005</text><rect x="0" y="0" width="156.0536836093661" height="14" fill="#d29922" opacity="0.85" rx="3"/><text x="162.0536836093661" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 093</text></g></svg>
-<h4 style="color:#3fb950;margin:20px 0 8px">classic</h4>
-<svg viewBox="0 0 650 110" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3023</text><rect x="0" y="0" width="500.0" height="14" fill="#3fb950" opacity="0.85" rx="3"/><text x="506.0" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 679</text></g><g transform="translate(0,22)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">756</text><rect x="0" y="0" width="441.0363311494938" height="14" fill="#3fb950" opacity="0.85" rx="3"/><text x="447.0363311494938" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 481</text></g><g transform="translate(0,44)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3004</text><rect x="0" y="0" width="422.57296009529483" height="14" fill="#3fb950" opacity="0.85" rx="3"/><text x="428.57296009529483" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 419</text></g><g transform="translate(0,66)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3710</text><rect x="0" y="0" width="292.13817748659915" height="14" fill="#3fb950" opacity="0.85" rx="3"/><text x="298.13817748659915" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">981</text></g><g transform="translate(0,88)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3005</text><rect x="0" y="0" width="291.8403811792734" height="14" fill="#3fb950" opacity="0.85" rx="3"/><text x="297.8403811792734" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">980</text></g></svg>
-<h4 style="color:#7ee787;margin:20px 0 8px">classic_gaps</h4>
-<svg viewBox="0 0 650 110" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3004</text><rect x="0" y="0" width="500.0" height="14" fill="#7ee787" opacity="0.85" rx="3"/><text x="506.0" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">988</text></g><g transform="translate(0,22)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3023</text><rect x="0" y="0" width="457.99595141700405" height="14" fill="#7ee787" opacity="0.85" rx="3"/><text x="463.99595141700405" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">905</text></g><g transform="translate(0,44)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3024</text><rect x="0" y="0" width="367.91497975708506" height="14" fill="#7ee787" opacity="0.85" rx="3"/><text x="373.91497975708506" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">727</text></g><g transform="translate(0,66)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">6141</text><rect x="0" y="0" width="350.2024291497975" height="14" fill="#7ee787" opacity="0.85" rx="3"/><text x="356.2024291497975" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">692</text></g><g transform="translate(0,88)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">756</text><rect x="0" y="0" width="325.9109311740891" height="14" fill="#7ee787" opacity="0.85" rx="3"/><text x="331.9109311740891" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">644</text></g></svg>
-<h4 style="color:#bc8cff;margin:20px 0 8px">modern</h4>
-<svg viewBox="0 0 650 110" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3023</text><rect x="0" y="0" width="500.0" height="14" fill="#bc8cff" opacity="0.85" rx="3"/><text x="506.0" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">5 246</text></g><g transform="translate(0,22)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3024</text><rect x="0" y="0" width="349.12314144109797" height="14" fill="#bc8cff" opacity="0.85" rx="3"/><text x="355.12314144109797" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">3 663</text></g><g transform="translate(0,44)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">6141</text><rect x="0" y="0" width="286.2180709111704" height="14" fill="#bc8cff" opacity="0.85" rx="3"/><text x="292.2180709111704" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">3 003</text></g><g transform="translate(0,66)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3004</text><rect x="0" y="0" width="279.45101029355703" height="14" fill="#bc8cff" opacity="0.85" rx="3"/><text x="285.45101029355703" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">2 932</text></g><g transform="translate(0,88)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3069b</text><rect x="0" y="0" width="277.0682424704537" height="14" fill="#bc8cff" opacity="0.85" rx="3"/><text x="283.0682424704537" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">2 907</text></g></svg>
-<h4 style="color:#f85149;margin:20px 0 8px">technic</h4>
-<svg viewBox="0 0 650 110" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">2780</text><rect x="0" y="0" width="500.0" height="14" fill="#f85149" opacity="0.85" rx="3"/><text x="506.0" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">15 038</text></g><g transform="translate(0,22)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">4-4cyli</text><rect x="0" y="0" width="386.6205612448464" height="14" fill="#f85149" opacity="0.85" rx="3"/><text x="392.6205612448464" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">11 628</text></g><g transform="translate(0,44)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">166</text><rect x="0" y="0" width="337.77763000398994" height="14" fill="#f85149" opacity="0.85" rx="3"/><text x="343.77763000398994" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">10 159</text></g><g transform="translate(0,66)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">u9218</text><rect x="0" y="0" width="265.893070887086" height="14" fill="#f85149" opacity="0.85" rx="3"/><text x="271.893070887086" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">7 997</text></g><g transform="translate(0,88)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">6558</text><rect x="0" y="0" width="250.73148025003323" height="14" fill="#f85149" opacity="0.85" rx="3"/><text x="256.7314802500332" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">7 541</text></g></svg>
-<h4 style="color:#39c5cf;margin:20px 0 8px">specialty</h4>
-<svg viewBox="0 0 650 110" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">98138</text><rect x="0" y="0" width="500.0" height="14" fill="#39c5cf" opacity="0.85" rx="3"/><text x="506.0" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">7 622</text></g><g transform="translate(0,22)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">6141</text><rect x="0" y="0" width="282.0125951193913" height="14" fill="#39c5cf" opacity="0.85" rx="3"/><text x="288.0125951193913" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">4 299</text></g><g transform="translate(0,44)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3023</text><rect x="0" y="0" width="260.62713198635527" height="14" fill="#39c5cf" opacity="0.85" rx="3"/><text x="266.62713198635527" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">3 973</text></g><g transform="translate(0,66)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3024</text><rect x="0" y="0" width="167.86932563631592" height="14" fill="#39c5cf" opacity="0.85" rx="3"/><text x="173.86932563631592" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">2 559</text></g><g transform="translate(0,88)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3069b</text><rect x="0" y="0" width="134.01994227236946" height="14" fill="#39c5cf" opacity="0.85" rx="3"/><text x="140.01994227236946" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">2 043</text></g></svg>
-<h4 style="color:#f778ba;margin:20px 0 8px">licensed</h4>
-<svg viewBox="0 0 650 110" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3023</text><rect x="0" y="0" width="500.0" height="14" fill="#f778ba" opacity="0.85" rx="3"/><text x="506.0" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 784</text></g><g transform="translate(0,22)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">6141</text><rect x="0" y="0" width="288.677130044843" height="14" fill="#f778ba" opacity="0.85" rx="3"/><text x="294.677130044843" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 030</text></g><g transform="translate(0,44)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3710</text><rect x="0" y="0" width="272.7017937219731" height="14" fill="#f778ba" opacity="0.85" rx="3"/><text x="278.7017937219731" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">973</text></g><g transform="translate(0,66)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">2780</text><rect x="0" y="0" width="269.6188340807175" height="14" fill="#f778ba" opacity="0.85" rx="3"/><text x="275.6188340807175" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">962</text></g><g transform="translate(0,88)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3020</text><rect x="0" y="0" width="216.08744394618833" height="14" fill="#f778ba" opacity="0.85" rx="3"/><text x="222.08744394618833" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">771</text></g></svg>
-</div>
+  <p>The most-used LEGO parts. Click any cell for details.</p>
+  <div class="section-2col">
+    <div class="chart-container" style="height:340px">
+      <div id="treemap" style="display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(6,1fr);gap:2px;height:100%"></div>
+    </div>
+    <div class="explanation">
+      <h4>What is a treemap?</h4>
+      <p>A <strong>treemap</strong> divides a rectangle into tiles sized proportionally to a value. Each tile is a part; the area = usage count.</p>
+      <p><span class="metric">4-4cyli.dat</span> (Technic cylinder) occupies <span class="metric">~36%</span> of the visible area: 20,031 uses, the most-used primitive in the corpus.</p>
+      <p>Hover for part names. <strong>Click</strong> a tile to highlight it across the dashboard.</p>
+    </div>
+  </div>
+  <div class="section-2col reversed" style="margin-top:18px">
+    <div class="explanation reversed">
+      <h4>How to read the treemap</h4>
+      <p>Parts are sorted by frequency. The first 4-5 parts cover the bulk. The remaining 20 fill the gaps.</p>
+      <p><strong>4-4cyli.dat</strong> is the Technic cylinder primitive used for pin holes, axles, and pivots. Its dominance reflects how Technic sets (175 in the corpus) use thousands of these.</p>
+    </div>
+    <div class="chart-container" style="height:340px">
+      <canvas id="vocab-bars"></canvas>
+    </div>
+  </div>
 </section>
+
 
 <section id="ylayers">
-  <h2><span class="num">04.</span>Vertical rhythm (Y-layers)</h2>
-  <p class="subhead">Y coordinates are the height of each piece in LDU. Multiples of 8 (plate) or 24 (brick) are canonical.</p>
-
-
-<div class="card">
-  <div class="card-title">Top Y-layers by cohort (top-5 each)</div>
-  <svg viewBox="0 0 750 800" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">80s9 0.0</text><rect x="0" y="0" width="18.235907501686807" height="12" fill="#58a6ff" opacity="0.85" rx="3"/><text x="24.235907501686807" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">991</text></g><g transform="translate(0,20)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">80s9 -24.0</text><rect x="0" y="0" width="17.334232963258295" height="12" fill="#58a6ff" opacity="0.85" rx="3"/><text x="23.334232963258295" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">942</text></g><g transform="translate(0,40)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">80s9 -32.0</text><rect x="0" y="0" width="12.25541311415077" height="12" fill="#58a6ff" opacity="0.85" rx="3"/><text x="18.25541311415077" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">666</text></g><g transform="translate(0,60)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">80s9 -8.0</text><rect x="0" y="0" width="11.960988775072073" height="12" fill="#58a6ff" opacity="0.85" rx="3"/><text x="17.960988775072074" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">650</text></g><g transform="translate(0,80)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">80s9 -56.0</text><rect x="0" y="0" width="10.102435134637796" height="12" fill="#58a6ff" opacity="0.85" rx="3"/><text x="16.102435134637794" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">549</text></g><g transform="translate(0,100)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">kids -24.0</text><rect x="0" y="0" width="48.13837943936699" height="12" fill="#d29922" opacity="0.85" rx="3"/><text x="54.13837943936699" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">2 616</text></g><g transform="translate(0,120)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">kids -8.0</text><rect x="0" y="0" width="43.66680978960927" height="12" fill="#d29922" opacity="0.85" rx="3"/><text x="49.66680978960927" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">2 373</text></g><g transform="translate(0,140)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">kids 0.0</text><rect x="0" y="0" width="37.50230019014905" height="12" fill="#d29922" opacity="0.85" rx="3"/><text x="43.50230019014905" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">2 038</text></g><g transform="translate(0,160)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">kids -32.0</text><rect x="0" y="0" width="26.516592038275164" height="12" fill="#d29922" opacity="0.85" rx="3"/><text x="32.516592038275164" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 441</text></g><g transform="translate(0,180)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">kids -16.0</text><rect x="0" y="0" width="26.222167699196465" height="12" fill="#d29922" opacity="0.85" rx="3"/><text x="32.22216769919646" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 425</text></g><g transform="translate(0,200)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">clas 0.0</text><rect x="0" y="0" width="62.693982702570075" height="12" fill="#3fb950" opacity="0.85" rx="3"/><text x="68.69398270257008" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">3 407</text></g><g transform="translate(0,220)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">clas -8.0</text><rect x="0" y="0" width="55.53579095871925" height="12" fill="#3fb950" opacity="0.85" rx="3"/><text x="61.53579095871925" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">3 018</text></g><g transform="translate(0,240)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">clas -24.0</text><rect x="0" y="0" width="44.494878243268104" height="12" fill="#3fb950" opacity="0.85" rx="3"/><text x="50.494878243268104" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">2 418</text></g><g transform="translate(0,260)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">clas -16.0</text><rect x="0" y="0" width="30.58332822179967" height="12" fill="#3fb950" opacity="0.85" rx="3"/><text x="36.58332822179967" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 662</text></g><g transform="translate(0,280)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">clas -32.0</text><rect x="0" y="0" width="30.30730540391339" height="12" fill="#3fb950" opacity="0.85" rx="3"/><text x="36.30730540391339" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 647</text></g><g transform="translate(0,300)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">clas -24.0</text><rect x="0" y="0" width="28.135925903207998" height="12" fill="#7ee787" opacity="0.85" rx="3"/><text x="34.135925903208" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 529</text></g><g transform="translate(0,320)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">clas -48.0</text><rect x="0" y="0" width="18.677544010304853" height="12" fill="#7ee787" opacity="0.85" rx="3"/><text x="24.677544010304853" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 015</text></g><g transform="translate(0,340)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">clas -64.0</text><rect x="0" y="0" width="18.143899895724715" height="12" fill="#7ee787" opacity="0.85" rx="3"/><text x="24.143899895724715" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">986</text></g><g transform="translate(0,360)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">clas -8.0</text><rect x="0" y="0" width="17.51824817518248" height="12" fill="#7ee787" opacity="0.85" rx="3"/><text x="23.51824817518248" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">952</text></g><g transform="translate(0,380)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">clas -72.0</text><rect x="0" y="0" width="17.40783904802797" height="12" fill="#7ee787" opacity="0.85" rx="3"/><text x="23.40783904802797" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">946</text></g><g transform="translate(0,400)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">mode -8.0</text><rect x="0" y="0" width="190.67656259584126" height="12" fill="#bc8cff" opacity="0.85" rx="3"/><text x="196.67656259584126" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">10 362</text></g><g transform="translate(0,420)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">mode 0.0</text><rect x="0" y="0" width="157.517021407103" height="12" fill="#bc8cff" opacity="0.85" rx="3"/><text x="163.517021407103" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">8 560</text></g><g transform="translate(0,440)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">mode -24.0</text><rect x="0" y="0" width="119.90431208979943" height="12" fill="#bc8cff" opacity="0.85" rx="3"/><text x="125.90431208979943" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">6 516</text></g><g transform="translate(0,460)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">mode -32.0</text><rect x="0" y="0" width="96.497577133043" height="12" fill="#bc8cff" opacity="0.85" rx="3"/><text x="102.497577133043" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">5 244</text></g><g transform="translate(0,480)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">mode -16.0</text><rect x="0" y="0" width="76.12709317303565" height="12" fill="#bc8cff" opacity="0.85" rx="3"/><text x="82.12709317303565" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">4 137</text></g><g transform="translate(0,500)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">tech 0.0</text><rect x="0" y="0" width="600.0" height="12" fill="#f85149" opacity="0.85" rx="3"/><text x="606.0" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">32 606</text></g><g transform="translate(0,520)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">tech -20.0</text><rect x="0" y="0" width="151.61013310433665" height="12" fill="#f85149" opacity="0.85" rx="3"/><text x="157.61013310433665" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">8 239</text></g><g transform="translate(0,540)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">tech -40.0</text><rect x="0" y="0" width="118.9842360301785" height="12" fill="#f85149" opacity="0.85" rx="3"/><text x="124.9842360301785" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">6 466</text></g><g transform="translate(0,560)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">tech +20.0</text><rect x="0" y="0" width="92.8356744157517" height="12" fill="#f85149" opacity="0.85" rx="3"/><text x="98.8356744157517" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">5 045</text></g><g transform="translate(0,580)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">tech -60.0</text><rect x="0" y="0" width="70.735447463657" height="12" fill="#f85149" opacity="0.85" rx="3"/><text x="76.735447463657" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">3 844</text></g><g transform="translate(0,600)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">spec -8.0</text><rect x="0" y="0" width="302.2817886278599" height="12" fill="#39c5cf" opacity="0.85" rx="3"/><text x="308.2817886278599" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">16 427</text></g><g transform="translate(0,620)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">spec 0.0</text><rect x="0" y="0" width="93.35091700913942" height="12" fill="#39c5cf" opacity="0.85" rx="3"/><text x="99.35091700913942" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">5 073</text></g><g transform="translate(0,640)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">spec -16.0</text><rect x="0" y="0" width="86.35833895602038" height="12" fill="#39c5cf" opacity="0.85" rx="3"/><text x="92.35833895602038" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">4 693</text></g><g transform="translate(0,660)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">spec -24.0</text><rect x="0" y="0" width="66.17187020793719" height="12" fill="#39c5cf" opacity="0.85" rx="3"/><text x="72.17187020793719" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">3 596</text></g><g transform="translate(0,680)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">spec -32.0</text><rect x="0" y="0" width="45.3781512605042" height="12" fill="#39c5cf" opacity="0.85" rx="3"/><text x="51.3781512605042" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">2 466</text></g><g transform="translate(0,700)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">lice 0.0</text><rect x="0" y="0" width="85.18064159970558" height="12" fill="#f778ba" opacity="0.85" rx="3"/><text x="91.18064159970558" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">4 629</text></g><g transform="translate(0,720)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">lice -8.0</text><rect x="0" y="0" width="61.0378457952524" height="12" fill="#f778ba" opacity="0.85" rx="3"/><text x="67.0378457952524" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">3 317</text></g><g transform="translate(0,740)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">lice -24.0</text><rect x="0" y="0" width="49.426485922836285" height="12" fill="#f778ba" opacity="0.85" rx="3"/><text x="55.426485922836285" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">2 686</text></g><g transform="translate(0,760)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">lice -32.0</text><rect x="0" y="0" width="33.14113966754585" height="12" fill="#f778ba" opacity="0.85" rx="3"/><text x="39.14113966754585" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 801</text></g><g transform="translate(0,780)"><text x="-10" y="10" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">lice -16.0</text><rect x="0" y="0" width="31.908237747653803" height="12" fill="#f778ba" opacity="0.85" rx="3"/><text x="37.9082377476538" y="10" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 734</text></g></svg>
-</div>
-
-
-<div class="card">
-  <div class="card-title">Top 15 Y-layers (cross-corpus)</div>
-  <svg viewBox="0 0 750 330" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">0.0</text><rect x="0" y="0" width="600.0" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="606.0" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">58 236</text></g><g transform="translate(0,22)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">-8.0</text><rect x="0" y="0" width="390.91283742015247" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="396.91283742015247" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">37 942</text></g><g transform="translate(0,44)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">-24.0</text><rect x="0" y="0" width="213.91922522151245" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="219.91922522151245" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">20 763</text></g><g transform="translate(0,66)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">-40.0</text><rect x="0" y="0" width="172.40881928703897" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="178.40881928703897" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">16 734</text></g><g transform="translate(0,88)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">-16.0</text><rect x="0" y="0" width="155.1823614259221" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="161.1823614259221" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">15 062</text></g><g transform="translate(0,110)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">-32.0</text><rect x="0" y="0" width="148.44426128168143" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="154.44426128168143" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">14 408</text></g><g transform="translate(0,132)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">-48.0</text><rect x="0" y="0" width="112.41500103029054" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="118.41500103029054" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">10 911</text></g><g transform="translate(0,154)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">-20.0</text><rect x="0" y="0" width="93.03523593653411" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="99.03523593653411" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">9 030</text></g><g transform="translate(0,176)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">-56.0</text><rect x="0" y="0" width="87.57469606429014" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="93.57469606429014" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">8 500</text></g><g transform="translate(0,198)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">-80.0</text><rect x="0" y="0" width="81.93900679991758" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="87.93900679991758" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">7 953</text></g><g transform="translate(0,220)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">-72.0</text><rect x="0" y="0" width="68.87492272820936" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="74.87492272820936" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">6 685</text></g><g transform="translate(0,242)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">-64.0</text><rect x="0" y="0" width="61.99258190809809" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="67.99258190809809" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">6 017</text></g><g transform="translate(0,264)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">20.0</text><rect x="0" y="0" width="53.36905007212034" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="59.36905007212034" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">5 180</text></g><g transform="translate(0,286)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">10.0</text><rect x="0" y="0" width="50.24726973006388" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="56.24726973006388" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">4 877</text></g><g transform="translate(0,308)"><text x="-10" y="12" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">8.0</text><rect x="0" y="0" width="49.57758087780754" height="14" fill="#58a6ff" opacity="0.85" rx="3"/><text x="55.57758087780754" y="12" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">4 812</text></g></svg>
-</div>
-
+  <h2><span class="num">04.</span>Y-layers (vertical rhythm)</h2>
+  <p>How high pieces sit in models. Multiples of 8 = plate, 24 = brick.</p>
+  <div class="section-2col">
+    <div class="chart-container">
+      <canvas id="y-bars"></canvas>
+    </div>
+    <div class="explanation">
+      <h4>What are Y-layers?</h4>
+      <p>The Y-axis in LDraw is <strong>vertical</strong>. Y=0 is the ground; Y=-24 is one brick up. Most pieces sit at <strong>multiples of 8 LDU</strong> (plate height).</p>
+      <p>The bar chart shows the <strong>15 most common Y values</strong> across all 534K pieces. Notice the spike at Y=0 (base plane) and the alternation -8 / -24 (plate, brick, plate, brick...).</p>
+    </div>
+  </div>
 </section>
 
-<section id="deltas">
+
+<section id="chaining">
   <h2><span class="num">05.</span>Chaining: how pieces fit together</h2>
-  <p class="subhead">Deltas are the (dx, dy, dz) between consecutive pieces. Multiples of 20 in X/Z = stud fit.</p>
+  <p>Deltas (Δx, Δy, Δz) measure the offset between consecutive placed pieces.</p>
 
+  <div class="section-2col">
+    <div class="chart-container">
+      <canvas id="deltas-bars"></canvas>
+    </div>
+    <div class="explanation">
+      <h4>What are deltas?</h4>
+      <p>When an LDraw file says <code>place piece A at (0,0,0), then piece B at (20, -8, 0)</code>, the <strong>delta</strong> is (20, -8, 0) — meaning "20 LDU in +X, 8 LDU down".</p>
+      <p>Multiples of <strong>20 LDU</strong> in X/Z = perfect stud alignment. Multiples of <strong>8 LDU</strong> in Y = plate height.</p>
+    </div>
+  </div>
 
-<div class="card">
-  <div class="card-title">Top 10 deltas (offset between consecutive pieces)</div>
-  <svg viewBox="0 0 750 260" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">(20, 0, 0)</text><rect x="0" y="0" width="600.0" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="606.0" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">17 714</text></g><g transform="translate(0,26)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">(0, 0, 0)</text><rect x="0" y="0" width="342.74585073952807" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="348.74585073952807" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">10 119</text></g><g transform="translate(0,52)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">(40, 0, 0)</text><rect x="0" y="0" width="263.6897369312408" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="269.6897369312408" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">7 785</text></g><g transform="translate(0,78)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">(0, -8, 0)</text><rect x="0" y="0" width="255.12024387490123" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="261.12024387490123" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">7 532</text></g><g transform="translate(0,104)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">(0, 0, -20)</text><rect x="0" y="0" width="204.41458733205374" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="210.41458733205374" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">6 035</text></g><g transform="translate(0,130)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">(60, 0, 0)</text><rect x="0" y="0" width="196.2176809303376" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="202.2176809303376" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">5 793</text></g><g transform="translate(0,156)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">(0, 0, 40)</text><rect x="0" y="0" width="186.29332731173085" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="192.29332731173085" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">5 500</text></g><g transform="translate(0,182)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">(0, 0, -40)</text><rect x="0" y="0" width="185.5820255165406" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="191.5820255165406" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">5 479</text></g><g transform="translate(0,208)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">(0, 0, 20)</text><rect x="0" y="0" width="175.82702946821723" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="181.82702946821723" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">5 191</text></g><g transform="translate(0,234)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">(-40, 0, 0)</text><rect x="0" y="0" width="155.7073501185503" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="161.7073501185503" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">4 597</text></g></svg>
-</div>
-
-
-<div class="card">
-  <div class="card-title">Top 12 bigrams (piece A -> piece B)</div>
-  <svg viewBox="0 0 850 288" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="14" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">4-4cyli -> 4-4cyli</text><rect x="0" y="0" width="700.0" height="16" fill="#58a6ff" opacity="0.85" rx="3"/><text x="706.0" y="14" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">19 842</text></g><g transform="translate(0,24)"><text x="-10" y="14" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">166 -> 166</text><rect x="0" y="0" width="370.70859792359647" height="16" fill="#58a6ff" opacity="0.85" rx="3"/><text x="376.70859792359647" y="14" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">10 508</text></g><g transform="translate(0,48)"><text x="-10" y="14" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">2780 -> 2780</text><rect x="0" y="0" width="321.5300876927729" height="16" fill="#58a6ff" opacity="0.85" rx="3"/><text x="327.5300876927729" y="14" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">9 114</text></g><g transform="translate(0,72)"><text x="-10" y="14" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">u9218 -> u9218</text><rect x="0" y="0" width="294.3654873500655" height="16" fill="#58a6ff" opacity="0.85" rx="3"/><text x="300.3654873500655" y="14" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">8 344</text></g><g transform="translate(0,96)"><text x="-10" y="14" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">77 -> 77</text><rect x="0" y="0" width="286.7805664751537" height="16" fill="#58a6ff" opacity="0.85" rx="3"/><text x="292.7805664751537" y="14" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">8 129</text></g><g transform="translate(0,120)"><text x="-10" y="14" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">98138 -> 98138</text><rect x="0" y="0" width="257.9225884487451" height="16" fill="#58a6ff" opacity="0.85" rx="3"/><text x="263.9225884487451" y="14" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">7 311</text></g><g transform="translate(0,144)"><text x="-10" y="14" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">6141 -> 6141</text><rect x="0" y="0" width="247.26842052212479" height="16" fill="#58a6ff" opacity="0.85" rx="3"/><text x="253.26842052212479" y="14" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">7 009</text></g><g transform="translate(0,168)"><text x="-10" y="14" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3023 -> 3023</text><rect x="0" y="0" width="216.9992944259651" height="16" fill="#58a6ff" opacity="0.85" rx="3"/><text x="222.9992944259651" y="14" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">6 151</text></g><g transform="translate(0,192)"><text x="-10" y="14" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">axlehol8 -> axlehol8</text><rect x="0" y="0" width="196.64348351980647" height="16" fill="#58a6ff" opacity="0.85" rx="3"/><text x="202.64348351980647" y="14" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">5 574</text></g><g transform="translate(0,216)"><text x="-10" y="14" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">box4o8a -> box4o8a</text><rect x="0" y="0" width="187.43574236468098" height="16" fill="#58a6ff" opacity="0.85" rx="3"/><text x="193.43574236468098" y="14" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">5 313</text></g><g transform="translate(0,240)"><text x="-10" y="14" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3024 -> 3024</text><rect x="0" y="0" width="156.0376978127205" height="16" fill="#58a6ff" opacity="0.85" rx="3"/><text x="162.0376978127205" y="14" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">4 423</text></g><g transform="translate(0,264)"><text x="-10" y="14" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3004 -> 3004</text><rect x="0" y="0" width="137.55165809898196" height="16" fill="#58a6ff" opacity="0.85" rx="3"/><text x="143.55165809898196" y="14" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">3 899</text></g></svg>
-</div>
-
+  <div class="section-2col reversed" style="margin-top:14px">
+    <div class="explanation reversed">
+      <h4>What are bigrams?</h4>
+      <p>A <strong>bigram</strong> is a 2-piece sequence: which part B tends to follow which part A. They reveal assembly patterns.</p>
+      <p>E.g., <span class="code">3004 -> 3004</span> = "another brick 1x2 follows the previous brick 1x2" (90% of bigrams are self-bigrams, meaning rows of the same part).</p>
+    </div>
+    <div class="chart-container">
+      <canvas id="bigrams-bars"></canvas>
+    </div>
+  </div>
 </section>
+
 
 <section id="themes">
   <h2><span class="num">06.</span>Themes: LEGO vocabulary by universe</h2>
-  <p class="subhead">152 themes appear in the corpus.</p>
-
-
-<div class="card">
-  <div class="card-title">Top 15 themes by total pieces</div>
-  <svg viewBox="0 0 900 390" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Technic</text><rect x="0" y="0" width="750.0" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="756.0" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">152 331</text></g><g transform="translate(0,26)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Creator › Creator Expert</text><rect x="0" y="0" width="152.37213699115742" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="158.37213699115742" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">30 948</text></g><g transform="translate(0,52)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Modular Buildings</text><rect x="0" y="0" width="123.71250763140792" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="129.7125076314079" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">25 127</text></g><g transform="translate(0,78)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Town › Classic Town</text><rect x="0" y="0" width="103.8659235480631" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="109.8659235480631" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">21 096</text></g><g transform="translate(0,104)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Icons</text><rect x="0" y="0" width="92.49266400141796" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="98.49266400141796" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">18 786</text></g><g transform="translate(0,130)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Creator › Creator 3-in-1</text><rect x="0" y="0" width="82.35027670008076" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="88.35027670008076" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">16 726</text></g><g transform="translate(0,156)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Architecture</text><rect x="0" y="0" width="78.49518482777636" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="84.49518482777636" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">15 943</text></g><g transform="translate(0,182)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">rs › Ultimate Collector Series</text><rect x="0" y="0" width="72.64115642909191" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="78.64115642909191" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">14 754</text></g><g transform="translate(0,208)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">LEGO Ideas and CUUSOO</text><rect x="0" y="0" width="68.33802705949545" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="74.33802705949545" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">13 880</text></g><g transform="translate(0,234)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Star Wars</text><rect x="0" y="0" width="65.19191760048841" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="71.19191760048841" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">13 241</text></g><g transform="translate(0,260)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Brickheadz</text><rect x="0" y="0" width="53.611871516631545" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="59.611871516631545" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">10 889</text></g><g transform="translate(0,286)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">LEGO Art</text><rect x="0" y="0" width="52.696102566122455" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="58.696102566122455" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">10 703</text></g><g transform="translate(0,312)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Technic › Star Wars</text><rect x="0" y="0" width="52.69117907714123" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="58.69117907714123" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">10 702</text></g><g transform="translate(0,338)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Classic Town</text><rect x="0" y="0" width="49.24473679027906" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="55.24473679027906" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">10 002</text></g><g transform="translate(0,364)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Racers</text><rect x="0" y="0" width="48.693306024381116" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="54.693306024381116" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">9 890</text></g></svg>
-</div>
-
-
-<div class="card">
-  <div class="card-title">Theme breakdown (top 20 by pieces)</div>
+  <p>152 themes appear in the corpus. The top 15 are below.</p>
+  <div class="section-2col">
+    <div class="chart-container">
+      <canvas id="themes-bars"></canvas>
+    </div>
+    <div class="explanation">
+      <h4>What is this chart?</h4>
+      <p><strong>Horizontal bars</strong> of the top 15 LEGO themes by total pieces. Notice how <span class="code">Town > Classic Town</span> dominates with 18,819 pieces — Town/City is the LEGO backbone.</p>
+      <p>The Pirates bar is large (6,319 pieces from only 7 sets) due to two mega-ships (6286 + 6285).</p>
+    </div>
+  </div>
   <table>
     <thead><tr><th>Theme</th><th>Sets</th><th>Total pieces</th></tr></thead>
     <tbody>
@@ -474,69 +478,71 @@
 <tr><td>Star Wars</td><td class="num">64</td><td class="num">13 241</td></tr>
 <tr><td>Brickheadz</td><td class="num">76</td><td class="num">10 889</td></tr>
 <tr><td>LEGO Art</td><td class="num">1</td><td class="num">10 703</td></tr>
-<tr><td>Technic > Star Wars</td><td class="num">3</td><td class="num">10 702</td></tr>
-<tr><td>Classic Town</td><td class="num">73</td><td class="num">10 002</td></tr>
-<tr><td>Racers</td><td class="num">76</td><td class="num">9 890</td></tr>
-</tbody></table></div>
-</section>
+</tbody></table></div></section>
 
 <section id="reflections">
   <h2><span class="num">07.</span>Reflections & BFC: the Space surprise</h2>
-  <p class="subhead">The biggest revelation of the corpus: Space-themed sets use reflections heavily.</p>
+  <p>The biggest revelation: Space-themed sets use reflections heavily.</p>
+  <div class="section-2col">
+    <div class="chart-container">
+      <canvas id="scatter"></canvas>
+    </div>
+    <div class="explanation">
+      <h4>What is a scatter plot?</h4>
+      <p>Each dot is one theme. <strong>X axis</strong> = % of sets with BFC CERTIFY. <strong>Y axis</strong> = % of pieces with reflections (matrices with det &lt; 0).</p>
+      <p>The <strong style="color:var(--red)">red dots in the top-right</strong> are Space-themed sets — they break the convention more than anywhere else.</p>
+      <p>Classic Town (109 sets) sits in the lower-left: low reflections, modest BFC.</p>
+    </div>
+  </div>
 
-
-<div class="card">
-  <div class="card-title">BFC ratio vs Reflections ratio per theme (top 8 by reflections)</div>
-  <svg viewBox="0 0 900 420" width="100%" xmlns="http://www.w3.org/2000/svg"><line x1="200" y1="370" x2="870" y2="370" stroke="#30363d"/><line x1="200" y1="30" x2="200" y2="370" stroke="#30363d"/><line x1="200" y1="98.0" x2="870" y2="98.0" stroke="#21262d" stroke-dasharray="2,2"/><line x1="200" y1="166.0" x2="870" y2="166.0" stroke="#21262d" stroke-dasharray="2,2"/><line x1="200" y1="234.0" x2="870" y2="234.0" stroke="#21262d" stroke-dasharray="2,2"/><line x1="200" y1="302.0" x2="870" y2="302.0" stroke="#21262d" stroke-dasharray="2,2"/><text x="535.0" y="405" text-anchor="middle" fill="#8b949e" font-size="11">BFC CERTIFY ratio (%)</text><text x="15" y="200.0" text-anchor="middle" fill="#8b949e" font-size="11" transform="rotate(-90 15 200.0)">Reflections ratio (%)</text><text x="192" y="373.0" text-anchor="end" fill="#6e7681" font-size="9" font-family="ui-monospace,monospace">0.0%</text><text x="192" y="305.0" text-anchor="end" fill="#6e7681" font-size="9" font-family="ui-monospace,monospace">7.3%</text><text x="192" y="237.0" text-anchor="end" fill="#6e7681" font-size="9" font-family="ui-monospace,monospace">14.5%</text><text x="192" y="169.0" text-anchor="end" fill="#6e7681" font-size="9" font-family="ui-monospace,monospace">21.8%</text><text x="192" y="101.0" text-anchor="end" fill="#6e7681" font-size="9" font-family="ui-monospace,monospace">29.1%</text><text x="192" y="33.0" text-anchor="end" fill="#6e7681" font-size="9" font-family="ui-monospace,monospace">36.4%</text><text x="200.0" y="385" text-anchor="middle" fill="#6e7681" font-size="9" font-family="ui-monospace,monospace">0%</text><text x="334.0" y="385" text-anchor="middle" fill="#6e7681" font-size="9" font-family="ui-monospace,monospace">22%</text><text x="468.0" y="385" text-anchor="middle" fill="#6e7681" font-size="9" font-family="ui-monospace,monospace">44%</text><text x="602.0" y="385" text-anchor="middle" fill="#6e7681" font-size="9" font-family="ui-monospace,monospace">66%</text><text x="736.0" y="385" text-anchor="middle" fill="#6e7681" font-size="9" font-family="ui-monospace,monospace">88%</text><text x="870.0" y="385" text-anchor="middle" fill="#6e7681" font-size="9" font-family="ui-monospace,monospace">110%</text><circle cx="809.090909090909" cy="60.909090909090935" r="6" fill="#f85149" opacity="0.85" stroke="#0d1117" stroke-width="1"/><text x="819.090909090909" y="63.909090909090935" fill="#e6edf3" font-size="9" font-family="ui-monospace,monospace">Technic › Competit</text><circle cx="200.0" cy="172.3483712330504" r="6" fill="#f85149" opacity="0.85" stroke="#0d1117" stroke-width="1"/><text x="210.0" y="175.3483712330504" fill="#e6edf3" font-size="9" font-family="ui-monospace,monospace">Classic Space</text><circle cx="200.0" cy="185.65677804113466" r="6" fill="#f85149" opacity="0.85" stroke="#0d1117" stroke-width="1"/><text x="210.0" y="188.65677804113466" fill="#e6edf3" font-size="9" font-family="ui-monospace,monospace">Space › Blacktron </text><circle cx="200.0" cy="232.7150364821383" r="6" fill="#f85149" opacity="0.85" stroke="#0d1117" stroke-width="1"/><text x="210.0" y="235.7150364821383" fill="#e6edf3" font-size="9" font-family="ui-monospace,monospace">Space › Blacktron </text><circle cx="352.27272727272725" cy="239.62234691040277" r="6" fill="#f85149" opacity="0.85" stroke="#0d1117" stroke-width="1"/><text x="362.27272727272725" y="242.62234691040277" fill="#e6edf3" font-size="9" font-family="ui-monospace,monospace">Unitron</text><circle cx="200.0" cy="254.5020503557089" r="6" fill="#f85149" opacity="0.85" stroke="#0d1117" stroke-width="1"/><text x="210.0" y="257.5020503557089" fill="#e6edf3" font-size="9" font-family="ui-monospace,monospace">Blacktron I</text><circle cx="200.0" cy="295.0029647784322" r="6" fill="#f85149" opacity="0.85" stroke="#0d1117" stroke-width="1"/><text x="210.0" y="298.0029647784322" fill="#e6edf3" font-size="9" font-family="ui-monospace,monospace">M:Tron</text><circle cx="200.0" cy="303.8474439374219" r="6" fill="#f85149" opacity="0.85" stroke="#0d1117" stroke-width="1"/><text x="210.0" y="306.8474439374219" fill="#e6edf3" font-size="9" font-family="ui-monospace,monospace">Space Police I</text></svg>
-</div>
-
-
-<div class="card">
-  <div class="card-title">Top 10 themes by absolute reflections count</div>
-  <svg viewBox="0 0 750 260" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Technic › Competition</text><rect x="0" y="0" width="600.0" height="18" fill="#f85149" opacity="0.85" rx="3"/><text x="606.0" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">902</text></g><g transform="translate(0,26)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Classic Space</text><rect x="0" y="0" width="130.3769401330377" height="18" fill="#f85149" opacity="0.85" rx="3"/><text x="136.3769401330377" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">196</text></g><g transform="translate(0,52)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Space › Blacktron II</text><rect x="0" y="0" width="121.72949002217295" height="18" fill="#f85149" opacity="0.85" rx="3"/><text x="127.72949002217295" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">183</text></g><g transform="translate(0,78)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Space › Blacktron I</text><rect x="0" y="0" width="129.04656319290467" height="18" fill="#f85149" opacity="0.85" rx="3"/><text x="135.04656319290467" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">194</text></g><g transform="translate(0,104)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Unitron</text><rect x="0" y="0" width="230.82039911308203" height="18" fill="#f85149" opacity="0.85" rx="3"/><text x="236.82039911308203" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">347</text></g><g transform="translate(0,130)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Space › Spyrius</text><rect x="0" y="0" width="33.25942350332594" height="18" fill="#f85149" opacity="0.85" rx="3"/><text x="39.25942350332594" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">50</text></g><g transform="translate(0,156)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Blacktron I</text><rect x="0" y="0" width="127.71618625277162" height="18" fill="#f85149" opacity="0.85" rx="3"/><text x="133.71618625277162" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">192</text></g><g transform="translate(0,182)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">The LEGO Movie</text><rect x="0" y="0" width="131.70731707317074" height="18" fill="#f85149" opacity="0.85" rx="3"/><text x="137.70731707317074" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">198</text></g><g transform="translate(0,208)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">Town › City Center</text><rect x="0" y="0" width="32.59423503325942" height="18" fill="#f85149" opacity="0.85" rx="3"/><text x="38.59423503325942" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">49</text></g><g transform="translate(0,234)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">M:Tron</text><rect x="0" y="0" width="65.85365853658537" height="18" fill="#f85149" opacity="0.85" rx="3"/><text x="71.85365853658537" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">99</text></g></svg>
-</div>
-
+  <div class="section-2col reversed" style="margin-top:14px">
+    <div class="explanation reversed">
+      <h4>Top themes by reflections count</h4>
+      <p>Classic Space has <span class="metric">196</span> reflections despite only 8 sets. Unitron has 347 (4 sets, 0.55% of corpus).</p>
+      <p>These numbers explain why the global ratio of <span class="metric">1.345%</span> reflections looks high: 87.8% come from Space-themed sets.</p>
+    </div>
+    <div class="chart-container">
+      <canvas id="refl-bars"></canvas>
+    </div>
+  </div>
 </section>
+
 
 <section id="time">
   <h2><span class="num">08.</span>Temporal evolution</h2>
-  <p class="subhead">How the corpus is distributed across decades.</p>
-
-
-<div class="card">
-  <div class="card-title">Sets per decade</div>
-  <svg viewBox="0 0 750 210" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="20" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">1960s</text><rect x="0" y="0" width="22.12581344902386" height="22" fill="#58a6ff" opacity="0.85" rx="3"/><text x="28.12581344902386" y="20" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">17</text></g><g transform="translate(0,30)"><text x="-10" y="20" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">1970s</text><rect x="0" y="0" width="131.4533622559653" height="22" fill="#58a6ff" opacity="0.85" rx="3"/><text x="137.4533622559653" y="20" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">101</text></g><g transform="translate(0,60)"><text x="-10" y="20" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">1980s</text><rect x="0" y="0" width="344.90238611713664" height="22" fill="#58a6ff" opacity="0.85" rx="3"/><text x="350.90238611713664" y="20" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">265</text></g><g transform="translate(0,90)"><text x="-10" y="20" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">1990s</text><rect x="0" y="0" width="354.01301518438174" height="22" fill="#58a6ff" opacity="0.85" rx="3"/><text x="360.01301518438174" y="20" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">272</text></g><g transform="translate(0,120)"><text x="-10" y="20" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">2000s</text><rect x="0" y="0" width="318.87201735357917" height="22" fill="#58a6ff" opacity="0.85" rx="3"/><text x="324.87201735357917" y="20" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">245</text></g><g transform="translate(0,150)"><text x="-10" y="20" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">2010s</text><rect x="0" y="0" width="600.0" height="22" fill="#58a6ff" opacity="0.85" rx="3"/><text x="606.0" y="20" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">461</text></g><g transform="translate(0,180)"><text x="-10" y="20" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">2020s</text><rect x="0" y="0" width="100.21691973969631" height="22" fill="#58a6ff" opacity="0.85" rx="3"/><text x="106.21691973969631" y="20" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">77</text></g></svg>
-</div>
-
-
-<div class="card">
-  <div class="card-title">Pieces per decade</div>
-  <svg viewBox="0 0 750 210" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="20" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">1960s</text><rect x="0" y="0" width="6.447330101245439" height="22" fill="#bc8cff" opacity="0.85" rx="3"/><text x="12.447330101245438" y="20" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">2 509</text></g><g transform="translate(0,30)"><text x="-10" y="20" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">1970s</text><rect x="0" y="0" width="48.250903671217856" height="22" fill="#bc8cff" opacity="0.85" rx="3"/><text x="54.250903671217856" y="20" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">18 777</text></g><g transform="translate(0,60)"><text x="-10" y="20" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">1980s</text><rect x="0" y="0" width="119.19980127798812" height="22" fill="#bc8cff" opacity="0.85" rx="3"/><text x="125.19980127798812" y="20" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">46 387</text></g><g transform="translate(0,90)"><text x="-10" y="20" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">1990s</text><rect x="0" y="0" width="155.78949171706097" height="22" fill="#bc8cff" opacity="0.85" rx="3"/><text x="161.78949171706097" y="20" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">60 626</text></g><g transform="translate(0,120)"><text x="-10" y="20" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">2000s</text><rect x="0" y="0" width="192.85457317595464" height="22" fill="#bc8cff" opacity="0.85" rx="3"/><text x="198.85457317595464" y="20" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">75 050</text></g><g transform="translate(0,150)"><text x="-10" y="20" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">2010s</text><rect x="0" y="0" width="600.0" height="22" fill="#bc8cff" opacity="0.85" rx="3"/><text x="606.0" y="20" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">233 492</text></g><g transform="translate(0,180)"><text x="-10" y="20" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">2020s</text><rect x="0" y="0" width="250.05824610693298" height="22" fill="#bc8cff" opacity="0.85" rx="3"/><text x="256.058246106933" y="20" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">97 311</text></g></svg>
-</div>
-
+  <p>How the corpus is distributed across decades.</p>
+  <div class="section-2col">
+    <div class="chart-container">
+      <canvas id="time-bars"></canvas>
+    </div>
+    <div class="explanation">
+      <h4>Decade distribution</h4>
+      <p>Two bars per decade: <strong style="color:#58a6ff">sets</strong> and <strong style="color:#bc8cff">pieces</strong>. The 1990s dominate (116 sets) because LEGO released many Space and Pirates sets in that decade.</p>
+      <p>The 2020s column is small (2 sets, 163 pieces) because OMR has few recent sets; OMR is curated, not comprehensive.</p>
+    </div>
+  </div>
 </section>
+
 
 <section id="custom">
   <h2><span class="num">09.</span>Custom parts (embedded)</h2>
-  <p class="subhead">Sets that include their own parts (not in the official library).</p>
-
-
-<div class="card">
-  <div class="card-title">Top 10 sets by embedded custom parts</div>
-  <svg viewBox="0 0 850 260" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">42129-1 Technic</text><rect x="0" y="0" width="700.0" height="18" fill="#f778ba" opacity="0.85" rx="3"/><text x="706.0" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">98</text></g><g transform="translate(0,26)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">42131-1 Technic</text><rect x="0" y="0" width="671.4285714285714" height="18" fill="#f778ba" opacity="0.85" rx="3"/><text x="677.4285714285714" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">94</text></g><g transform="translate(0,52)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">10261-1 Creator > Creator Expert</text><rect x="0" y="0" width="650.0" height="18" fill="#f778ba" opacity="0.85" rx="3"/><text x="656.0" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">91</text></g><g transform="translate(0,78)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">60216-1 City > Fire</text><rect x="0" y="0" width="557.1428571428571" height="18" fill="#f778ba" opacity="0.85" rx="3"/><text x="563.1428571428571" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">78</text></g><g transform="translate(0,104)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">75870-1 Speed Champions</text><rect x="0" y="0" width="542.8571428571429" height="18" fill="#f778ba" opacity="0.85" rx="3"/><text x="548.8571428571429" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">76</text></g><g transform="translate(0,130)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3185-1 Friends</text><rect x="0" y="0" width="492.85714285714283" height="18" fill="#f778ba" opacity="0.85" rx="3"/><text x="498.85714285714283" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">69</text></g><g transform="translate(0,156)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">42100-1 Technic</text><rect x="0" y="0" width="492.85714285714283" height="18" fill="#f778ba" opacity="0.85" rx="3"/><text x="498.85714285714283" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">69</text></g><g transform="translate(0,182)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">42125-1 Technic</text><rect x="0" y="0" width="450.00000000000006" height="18" fill="#f778ba" opacity="0.85" rx="3"/><text x="456.00000000000006" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">63</text></g><g transform="translate(0,208)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">10283-1 Icons</text><rect x="0" y="0" width="435.7142857142857" height="18" fill="#f778ba" opacity="0.85" rx="3"/><text x="441.7142857142857" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">61</text></g><g transform="translate(0,234)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">3189-1 Friends</text><rect x="0" y="0" width="421.42857142857144" height="18" fill="#f778ba" opacity="0.85" rx="3"/><text x="427.42857142857144" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">59</text></g></svg>
-</div>
-
-
-<div class="card">
-  <div class="card-title">Custom parts count by cohort</div>
-  <svg viewBox="0 0 750 208" width="100%" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,0)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">80s90s</text><rect x="0" y="0" width="39.7397989355411" height="18" fill="#58a6ff" opacity="0.85" rx="3"/><text x="45.7397989355411" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">112</text></g><g transform="translate(0,26)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">kids</text><rect x="0" y="0" width="290.24246008279124" height="18" fill="#d29922" opacity="0.85" rx="3"/><text x="296.24246008279124" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">818</text></g><g transform="translate(0,52)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">classic</text><rect x="0" y="0" width="37.965700768775875" height="18" fill="#3fb950" opacity="0.85" rx="3"/><text x="43.965700768775875" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">107</text></g><g transform="translate(0,78)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">classic_gaps</text><rect x="0" y="0" width="32.288586635127146" height="18" fill="#7ee787" opacity="0.85" rx="3"/><text x="38.288586635127146" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">91</text></g><g transform="translate(0,104)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">modern</text><rect x="0" y="0" width="272.856298048492" height="18" fill="#bc8cff" opacity="0.85" rx="3"/><text x="278.856298048492" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">769</text></g><g transform="translate(0,130)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">technic</text><rect x="0" y="0" width="600.0" height="18" fill="#f85149" opacity="0.85" rx="3"/><text x="606.0" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">1 691</text></g><g transform="translate(0,156)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">specialty</text><rect x="0" y="0" width="124.54169130691899" height="18" fill="#39c5cf" opacity="0.85" rx="3"/><text x="130.541691306919" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">351</text></g><g transform="translate(0,182)"><text x="-10" y="16" text-anchor="end" fill="#e6edf3" font-size="11" font-family="ui-monospace,monospace">licensed</text><rect x="0" y="0" width="188.40922531046718" height="18" fill="#f778ba" opacity="0.85" rx="3"/><text x="194.40922531046718" y="16" fill="#8b949e" font-size="10" font-family="ui-monospace,monospace">531</text></g></svg>
-</div>
-
+  <p>Sets that include their own parts (not in the official library).</p>
+  <div class="section-2col">
+    <div class="chart-container">
+      <canvas id="custom-bars"></canvas>
+    </div>
+    <div class="explanation">
+      <h4>What are custom parts?</h4>
+      <p>An <strong>embedded custom part</strong> is a <span class="code">.dat</span> file inside an MPD whose name starts with the set number (e.g. <span class="code">10252 - 24599s01.dat</span>). It exists only for that set.</p>
+      <p>Fabuland sets often have many custom parts because the Fabuland theme has unique piece designs.</p>
+    </div>
+  </div>
 </section>
+
 
 <section id="rules">
   <h2><span class="num">10.</span>The 23 learned conventions</h2>
-  <p class="subhead">Click a status filter to focus on a subset.</p>
+  <p>Filter by status to see only the rules of interest.</p>
   <div class="filter-bar">
     <button class="filter-btn active" data-filter="all">All (23)</button>
     <button class="filter-btn" data-status="confirmed" data-filter="confirmed">Confirmed (7)</button>
@@ -551,283 +557,566 @@
       <div class="head">
         <span class="id">R1</span>
         <span class="name">Y-layers multiples of 8</span>
-        <span class="badge" style="background:#3fb950;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">CONFIRMED</span>
+        <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="desc">Plate (8 LDU), brick (24 LDU).</div>
-      <div class="ev">-> 96.4% top-15 canonical</div>
+      <div class="ev">Plate (8 LDU), brick (24 LDU). -> 96.4% top-15 canonical</div>
     </div>
 
     <div class="rule-card confirmed" data-status="confirmed">
       <div class="head">
         <span class="id">R2</span>
         <span class="name">X/Z deltas multiples of 20</span>
-        <span class="badge" style="background:#3fb950;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">CONFIRMED</span>
+        <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="desc">Encaje de stud.</div>
-      <div class="ev">-> 100% top-15 canonical</div>
+      <div class="ev">Encaje de stud. -> 100% top-15 canonical</div>
     </div>
 
     <div class="rule-card refuted" data-status="refuted">
       <div class="head">
         <span class="id">R3</span>
         <span class="name">Reflections < 0.3%</span>
-        <span class="badge" style="background:#f85149;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">REFUTED</span>
+        <span class="badge" style="background:#f85149">refuted</span>
       </div>
-      <div class="desc">Space-themed disparan a 5-21%.</div>
-      <div class="ev">-> 1.345% corpus 1438</div>
+      <div class="ev">Space-themed disparan a 5-21%. -> 1.345% corpus 1438</div>
     </div>
 
     <div class="rule-card refuted" data-status="refuted">
       <div class="head">
         <span class="id">R4</span>
         <span class="name">Custom parts = 0.6%</span>
-        <span class="badge" style="background:#f85149;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">REFUTED</span>
+        <span class="badge" style="background:#f85149">refuted</span>
       </div>
-      <div class="desc">kids = 1.9%, Fabuland 9.3%.</div>
-      <div class="ev">-> 0.95% global</div>
+      <div class="ev">kids = 1.9%, Fabuland 9.3%. -> 0.95% global</div>
     </div>
 
     <div class="rule-card confirmed" data-status="confirmed">
       <div class="head">
         <span class="id">R5</span>
         <span class="name">Top 10 piezas cover ~24-30%</span>
-        <span class="badge" style="background:#3fb950;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">CONFIRMED</span>
+        <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="desc">Vocabulario base del System.</div>
-      <div class="ev">-> 24.3% corpus 532</div>
+      <div class="ev">Vocabulario base del System. -> 24.3% corpus 532</div>
     </div>
 
     <div class="rule-card weakened" data-status="weakened">
       <div class="head">
         <span class="id">R6</span>
         <span class="name">Y-irregular = Technic/slopes</span>
-        <span class="badge" style="background:#d29922;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">WEAKENED</span>
+        <span class="badge" style="background:#d29922">weakened</span>
       </div>
-      <div class="desc">Slope 33° firma Y=-46.1.</div>
-      <div class="ev">-> Exists but rare</div>
+      <div class="ev">Slope 33° signature Y=-46.1. -> Exists but rare</div>
     </div>
 
     <div class="rule-card confirmed" data-status="confirmed">
       <div class="head">
         <span class="id">R7</span>
         <span class="name">Bigramas son self-bigrams</span>
-        <span class="badge" style="background:#3fb950;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">CONFIRMED</span>
+        <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="desc">Filas paralelas de misma pieza.</div>
-      <div class="ev">-> 90%+ self-bigrams</div>
+      <div class="ev">Filas parallel de misma pieza. -> 90%+ self-bigrams</div>
     </div>
 
     <div class="rule-card weakened" data-status="weakened">
       <div class="head">
         <span class="id">R8</span>
         <span class="name">Technic embebido en no-Technic</span>
-        <span class="badge" style="background:#d29922;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">WEAKENED</span>
+        <span class="badge" style="background:#d29922">weakened</span>
       </div>
-      <div class="desc">0.27% en 80s/90s, 1.50% kids.</div>
-      <div class="ev">-> Era-dependiente</div>
+      <div class="ev">0.27% in 80s/90s, 1.50% kids. -> Era-dependent</div>
     </div>
 
     <div class="rule-card weakened" data-status="weakened">
       <div class="head">
         <span class="id">R9</span>
         <span class="name">90s are 1.7× larger than 80s</span>
-        <span class="badge" style="background:#d29922;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">WEAKENED</span>
+        <span class="badge" style="background:#d29922">weakened</span>
       </div>
-      <div class="desc">Kids 2010s 2× larger.</div>
-      <div class="ev">-> Era-dependiente</div>
+      <div class="ev">Kids 2010s 2× larger. -> Era-dependent</div>
     </div>
 
     <div class="rule-card refuted" data-status="refuted">
       <div class="head">
         <span class="id">R10</span>
         <span class="name">BFC CERTIFY decrece con tiempo</span>
-        <span class="badge" style="background:#f85149;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">REFUTED</span>
+        <span class="badge" style="background:#f85149">refuted</span>
       </div>
-      <div class="desc">kids 36.5% > classic 16.4%.</div>
-      <div class="ev">-> Not monotonic</div>
+      <div class="ev">kids 36.5% > classic 16.4%. -> Not monotonic</div>
     </div>
 
     <div class="rule-card weakened" data-status="weakened">
       <div class="head">
         <span class="id">R11</span>
         <span class="name">Sub-builds crecen con tiempo</span>
-        <span class="badge" style="background:#d29922;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">WEAKENED</span>
+        <span class="badge" style="background:#d29922">weakened</span>
       </div>
-      <div class="desc">Classic 10.13 > kids 7.68.</div>
-      <div class="ev">-> Not monotonic</div>
+      <div class="ev">Classic 10.13 > kids 7.68. -> Not monotonic</div>
     </div>
 
     <div class="rule-card confirmed" data-status="confirmed">
       <div class="head">
         <span class="id">R12</span>
         <span class="name">4-4cyli es universal</span>
-        <span class="badge" style="background:#3fb950;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">CONFIRMED</span>
+        <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="desc">20 031 usos en corpus 1438.</div>
-      <div class="ev">-> #1 global</div>
+      <div class="ev">20 031 usos en corpus 1438. -> #1 global</div>
     </div>
 
     <div class="rule-card weakened" data-status="weakened">
       <div class="head">
         <span class="id">R13</span>
-        <span class="name">Kids vocabulario moderno</span>
-        <span class="badge" style="background:#d29922;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">WEAKENED</span>
+        <span class="name">Kids modern vocabulary</span>
+        <span class="badge" style="background:#d29922">weakened</span>
       </div>
-      <div class="desc">New pieces post-2000.</div>
-      <div class="ev">-> 12 exclusivas</div>
+      <div class="ev">New pieces post-2000. -> 12 exclusive</div>
     </div>
 
     <div class="rule-card confirmed" data-status="confirmed">
       <div class="head">
         <span class="id">R14</span>
         <span class="name">Bigrama 3005→3004 solo kids</span>
-        <span class="badge" style="background:#3fb950;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">CONFIRMED</span>
+        <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="desc">70 ocurrencias.</div>
-      <div class="ev">-> 0 en 80s/90s</div>
+      <div class="ev">70 ocurrencias. -> 0 en 80s/90s</div>
     </div>
 
     <div class="rule-card weakened" data-status="weakened">
       <div class="head">
         <span class="id">R15</span>
         <span class="name">Kids Y deeper</span>
-        <span class="badge" style="background:#d29922;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">WEAKENED</span>
+        <span class="badge" style="background:#d29922">weakened</span>
       </div>
-      <div class="desc">Y=-168 en kids.</div>
-      <div class="ev">-> vs -128 en 80s/90s</div>
+      <div class="ev">Y=-168 en kids. -> vs -128 en 80s/90s</div>
     </div>
 
     <div class="rule-card confirmed" data-status="confirmed">
       <div class="head">
         <span class="id">R16</span>
         <span class="name">Fabuland identidad propia</span>
-        <span class="badge" style="background:#3fb950;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">CONFIRMED</span>
+        <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="desc">~25 piezas exclusivas.</div>
-      <div class="ev">-> 9.3% custom parts</div>
+      <div class="ev">~25 piezas exclusivas. -> 9.3% custom parts</div>
     </div>
 
     <div class="rule-card confirmed" data-status="confirmed">
       <div class="head">
         <span class="id">R17</span>
         <span class="name">Friends = most decorative</span>
-        <span class="badge" style="background:#3fb950;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">CONFIRMED</span>
+        <span class="badge" style="background:#3fb950">confirmed</span>
       </div>
-      <div class="desc">94% usan 6141.</div>
-      <div class="ev">-> 17 sets</div>
+      <div class="ev">94% usan 6141. -> 17 sets</div>
     </div>
 
     <div class="rule-card weakened" data-status="weakened">
       <div class="head">
         <span class="id">R18</span>
         <span class="name">Train eje Z-dominante</span>
-        <span class="badge" style="background:#d29922;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">WEAKENED</span>
+        <span class="badge" style="background:#d29922">weakened</span>
       </div>
-      <div class="desc">Boat too.</div>
-      <div class="ev">-> Ya no exclusivo</div>
+      <div class="ev">Boat too. -> Ya no exclusivo</div>
     </div>
 
     <div class="rule-card new" data-status="new">
       <div class="head">
         <span class="id">R19</span>
         <span class="name">Space-themed disparan reflejos</span>
-        <span class="badge" style="background:#bc8cff;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">NEW</span>
+        <span class="badge" style="background:#bc8cff">new</span>
       </div>
-      <div class="desc">73 sets Space = 87.8% reflejos.</div>
-      <div class="ev">-> Classic Space 21%</div>
+      <div class="ev">73 sets Space = 87.8% reflejos. -> Classic Space 21%</div>
     </div>
 
     <div class="rule-card new" data-status="new">
       <div class="head">
         <span class="id">R20</span>
         <span class="name">756.dat signature Space</span>
-        <span class="badge" style="background:#bc8cff;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">NEW</span>
+        <span class="badge" style="background:#bc8cff">new</span>
       </div>
-      <div class="desc">Baseplate Technic 16×32.</div>
-      <div class="ev">-> #8 global</div>
+      <div class="ev">Baseplate Technic 16×32. -> #8 global</div>
     </div>
 
     <div class="rule-card new" data-status="new">
       <div class="head">
         <span class="id">R21</span>
         <span class="name">Classic have lowest BFC</span>
-        <span class="badge" style="background:#bc8cff;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">NEW</span>
+        <span class="badge" style="background:#bc8cff">new</span>
       </div>
-      <div class="desc">16.4% vs kids 36.5%.</div>
-      <div class="ev">-> Not monotonic</div>
+      <div class="ev">16.4% vs kids 36.5%. -> Not monotonic</div>
     </div>
 
     <div class="rule-card new" data-status="new">
       <div class="head">
         <span class="id">R22</span>
         <span class="name">Bigramas slope-slope = Space</span>
-        <span class="badge" style="background:#bc8cff;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">NEW</span>
+        <span class="badge" style="background:#bc8cff">new</span>
       </div>
-      <div class="desc">3818↔3820 etc.</div>
-      <div class="ev">-> 4 pares >30</div>
+      <div class="ev">3818↔3820 etc. -> 4 pares >30</div>
     </div>
 
     <div class="rule-card new" data-status="new">
       <div class="head">
         <span class="id">R23</span>
         <span class="name">Y = +8 LDU = antenas</span>
-        <span class="badge" style="background:#bc8cff;color:#0d1117;padding:2px 8px;border-radius:10px;font-size:0.7em;font-weight:700">NEW</span>
+        <span class="badge" style="background:#bc8cff">new</span>
       </div>
-      <div class="desc">1 389 piezas (antenas).</div>
-      <div class="ev">-> Blacktron/Unitron</div>
+      <div class="ev">1 389 piezas (antenas). -> Blacktron/Unitron</div>
     </div>
 </div></section>
 
+<section id="methodology">
+  <h2><span class="num">11.</span>Methodology & limitations</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div>
+      <h3>Pipeline</h3>
+      <ol style="color:var(--text-dim);max-width:680px;line-height:1.7;padding-left:20px;font-size:0.9em">
+        <li>Scraped OMR catalog (1,470 sets).</li>
+        <li>Sampled 8 cohorts covering 1,438 sets.</li>
+        <li>Downloaded each MPD via <code class="code">library.ldraw.org/library/omr/{SET}-{Q}.mpd</code>.</li>
+        <li>Parsed all MPDs with <code class="code">analysis/batch_parse3.py</code>.</li>
+        <li>Aggregated per cohort with the same script.</li>
+        <li>Dispatched 4 parallel subagents for analysis.</li>
+        <li>Derived 23 conventions (7+8+2+6 by status).</li>
+      </ol>
+    </div>
+    <div>
+      <h3>Limitations</h3>
+      <ul style="color:var(--text-dim);max-width:680px;line-height:1.7;padding-left:20px;font-size:0.9em">
+        <li>OMR has 1,470 sets total; we sampled 1,438 (97.8%).</li>
+        <li>OMR is curated, not exhaustive — many modern sets are missing.</li>
+        <li>Pirates theme is dominated by 6286 (86% of the theme).</li>
+        <li>Textures (TEXMAP) not analyzed.</li>
+        <li>No comparison with MOCs.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<footer>
+  <p><strong>Project</strong>: LDraw OMR cross-corpus analysis · <a href="https://github.com/vdirienzo/ldrawomr">github.com/vdirienzo/ldrawomr</a></p>
+  <p>Built with <a href="https://www.chartjs.org/">Chart.js</a> (CDN). Self-contained layout, no other external deps. 100% English.</p>
+  <p style="margin-top:12px;color:var(--text-muted);font-size:0.8em">LDraw™ is a trademark of the Estate of James Jessiman. LEGO® is a trademark of the LEGO Group. This dashboard is unofficial.</p>
+</footer>
+
+</div>
+
 <script>
+// === CHART.JS INITIALIZATION ===
+
+Chart.defaults.color = '#8b949e';
+Chart.defaults.borderColor = '#30363d';
+Chart.defaults.font.family = '-apple-system, system-ui, sans-serif';
+Chart.defaults.font.size = 11;
+Chart.defaults.animation.duration = 400;
+
+// Helper: cohort color
+const cohortColors = DATA.cohort_colors;
+function colorForCohort(name) { return cohortColors[name] || '#58a6ff'; }
+
+// 1. Cohort pieces bar
+const cohortData = Object.entries(DATA.cohorts).map(([k, v]) => ({
+  name: k.replace('_', ' '),
+  pieces: v.pieces,
+}));
+new Chart(document.getElementById('cohort-pieces'), {
+  type: 'bar',
+  data: {
+    labels: cohortData.map(c => c.name),
+    datasets: [{
+      data: cohortData.map(c => c.pieces),
+      backgroundColor: cohortData.map(c => colorForCohort(c.name)),
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => ctx.parsed.x.toLocaleString() + ' pieces'
+        }
+      }
+    },
+    scales: {
+      x: { ticks: { callback: v => (v/1000).toFixed(0) + 'K' } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// 2. Radar chart
+const radarCohorts = Object.entries(DATA.cohorts).map(([k, v]) => ({
+  name: k.replace('_', ' '),
+  color: colorForCohort(k),
+  sets: v.sets / 10, // normalize
+  pieces: v.pieces / 10000,
+  sub_builds: v.sub_builds / 100,
+  custom: v.custom_parts / 50,
+  bfc: v.bfc_certify / 5,
+  reflections: v.neg_det_count / 50,
+}));
+new Chart(document.getElementById('cohort-radar'), {
+  type: 'radar',
+  data: {
+    labels: ['Sets', 'Pieces', 'Sub-builds', 'Custom', 'BFC', 'Reflections'],
+    datasets: radarCohorts.map(c => ({
+      label: c.name,
+      data: [c.sets, c.pieces, c.sub_builds, c.custom, c.bfc, c.reflections],
+      backgroundColor: c.color + '20',
+      borderColor: c.color,
+      pointBackgroundColor: c.color,
+      borderWidth: 1.5,
+    }))
+  },
+  options: {
+    plugins: {
+      legend: { position: 'right', labels: { boxWidth: 12, padding: 6 } },
+    },
+    scales: {
+      r: { suggestedMin: 0, suggestedMax: 5, ticks: { display: false } }
+    }
+  }
+});
+
+// 3. Vocabulary horizontal bar
+new Chart(document.getElementById('vocab-bars'), {
+  type: 'bar',
+  data: {
+    labels: DATA.top_pieces_global.slice(0,15).map(p => p[0].replace('.dat','')),
+    datasets: [{
+      data: DATA.top_pieces_global.slice(0,15).map(p => p[1]),
+      backgroundColor: '#58a6ff',
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.x.toLocaleString() } } },
+    scales: { x: { ticks: { callback: v => (v/1000).toFixed(1) + 'K' } }, y: { grid: { display: false } } }
+  }
+});
+
+// 4. Treemap (manual, since Chart.js treemap needs extra plugin)
+const treemapContainer = document.getElementById('treemap');
+const treemapData = DATA.top_pieces_global.slice(0, 24);
+const total = treemapData.reduce((s, p) => s + p[1], 0);
+const cols = 8; const rows = 6; const cellW = 100/cols; const cellH = 100/rows;
+const sizes = treemapData.map(p => p[1] / total * 100);
+let placed = 0;
+const layout = [];
+const usedCells = new Set();
+function placeItem(areaPercent) {
+  // Greedy: find first available row, fill cells until area used up
+  let needed = Math.max(1, Math.round(areaPercent / (cellW * cellH)));
+  let placedCells = 0;
+  outer: for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (!usedCells.has(r * 100 + c)) {
+        for (let k = 0; k < needed; k++) {
+          const rr = r + Math.floor((c + k) / cols);
+          const cc = (c + k) % cols;
+          if (rr >= rows || usedCells.has(rr * 100 + cc)) continue outer;
+          layout.push({ row: r, col: c, span: needed });
+          for (let j = 0; j < needed; j++) {
+            const rrr = r + Math.floor((c + j) / cols);
+            const ccc = (c + j) % cols;
+            if (rrr < rows) usedCells.add(rrr * 100 + ccc);
+          }
+          placedCells += needed;
+          return;
+        }
+      }
+    }
+  }
+}
+for (let i = 0; i < treemapData.length; i++) {
+  placeItem(sizes[i]);
+}
+layout.forEach((cell, idx) => {
+  const item = treemapData[idx];
+  if (!item) return;
+  const div = document.createElement('div');
+  div.className = 'treemap-cell';
+  div.style.gridColumn = `${cell.col + 1} / span ${cell.span}`;
+  div.style.gridRow = `${cell.row + 1} / span 1`;
+  const colorSat = Math.min(1, 0.4 + (item[1] / total) * 3);
+  div.style.background = `hsl(210, 80%, ${65 - sizes[idx] * 0.6}%)`;
+  const fontSize = sizes[idx] > 5 ? 13 : sizes[idx] > 2 ? 11 : 9;
+  div.innerHTML = `<div class="name" style="font-size:${fontSize}px">${item[0].replace('.dat','')}</div><div class="val">${(item[1]/1000).toFixed(1)}K</div>`;
+  div.title = `${item[0]}: ${item[1].toLocaleString()} uses`;
+  treemapContainer.appendChild(div);
+});
+
+// 5. Y-layers
+new Chart(document.getElementById('y-bars'), {
+  type: 'bar',
+  data: {
+    labels: DATA.top_y_layers_global.map(y => y[0] >= 0 ? '+' + y[0] : y[0]),
+    datasets: [{
+      data: DATA.top_y_layers_global.map(y => y[1]),
+      backgroundColor: (ctx) => {
+        const y = DATA.top_y_layers_global[ctx.dataIndex][0];
+        return y === 0 ? '#3fb950' : y === -8 || y === -16 || y === -24 || y === -32 ? '#58a6ff' : '#d29922';
+      },
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { title: (items) => 'Y = ' + items[0].label, label: ctx => ctx.parsed.y.toLocaleString() + ' pieces' } }
+    },
+    scales: { y: { ticks: { callback: v => (v/1000).toFixed(1) + 'K' } } }
+  }
+});
+
+// 6. Deltas
+new Chart(document.getElementById('deltas-bars'), {
+  type: 'bar',
+  data: {
+    labels: DATA.top_deltas_global.slice(0,10).map(d => `(${d.dx},${d.dy},${d.dz})`),
+    datasets: [{
+      data: DATA.top_deltas_global.slice(0,10).map(d => d.count),
+      backgroundColor: '#d29922',
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.x.toLocaleString() + ' occurrences' } } },
+    scales: { x: { ticks: { callback: v => (v/1000).toFixed(0) + 'K' } }, y: { grid: { display: false } } }
+  }
+});
+
+// 7. Bigrams
+new Chart(document.getElementById('bigrams-bars'), {
+  type: 'bar',
+  data: {
+    labels: DATA.top_bigrams_global.slice(0,12).map(b => `${b[0].replace('.dat','')} > ${b[1].replace('.dat','')}`),
+    datasets: [{
+      data: DATA.top_bigrams_global.slice(0,12).map(b => b.count),
+      backgroundColor: '#bc8cff',
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.x.toLocaleString() + ' times' } } },
+    scales: { x: { ticks: { callback: v => (v/1000).toFixed(0) + 'K' } }, y: { grid: { display: false }, ticks: { font: { size: 9 } } } }
+  }
+});
+
+// 8. Themes bar
+new Chart(document.getElementById('themes-bars'), {
+  type: 'bar',
+  data: {
+    labels: DATA.top_themes.slice(0,15).map(t => t.theme.replace(' > ', ' › ').slice(-22)),
+    datasets: [{
+      data: DATA.top_themes.slice(0,15).map(t => t.pieces),
+      backgroundColor: '#39c5cf',
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.x.toLocaleString() + ' pieces' } } },
+    scales: { x: { ticks: { callback: v => (v/1000).toFixed(0) + 'K' } }, y: { grid: { display: false }, ticks: { font: { size: 9 } } } }
+  }
+});
+
+// 9. Scatter (themes reflections vs BFC)
+const scatterData = DATA.theme_scatter;
+new Chart(document.getElementById('scatter'), {
+  type: 'scatter',
+  data: {
+    datasets: [{
+      data: scatterData.map(t => ({ x: t.bfc_pct, y: t.refl_pct, name: t.name, r: Math.min(15, Math.max(3, Math.log(t.pieces))) })),
+      backgroundColor: (ctx) => {
+        const v = ctx.raw;
+        return v.y > 5 ? '#f85149' : v.y > 1 ? '#d29922' : '#3fb950';
+      },
+      borderColor: '#0d1117',
+      borderWidth: 1,
+    }]
+  },
+  options: {
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: (ctx) => `${ctx.raw.name}\n${ctx.raw.x}% BFC · ${ctx.raw.y}% reflections` } }
+    },
+    scales: {
+      x: { title: { display: true, text: 'BFC CERTIFY ratio (%)' }, ticks: { callback: v => v + '%' } },
+      y: { title: { display: true, text: 'Reflections ratio (%)' }, ticks: { callback: v => v + '%' } }
+    }
+  }
+});
+
+// 10. Reflections bar
+new Chart(document.getElementById('refl-bars'), {
+  type: 'bar',
+  data: {
+    labels: DATA.top_themes_refl.slice(0,10).map(t => t.theme.replace(' > ', ' › ').slice(-22)),
+    datasets: [{
+      data: DATA.top_themes_refl.slice(0,10).map(t => t.refl),
+      backgroundColor: '#f85149',
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.x + ' reflections' } } },
+    scales: { x: { beginAtZero: true }, y: { grid: { display: false }, ticks: { font: { size: 9 } } } }
+  }
+});
+
+// 11. Time (grouped bars per decade)
+new Chart(document.getElementById('time-bars'), {
+  type: 'bar',
+  data: {
+    labels: DATA.decades.map(d => d.decade),
+    datasets: [
+      { label: 'Sets', data: DATA.decades.map(d => d.sets), backgroundColor: '#58a6ff', yAxisID: 'y', borderRadius: 3 },
+      { label: 'Pieces (÷100)', data: DATA.decades.map(d => d.pieces / 100), backgroundColor: '#bc8cff', yAxisID: 'y1', borderRadius: 3 },
+    ]
+  },
+  options: {
+    plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 10 } } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { type: 'linear', position: 'left', title: { display: true, text: 'Sets' }, ticks: { color: '#58a6ff' } },
+      y1: { type: 'linear', position: 'right', title: { display: true, text: 'Pieces (÷100)' }, grid: { drawOnChartArea: false }, ticks: { color: '#bc8cff' } }
+    }
+  }
+});
+
+// 12. Custom parts
+new Chart(document.getElementById('custom-bars'), {
+  type: 'bar',
+  data: {
+    labels: DATA.top_custom_sets.map(s => s.set),
+    datasets: [{
+      data: DATA.top_custom_sets.map(s => s.custom),
+      backgroundColor: '#f778ba',
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.parsed.x} custom parts` } } },
+    scales: { x: { beginAtZero: true }, y: { grid: { display: false }, ticks: { font: { size: 10 } } } }
+  }
+});
+
+// === Rule filter ===
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const filter = btn.dataset.filter;
     document.querySelectorAll('.rule-card').forEach(card => {
-      if (filter === 'all' || card.dataset.status === filter) {
-        card.classList.remove('hidden');
-      } else {
-        card.classList.add('hidden');
-      }
+      card.classList.toggle('hidden', filter !== 'all' && card.dataset.status !== filter);
     });
   });
 });
 </script>
-
-
-<section id="methodology">
-  <h2><span class="num">11.</span>Methodology & limitations</h2>
-  <h3>How this corpus was assembled</h3>
-  <ol style="color:var(--text-dim);max-width:780px;line-height:1.8;padding-left:24px">
-    <li>Scraped the official OMR catalog (<a href="https://library.ldraw.org/omr/sets">library.ldraw.org/omr/sets</a>) — 1,470 sets in total.</li>
-    <li>Selected sets across 8 cohorts: 80s/90s, kids, classic (Plan C), classic gaps, modern, technic, specialty, licensed.</li>
-    <li>Downloaded each set's MPD via <code>https://library.ldraw.org/library/omr/{SET}-{Q}.mpd</code>.</li>
-    <li>Parsed all MPDs with <code>analysis/batch_parse3.py</code> (handles CRLF, sub_model suffix, embedded custom parts).</li>
-    <li>Aggregated stats per cohort with the same script. Output: <code>analysis/cross_corpus3_stats.json</code>.</li>
-    <li>Dispatched 4 parallel subagents for chaining / themes / cohorts / generator analysis.</li>
-    <li>Derived 23 conventions: 7 confirmed, 8 weakened, 2 refuted, 6 new.</li>
-  </ol>
-  <h3>Limitations</h3>
-  <ul style="color:var(--text-dim);max-width:780px;line-height:1.8;padding-left:24px">
-    <li>OMR has ~1,470 sets; we sampled 1,438 (97.8%). The remaining 32 are mostly recent or low-priority.</li>
-    <li>OMR doesn't include every LEGO set (Ninjago, many Star Wars post-2010, several Icons).</li>
-    <li>The Pirates theme is dominated by 6286 Skull's Eye Schooner (2,834 pieces) — 86% of the theme.</li>
-    <li>Custom parts and textures are not deeply analyzed.</li>
-    <li>Sub-build hierarchy within MPDs is not studied.</li>
-    <li>No comparison with MOCs (non-OMR community models).</li>
-  </ul>
-</section>
-
-
-<footer>
-  <p><strong>Project</strong>: LDraw OMR cross-corpus analysis · <a href="https://github.com/vdirienzo/ldrawomr">github.com/vdirienzo/ldrawomr</a></p>
-  <p><strong>Documents</strong>: <a href="../LDRAW_GUIDE.md">LDRAW_GUIDE.md</a> · <a href="../LEARNED_CONVENTIONS_1438.md">LEARNED_CONVENTIONS_1438.md</a> · <a href="../README.md">README.md</a></p>
-  <p><strong>Scripts</strong>: <a href="../analysis/batch_parse3.py">analysis/batch_parse3.py</a> · <a href="../generator/ldraw_gen.py">generator/ldraw_gen.py</a></p>
-  <p><strong>Data</strong>: <a href="../analysis/cross_corpus3_stats.json">cross_corpus3_stats.json</a> · <a href="../STATE.json">STATE.json</a></p>
-  <p style="margin-top:16px;color:var(--text-muted);font-size:0.85em">LDraw™ is a trademark of the Estate of James Jessiman. LEGO® is a trademark of the LEGO Group. This dashboard is unofficial.</p>
-</footer>
-
-</div>
 </body>
 </html>
